@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
-// --- BARIS INI DIGANTI ---
 import { GoogleGenAI } from "@google/genai";
 import { motion } from "framer-motion";
 import { FaPaperPlane } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 
-// --- INISIALISASI GEMINI SDK DENGAN ENV VARIABLE BARU ---
-// Pastikan nama variable di .env.local kamu adalah VITE_GEMINI_API_KEY
-const ai = new GoogleGenAI(import.meta.env.VITE_GEMINI_API_KEY);
-const MODEL_NAME = "gemini-2.5-flash"; // Model tercepat & batas gratis besar
+// --- PENGAMBILAN KEY DAN DEBUG CHECK (Wajib) ---
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+// 🚨 GUARD CLAUSE: MELEMPARKAN ERROR JIKA KEY KOSONG
+// Ini akan muncul di terminal jika file .env.local tidak terbaca.
+if (!GEMINI_KEY) {
+  throw new Error("❌ ERROR KRITIS: VITE_GEMINI_API_KEY tidak ditemukan! Pastikan .env.local berada di root dan tanpa spasi/kutipan.");
+}
+
+// INISIALISASI GEMINI SDK DENGAN OBJEK KONFIGURASI YANG BENAR
+const ai = new GoogleGenAI({
+  apiKey: GEMINI_KEY,
+});
+const MODEL_NAME = "gemini-2.5-flash"; // Model yang cepat dan efisien untuk free tier
 
 const Chatbot = () => {
   const [input, setInput] = useState("");
@@ -90,8 +99,8 @@ const Chatbot = () => {
 
         <motion.div
           className="flex-1 bg-gradient-to-br from-green-400/10 via-blue-500/10 to-purple-500/10 
-                       backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg 
-                       flex flex-col overflow-hidden"
+                               backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg 
+                               flex flex-col overflow-hidden"
         >
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {chat.map((message, index) => (
@@ -116,7 +125,7 @@ const Chatbot = () => {
             <div className="flex gap-2">
               <input
                 className="flex-grow bg-white/10 text-white border border-white/20 rounded-xl px-4 py-3
-                            focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400"
+                                            focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400"
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -128,7 +137,7 @@ const Chatbot = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-xl
-                            flex items-center gap-2 hover:shadow-lg hover:shadow-green-500/20 flex-shrink-0"
+                                            flex items-center gap-2 hover:shadow-lg hover:shadow-green-500/20 flex-shrink-0"
                 onClick={sendMessage}
                 disabled={loading}
               >

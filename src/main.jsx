@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client"; // Pastikan import createRoot dari react-dom/client
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
@@ -17,10 +17,15 @@ import Connect from "./pages/Connect.jsx";
 import Gallery from "./pages/Gallery.jsx";
 import WaterManagement from "./pages/WaterConservation.jsx";
 import Disease from "./pages/Disease.jsx";
-
 import Eksplorasi from "./pages/Eksplorasi.jsx";
 import Prediksi from "./pages/Prediksi.jsx";
 import Rekomendasi from "./pages/Rekomendasi.jsx";
+
+// --- TES DIAGNOSTIK UNTUK MEMASTIKAN API KEY TERBACA (HAPUS SETELAH BERHASIL) ---
+// Cek terminal saat npm run dev, nilainya harus muncul!
+// console.log("Nilai API Key yang Dibaca Vite:", import.meta.env.VITE_GEMINI_API_KEY);
+// ---------------------------------------------------------------------------------
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -76,10 +81,6 @@ const router = createBrowserRouter([
     element: <Disease />,
   },
   {
-    path: "*",
-    element: <ErrorPage />,
-  },
-  {
     path: "/eksplorasi",
     element: <Eksplorasi />,
   },
@@ -91,12 +92,21 @@ const router = createBrowserRouter([
     path: "/rekomendasi",
     element: <Rekomendasi />,
   },
+  {
+    // Rute Wildcard untuk menangani halaman yang tidak ditemukan (Error 404)
+    path: "*",
+    element: <ErrorPage />,
+  },
 ]);
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
-  </StrictMode>
-);
+// Pastikan elemen root diambil dengan benar
+const rootElement = document.getElementById("root");
+
+// Hanya render jika elemen root ditemukan
+if (rootElement) {
+  createRoot(rootElement).render(
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+  );
+}
