@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-    .text-gradient {
-      @apply bg-clip-text text-transparent;
-    }
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
   }
+}

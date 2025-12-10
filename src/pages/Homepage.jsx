@@ -33,54 +33,6 @@ const Homepage = () => {
 
   const features = [
     {
-      icon: FaChartLine,
-      label: "Analytics",
-      path: "/Charts",
-      description: "View detailed agricultural analytics and trends",
-    },
-    {
-      icon: FaBell,
-      label: "Alerts",
-      path: "/DisasterAlerts",
-      description: "Get real-time disaster and weather alerts",
-    },
-    {
-      icon: FaTint,
-      label: "Irrigation",
-      path: "/Irrigation",
-      description: "Smart irrigation control and monitoring",
-    },
-    {
-      icon: FaSeedling,
-      label: "Crop Guide",
-      path: "/CropSuggestion",
-      description: "Get personalized crop suggestions",
-    },
-    {
-      icon: FaMicroscope,
-      label: "Disease Detection",
-      path: "/disease-detection",
-      description: "AI-powered plant disease detection",
-    },
-    {
-      icon: FaDatabase,
-      label: "Crop Data",
-      path: "/cropdata",
-      description: "Access comprehensive crop database",
-    },
-    {
-      icon: FaHandsHelping,
-      label: "Connect",
-      path: "/Expert",
-      description: "Connect with agriculture experts",
-    },
-    {
-      icon: FaHandHoldingWater,
-      label: "Water Management",
-      path: "/WaterManagement",
-      description: "Efficient water conservation techniques",
-    },
-    {
       icon: FaChartBar,
       label: "Eksplorasi",
       path: "/Eksplorasi",
@@ -96,7 +48,19 @@ const Homepage = () => {
       icon: FaBrain,
       label: "Rekomendasi",
       path: "/Rekomendasi",
-      description: "Rekomendasi berbasis Deep Q-Network.",
+      description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network.",
+    },
+    {
+      icon: FaDatabase,
+      label: "Crop Data",
+      path: "/cropdata",
+      description: "Access comprehensive crop database",
+    },
+    {
+      icon: FaHandsHelping,
+      label: "Connect",
+      path: "/Expert",
+      description: "Connect with agriculture experts",
     },
   ];
 
