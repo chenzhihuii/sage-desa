@@ -3,13 +3,19 @@
 import KPICard from "../components/KPI"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+
+// 1. GANTI IMPORT INI (Vite/React Router)
+import { useNavigate } from "react-router-dom" 
+
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, AreaChart, Area, Legend
 } from "recharts"
 
+// Warna Chart
 const COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f97316", "#ef4444"]
 
+// Style tooltip custom
 const tooltipStyle = {
   backgroundColor: 'rgba(17, 24, 39, 0.95)',
   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -37,6 +43,9 @@ const cardStyle = `
 `
 
 export default function EksplorasiPage() {
+  // 2. GUNAKAN useNavigate
+  const navigate = useNavigate()
+  
   const [selectedCluster, setSelectedCluster] = useState(null)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -81,21 +90,42 @@ export default function EksplorasiPage() {
       className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black p-6 space-y-8 text-white"
     >
       
-      {/* ========================== HEADER DENGAN LOGO ========================== */}
+      {/* ========================== TOMBOL BACK (FIXED) ========================== */}
+      <motion.div variants={itemVariants}>
+        <button 
+          onClick={() => navigate('/')} // 3. Ganti router.push jadi navigate
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-green-500/50 transition-all duration-300 text-white/80 hover:text-green-400 group"
+        >
+          {/* Icon Panah Kiri */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="20" height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="group-hover:-translate-x-1 transition-transform"
+          >
+            <path d="m12 19-7-7 7-7"/>
+            <path d="M19 12H5"/>
+          </svg>
+          <span className="font-medium text-sm">Kembali ke Beranda</span>
+        </button>
+      </motion.div>
+      {/* ======================================================================= */}
+
+      {/* Header dengan Logo */}
       <motion.div variants={itemVariants} className="mb-8">
         <div className="flex items-center gap-6">
-          
-          {/* Logo Container */}
-          <div className="relative w-20 h-20 flex-shrink-0 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-lg shadow-green-500/20 overflow-hidden p-0">
+          <div className="relative w-20 h-20 flex-shrink-0 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-lg shadow-green-500/20 overflow-hidden p-1">
             <img 
-              // 👇 Panggil path langsung dari root public (tanpa import)
               src="/assets/logo sage desa.png" 
               alt="Logo SAGE Desa" 
               className="w-full h-full object-contain drop-shadow-md" 
             />
           </div>
-
-          {/* Teks Judul */}
           <div className="space-y-1">
             <h2 className="text-4xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
               Eksplorasi Data Ketahanan Pangan
@@ -104,25 +134,23 @@ export default function EksplorasiPage() {
               Analisis karakteristik petani, demografi, dan faktor ketahanan pangan (Live Data)
             </p>
           </div>
-
         </div>
       </motion.div>
-      {/* ======================================================================== */}
 
       {/* KPI Cards Area */}
       <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div variants={itemVariants} className={cardStyle}>
-           <KPICard title="Total Petani" value={data.petaniData.total} unit="Orang" trend="+12%" trendPositive />
+           <KPICard title="🧑‍🌾Total Petani" value={data.petaniData.total} unit="Orang" trend="+12%" trendPositive />
         </motion.div>
         <motion.div variants={itemVariants} className={cardStyle}>
-           <KPICard title="Rata-rata Lahan" value={data.petaniData.avgLahan} unit="Ha" trend="-5%" trendPositive={false} />
+           <KPICard title="🏔️Rata-rata Lahan" value={data.petaniData.avgLahan} unit="Ha" trend="-5%" trendPositive={false} />
         </motion.div>
         <motion.div variants={itemVariants} className={cardStyle}>
-           <KPICard title="Rata-rata Produksi" value={data.petaniData.avgProduksi} unit="Kw/Ha" trend="+8%" trendPositive />
+           <KPICard title="🌽Rata-rata Produksi" value={data.petaniData.avgProduksi} unit="Kw/Ha" trend="+8%" trendPositive />
         </motion.div>
         <motion.div variants={itemVariants} className={cardStyle}>
            <KPICard 
-             title="Status Tahan Pangan" 
+             title="🌾Status Tahan Pangan" 
              value={data.petaniData.tahanPanganPct} 
              unit="%" 
              trend="Stabil" 
@@ -161,12 +189,28 @@ export default function EksplorasiPage() {
         <motion.div variants={itemVariants} className={cardStyle}>
           <h3 className="text-xl font-semibold mb-6 text-blue-400">Status Kemandirian Pangan</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data.kemandirianChart} layout="vertical" margin={{ left: 20, right: 40 }}>
+            <BarChart data={data.kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
               <XAxis type="number" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)'}} />
               <YAxis dataKey="status" type="category" width={130} stroke="rgba(255,255,255,0.8)" tick={{fill: 'rgba(255,255,255,0.8)', fontSize: 13}} />
-              <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} formatter={(value) => [`${value} Petani`, 'Jumlah']}/>
-              <Bar dataKey="jumlah" radius={[0, 4, 4, 0]} barSize={40} label={{ position: 'right', fill: '#ffffff', fontSize: 12, fontWeight: 'bold', formatter: (value) => `${value} Petani` }}>
+              <Tooltip 
+                cursor={{fill: 'rgba(255,255,255,0.05)'}} 
+                contentStyle={tooltipStyle} 
+                itemStyle={{ color: '#ffffff' }}
+                formatter={(value) => [`${value} Petani`, 'Jumlah']} 
+              />
+              <Bar 
+                dataKey="jumlah" 
+                radius={[0, 4, 4, 0]} 
+                barSize={40} 
+                label={{ 
+                  position: 'right', 
+                  fill: '#ffffff', 
+                  fontSize: 12, 
+                  fontWeight: 'bold', 
+                  formatter: (value) => `${value} Petani` 
+                }}
+              >
                 {data.kemandirianChart.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.status === 'Tahan pangan' ? '#4ade80' : entry.status === 'Kekurangan sementara' ? '#fbbf24' : '#f87171'} />
                 ))}
