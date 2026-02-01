@@ -1,40 +1,23 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import Navbar from '../components/Navbar';
-import { FaEnvelope, FaUser, FaPencilAlt, FaPaperPlane } from 'react-icons/fa';
+import React from "react";
+import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
+import { FaEnvelope, FaUser, FaPencilAlt, FaPaperPlane } from "react-icons/fa";
 
 const Contact = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Contact Us
-          </h1>
-          <p className="text-xl text-white/60">
-            Get in touch with our agricultural experts
-          </p>
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">Hubungi Kami</h1>
+          <p className="text-xl text-white/60">Kami terbuka dengan kritik dan saran</p>
         </motion.div>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-xl mx-auto backdrop-blur-xl bg-white/5 p-8 rounded-2xl border border-white/10"
-        >
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="max-w-xl mx-auto backdrop-blur-xl bg-white/5 p-8 rounded-2xl border border-white/10">
           <form className="space-y-6">
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2" htmlFor="name">
-                Name
+                Nama
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -47,7 +30,7 @@ const Contact = () => {
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg 
                            text-white placeholder-white/40 focus:outline-none focus:border-purple-500
                            transition-colors"
-                  placeholder="Your Name"
+                  placeholder="Nama Anda"
                 />
               </div>
             </div>
@@ -67,14 +50,14 @@ const Contact = () => {
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg 
                            text-white placeholder-white/40 focus:outline-none focus:border-purple-500
                            transition-colors"
-                  placeholder="Your Email"
+                  placeholder="Email Anda"
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2" htmlFor="subject">
-                Subject
+                Subjek
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -87,14 +70,14 @@ const Contact = () => {
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg 
                            text-white placeholder-white/40 focus:outline-none focus:border-purple-500
                            transition-colors"
-                  placeholder="Subject"
+                  placeholder="Subjek"
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2" htmlFor="message">
-                Message
+                Pesan
               </label>
               <textarea
                 id="message"
@@ -103,7 +86,7 @@ const Contact = () => {
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg 
                          text-white placeholder-white/40 focus:outline-none focus:border-purple-500
                          transition-colors resize-none"
-                placeholder="Your Message"
+                placeholder="Tuliskan pesan atau pertanyaan Anda di sini"
               ></textarea>
             </div>
 
@@ -116,7 +99,7 @@ const Contact = () => {
                        hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
             >
               <FaPaperPlane />
-              Send Message
+              Kirim Pesan
             </motion.button>
           </form>
         </motion.div>
