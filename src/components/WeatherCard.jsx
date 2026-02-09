@@ -43,22 +43,10 @@ export default function WeatherCard() {
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          fetchWeather(latitude, longitude);
-        },
-        (err) => {
-          console.error('Error getting location:', err.message);
-          setError('Error getting location');
-          setLoading(false);
-        }
-      );
-    } else {
-      setError('Geolocation is not supported by this browser.');
-      setLoading(false);
-    }
+    // Fixed coordinates for Desa Sumberarum, Wates, Blitar
+    const lat = -8.2483;
+    const lon = 112.3386;
+    fetchWeather(lat, lon);
   }, []);
 
   if (loading) {
@@ -71,7 +59,7 @@ export default function WeatherCard() {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-red-500/10 backdrop-blur-lg rounded-xl p-6 text-white border border-red-500/20"
@@ -87,7 +75,7 @@ export default function WeatherCard() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-6xl mx-auto px-2 sm:px-4" // Reduced padding on mobile
     >
-      <motion.div 
+      <motion.div
         whileHover={{ scale: 1.01 }}
         className="backdrop-blur-md bg-black/40 rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-white/10 shadow-lg"
       >
@@ -95,7 +83,7 @@ export default function WeatherCard() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-8 mb-6 sm:mb-8">
           <div className="text-center md:text-left">
             <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">
-              {weather.name}
+              Desa Sumberarum, Blitar
             </h2>
             <p className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
               {Math.round(weather.main.temp)}°C
@@ -104,19 +92,19 @@ export default function WeatherCard() {
               {weather.weather[0].description}
             </p>
           </div>
-          
+
           <motion.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ duration: 6, repeat: Infinity }}
             className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center"
           >
-            <WeatherIcon 
-              weather={weather.weather[0]} 
+            <WeatherIcon
+              weather={weather.weather[0]}
               size="text-6xl sm:text-8xl text-white" // Added text-white
             />
           </motion.div>
         </div>
-  
+
         {/* Weather Metrics */}
         <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
           {[
@@ -135,10 +123,10 @@ export default function WeatherCard() {
             </motion.div>
           ))}
         </div>
-  
+
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-6 sm:my-8" />
-  
+
         {/* Forecast Section */}
         <div>
           <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">
@@ -155,8 +143,8 @@ export default function WeatherCard() {
               >
                 <div className="flex items-center justify-between gap-2 sm:gap-4">
                   <div className="flex items-center gap-2 sm:gap-4">
-                    <WeatherIcon 
-                      weather={item.weather[0]} 
+                    <WeatherIcon
+                      weather={item.weather[0]}
                       size="text-2xl sm:text-3xl text-white" // Added text-white
                     />
                     <div>
@@ -164,10 +152,10 @@ export default function WeatherCard() {
                         {Math.round(item.main.temp)}°C
                       </p>
                       <p className="text-[10px] sm:text-xs text-white/60">
-                        {new Date(item.dt * 1000).toLocaleTimeString([], { 
-                          hour: '2-digit', 
+                        {new Date(item.dt * 1000).toLocaleTimeString([], {
+                          hour: '2-digit',
                           minute: '2-digit',
-                          hour12: true 
+                          hour12: true
                         })}
                       </p>
                     </div>
