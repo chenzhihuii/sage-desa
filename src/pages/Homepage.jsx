@@ -52,15 +52,15 @@ const Homepage = () => {
     },
     {
       icon: FaDatabase,
-      label: "Crop Data",
+      label: "Data Komoditas",
       path: "/cropdata",
-      description: "Access comprehensive crop database",
+      description: "Informasi dan data tanaman pertanian",
     },
     {
       icon: FaHandsHelping,
-      label: "Connect",
+      label: "Konsultasi",
       path: "/Expert",
-      description: "Connect with agriculture experts",
+      description: "Konsultasi dengan penyuluh",
     },
   ];
 

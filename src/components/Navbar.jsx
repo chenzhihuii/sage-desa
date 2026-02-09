@@ -10,9 +10,9 @@ const Navbar = () => {
   const location = useLocation();
 
   const navLinks = [
-    { title: "Home", path: "/" },
-    { title: "About", path: "/about" },
-    { title: "Gallery", path: "/gallery" },
+    { title: "Beranda", path: "/" },
+    { title: "Tentang", path: "/about" },
+    { title: "Galeri", path: "/gallery" },
   ];
 
   // Scroll effect
@@ -35,9 +35,11 @@ const Navbar = () => {
              backdrop-blur-lg rounded-2xl border border-white/10 shadow-lg`}
       >
         <div className="flex items-center justify-between h-16 px-6 sm:px-8">
-          <motion.div whileHover={{ scale: 1.05 }} className="relative">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-              SAGE-Desa
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link to="/" className="flex items-center gap-3">
+              <img src="/assets/logo sage desa.png" alt="SAGE-Desa Logo" className="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0" />
+
+              <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent whitespace-nowrap">SAGE-Desa</span>
             </Link>
           </motion.div>
 
@@ -64,7 +66,7 @@ const Navbar = () => {
                 className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-2 rounded-full 
                          flex items-center space-x-2 hover:shadow-lg hover:shadow-green-500/20 transition duration-300"
               >
-                <span>Contact Us</span>
+                <span>Aspirasi</span>
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
