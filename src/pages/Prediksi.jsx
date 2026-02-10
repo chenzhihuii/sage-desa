@@ -1,8 +1,6 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useNavigate } from "react-router-dom"
+import Navbar from "../components/Navbar"
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend, LineChart, Line
@@ -10,6 +8,60 @@ import {
 import useWeatherForecast from "../hooks/useWeatherForecast"
 import useCommodityForecast from "../hooks/useCommodityForecast"
 import WeatherIcon from "../components/WeatherIcon"
+
+// Warna Chart
+const COLORS = {
+  temperature: "#ef4444",
+  humidity: "#3b82f6",
+  jagung: "#f59e0b",
+  cabai: "#ef4444",
+  kedelai: "#22c55e",
+  berasPremium: "#ceb0fa",
+  berasMedium: "#a78bfa",
+  minyakPremium: "#fde047",
+  minyakita: "#eab308",
+  telur: "#f97316"
+}
+
+// ... (keep tooltipStyle and variants same) ...
+const tooltipStyle = {
+  backgroundColor: 'rgba(17, 24, 39, 0.95)',
+  borderColor: 'rgba(255, 255, 255, 0.1)',
+  color: '#f3f4f6',
+  borderRadius: '0.75rem',
+  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  backdropFilter: 'blur(8px)',
+  padding: '12px'
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+}
+
+const cardStyle = `
+  bg-gradient-to-br from-green-400/5 via-blue-500/5 to-purple-500/5 
+  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-6
+  hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
+`
+
+// ... (Keep Data Constants) ...
+// Instead of replacing the whole file constants, I should target specific blocks.
+// I will target imports and the component start.
+
+// Let's scroll up to imports.
+// Lines 1-13 imports.
+// Lines 477 component start.
+// Lines 509 header start.
+
+// I'll do this in chunks or a larger replacement if I can match safely.
+// Since the file is huge (900 lines), I'll use multi_replace.
+
 
 // Warna Chart
 const COLORS = {
@@ -477,46 +529,19 @@ export default function PrediksiPage() {
       initial="hidden"
       animate="show"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-8 px-4 md:px-8 text-white"
+      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-4 md:px-8 pb-8 text-white"
     >
+      <Navbar />
       {/* Centered Container */}
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Tombol Back */}
-        <motion.div variants={itemVariants}>
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-green-500/50 transition-all duration-300 text-white/80 hover:text-green-400 group"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20" height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="group-hover:-translate-x-1 transition-transform"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
-            <span className="font-medium text-sm">Kembali ke Beranda</span>
-          </button>
-        </motion.div>
+        {/* Tombol Back removed */}
 
         {/* Header with Category Tabs */}
         <motion.div variants={itemVariants} className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            {/* Left side - Logo and Title */}
+            {/* Left side - Title only (Logo removed) */}
             <div className="flex items-center gap-4">
-              <div className="relative w-14 h-14 flex-shrink-0 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-lg shadow-green-500/20 overflow-hidden p-1">
-                <img
-                  src="/assets/logo sage desa.png"
-                  alt="Logo SAGE Desa"
-                  className="w-full h-full object-contain drop-shadow-md"
-                />
-              </div>
+              {/* Logo removed */}
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-white">
                   Prediksi & Peramalan

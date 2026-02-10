@@ -78,9 +78,14 @@ const Homepage = () => {
           <WeatherCard />
         </div>
 
-        <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto pb-24">
+        <motion.div variants={container} initial="hidden" animate="show" className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto pb-24">
           {features.map((feature, index) => (
-            <motion.div key={index} variants={item} custom={index}>
+            <motion.div
+              key={index}
+              variants={item}
+              custom={index}
+              className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+            >
               <FeatureIcon {...feature} />
             </motion.div>
           ))}
