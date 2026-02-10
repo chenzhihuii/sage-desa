@@ -50,59 +50,7 @@ const cardStyle = `
   hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
 `
 
-// ... (Keep Data Constants) ...
-// Instead of replacing the whole file constants, I should target specific blocks.
-// I will target imports and the component start.
 
-// Let's scroll up to imports.
-// Lines 1-13 imports.
-// Lines 477 component start.
-// Lines 509 header start.
-
-// I'll do this in chunks or a larger replacement if I can match safely.
-// Since the file is huge (900 lines), I'll use multi_replace.
-
-
-// Warna Chart
-const COLORS = {
-  temperature: "#ef4444",
-  humidity: "#3b82f6",
-  jagung: "#f59e0b",
-  cabai: "#ef4444",
-  kedelai: "#22c55e",
-  berasPremium: "#8b5cf6",
-  berasMedium: "#a78bfa",
-  minyakPremium: "#f97316",
-  minyakita: "#fb923c",
-  telur: "#fbbf24"
-}
-
-// Style tooltip custom
-const tooltipStyle = {
-  backgroundColor: 'rgba(17, 24, 39, 0.95)',
-  borderColor: 'rgba(255, 255, 255, 0.1)',
-  color: '#f3f4f6',
-  borderRadius: '0.75rem',
-  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-  backdropFilter: 'blur(8px)',
-  padding: '12px'
-}
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
-}
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { duration: 0.5 } },
-}
-
-const cardStyle = `
-  bg-gradient-to-br from-green-400/5 via-blue-500/5 to-purple-500/5 
-  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-6
-  hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
-`
 
 // Mock Data untuk prediksi cuaca
 const weatherForecastData = [
@@ -273,7 +221,6 @@ const MetricsCard = ({ title, metrics, color }) => (
 )
 
 export default function PrediksiPage() {
-  const navigate = useNavigate()
   const [activeCategory, setActiveCategory] = useState('weather') // 'weather', 'commodity', or 'food'
   const [selectedPrediction, setSelectedPrediction] = useState('suhu')
   const [timeRange, setTimeRange] = useState('30')
