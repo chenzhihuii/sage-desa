@@ -10,32 +10,32 @@ const Gallery = () => {
     {
       id: '1',
       urls: {
-        small: '/assets/h1.jpg',
-        regular: '/assets/h1.jpg'
+        small: '/assets/h1.jpeg',
+        regular: '/assets/h1.jpeg'
       },
       alt_description: 'Image 1 description'
     },
     {
       id: '2',
       urls: {
-        small: '/assets/h2.jpg',
-        regular: '/assets/h2.jpg'
+        small: '/assets/h2.jpeg',
+        regular: '/assets/h2.jpeg'
       },
       alt_description: 'Image 2 description'
     },
     {
       id: '3',
       urls: {
-        small: '/assets/h3.jpg',
-        regular: '/assets/h3.jpg'
+        small: '/assets/h6.jpeg',
+        regular: '/assets/h6.jpeg'
       },
       alt_description: 'Image 3 description'
     },
     {
       id: '4',
       urls: {
-        small: '/assets/h4.jpg',
-        regular: '/assets/h4.jpg'
+        small: '/assets/h3.jpeg',
+        regular: '/assets/h3.jpeg'
       },
       alt_description: 'Image 4 description'
     },

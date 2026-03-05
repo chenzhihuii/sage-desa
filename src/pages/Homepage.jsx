@@ -70,8 +70,8 @@ const Homepage = () => {
 
       <div className="container mx-auto px-4">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">SAGE-Desa</h1>
-          <p className="text-xl text-white/60">Sustainable Agriculture and Growth through Expert AI</p>
+          <h1 className="text-5xl md:text-6xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">SAGE-Desa</h1>
+          <p className="text-xl text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>
         </motion.div>
 
         <div className="mb-12">

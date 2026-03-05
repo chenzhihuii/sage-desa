@@ -8,6 +8,37 @@ import {
 import useWeatherForecast from "../hooks/useWeatherForecast"
 import useCommodityForecast from "../hooks/useCommodityForecast"
 import WeatherIcon from "../components/WeatherIcon"
+import {
+  WiThermometer,
+  WiHumidity,
+} from "react-icons/wi"
+import {
+  FaSeedling,
+  FaPepperHot,
+  FaBottleWater,
+  FaEgg,
+  FaBowlRice,
+} from "react-icons/fa6"
+import {
+  GiMaize,
+} from "react-icons/gi"
+import {
+  Bean
+} from "lucide-react" 
+import {
+  MdLocationOn,
+  MdAccessTime,
+  MdCalendarMonth,
+  MdAccountBalance,
+  MdWarning,
+  MdOutlineWaterDrop,
+} from "react-icons/md"
+import {
+  IoCloudOutline,
+} from "react-icons/io5"
+import {
+  BsDropletFill,
+} from "react-icons/bs"
 
 // Warna Chart
 const COLORS = {
@@ -23,7 +54,6 @@ const COLORS = {
   telur: "#f97316"
 }
 
-// ... (keep tooltipStyle and variants same) ...
 const tooltipStyle = {
   backgroundColor: 'rgba(17, 24, 39, 0.95)',
   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -49,8 +79,6 @@ const cardStyle = `
   backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-6
   hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
 `
-
-
 
 // Mock Data untuk prediksi cuaca
 const weatherForecastData = [
@@ -163,6 +191,23 @@ const formatCurrency = (value) => {
   }).format(value)
 }
 
+// Helper: render commodity label with icon
+const CommodityLabel = ({ name }) => {
+  const map = {
+    suhu:         <><WiThermometer className="inline mr-1" /> Suhu</>,
+    kelembaban:   <><WiHumidity className="inline mr-1" /> Kelembaban</>,
+    jagung:       <><GiMaize className="inline mr-1" /> Jagung</>,
+    cabai:        <><FaPepperHot className="inline mr-1" /> Cabai Rawit</>,
+    kedelai:      <><Bean size={14}  className="inline mr-1" /> Kedelai</>,
+    berasPremium: <><FaBowlRice className="inline mr-1" /> Beras Premium</>,
+    berasMedium:  <><FaBowlRice className="inline mr-1" /> Beras Medium</>,
+    minyakPremium:<><FaBottleWater className="inline mr-1" /> Minyak Goreng Premium</>,
+    minyakita:    <><FaBottleWater className="inline mr-1" /> Minyak MINYAKITA</>,
+    telur:        <><FaEgg className="inline mr-1" /> Telur Ayam Ras</>,
+  }
+  return map[name] || name
+}
+
 // Summary Card Component
 const PredictionCard = ({ title, model, accuracy, description, isActive, onClick, warning }) => (
   <motion.div
@@ -175,11 +220,7 @@ const PredictionCard = ({ title, model, accuracy, description, isActive, onClick
   >
     {warning && (
       <div className="absolute top-4 right-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-          <path d="M12 9v4" />
-          <path d="M12 17h.01" />
-        </svg>
+        <MdWarning className="text-amber-400" size={20} />
       </div>
     )}
     <h4 className="font-semibold text-white mb-1">{title}</h4>
@@ -196,17 +237,8 @@ const MetricsCard = ({ title, metrics, color }) => (
     <div className="space-y-3">
       {Object.entries(metrics).map(([key, value]) => (
         <div key={key} className="border-b border-white/5 pb-2 last:border-0">
-          <p className="text-sm text-white font-medium capitalize mb-1">
-            {key === 'suhu' ? '🌡️ Suhu' :
-              key === 'kelembaban' ? '💧 Kelembaban' :
-                key === 'jagung' ? '🌽 Jagung' :
-                  key === 'cabai' ? '🌶️ Cabai Rawit' :
-                    key === 'kedelai' ? '🫘 Kedelai' :
-                      key === 'berasPremium' ? '🍚 Beras Premium' :
-                        key === 'berasMedium' ? '🍚 Beras Medium' :
-                          key === 'minyakPremium' ? '🛢️ Minyak Goreng Premium' :
-                            key === 'minyakita' ? '🛢️ Minyak MINYAKITA' :
-                              key === 'telur' ? '🥚 Telur Ayam Ras' : key}
+          <p className="text-sm text-white font-medium capitalize mb-1 flex items-center gap-1">
+            <CommodityLabel name={key} />
           </p>
           <p className="text-xs text-white/40 mb-1">Model: {value.model}</p>
           <div className="flex gap-4 text-xs">
@@ -221,20 +253,16 @@ const MetricsCard = ({ title, metrics, color }) => (
 )
 
 export default function PrediksiPage() {
-  const [activeCategory, setActiveCategory] = useState('weather') // 'weather', 'commodity', or 'food'
+  const [activeCategory, setActiveCategory] = useState('weather')
   const [selectedPrediction, setSelectedPrediction] = useState('suhu')
   const [timeRange, setTimeRange] = useState('30')
 
-  // Weather forecast states
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [selectedForecast, setSelectedForecast] = useState(null)
 
-  // Note: We always maintain 'openweather' as initial value, but switch to 'arimax' 
-  // if user picks a date outside OpenWeather range.
   const [dataSource, setDataSource] = useState('openweather')
 
-  // Use Weather forecast hook (OpenWeather + ARIMAX)
   const {
     currentWeather: liveWeather,
     forecast,
@@ -245,7 +273,6 @@ export default function PrediksiPage() {
     getAvailableDates,
     getAvailableTimes,
     getDailySummary,
-    // ARIMAX prediction
     arimaxPrediction,
     predictionLoading,
     predictionError,
@@ -256,7 +283,6 @@ export default function PrediksiPage() {
     getArimaxDailySummary
   } = useWeatherForecast()
 
-  // Use Commodity forecast hook
   const {
     commodityData,
     currentPrices: realCurrentPrices,
@@ -264,7 +290,6 @@ export default function PrediksiPage() {
     error: commodityError,
     getChartData: getCommodityChartData,
     getPriceStats,
-
   } = useCommodityForecast()
 
 
@@ -282,12 +307,10 @@ export default function PrediksiPage() {
     }
   }, [forecast, dataSource])
 
-  // Set initial date when switching to ARIMAX
   useEffect(() => {
     if (arimaxPrediction?.predictions?.length > 0 && dataSource === 'arimax') {
       const dates = getArimaxDates()
       if (dates.length > 0) {
-        // Keep the same date if possible, or use first available
         const currentDateValid = dates.includes(selectedDate)
         const targetDate = currentDateValid ? selectedDate : dates[0]
         setSelectedDate(targetDate)
@@ -297,7 +320,6 @@ export default function PrediksiPage() {
           const firstPrediction = times[0].data
           setSelectedForecast({
             ...firstPrediction,
-            // Use humidity from prediction (now includes LSTM data)
             humidity: firstPrediction.humidity,
             windSpeed: liveWeather?.wind?.speed || 2,
             weather: liveWeather?.weather?.[0] || null,
@@ -309,7 +331,6 @@ export default function PrediksiPage() {
     }
   }, [arimaxPrediction, dataSource])
 
-  // Update selected forecast when date/time changes
   useEffect(() => {
     if (selectedDate && selectedTime) {
       if (dataSource === 'openweather') {
@@ -320,7 +341,6 @@ export default function PrediksiPage() {
         if (arimaxData) {
           setSelectedForecast({
             ...arimaxData,
-            // Use humidity from ARIMAX prediction (now includes LSTM data)
             humidity: arimaxData.humidity,
             windSpeed: liveWeather?.wind?.speed || 2,
             weather: liveWeather?.weather?.[0] || null,
@@ -332,38 +352,26 @@ export default function PrediksiPage() {
     }
   }, [selectedDate, selectedTime, dataSource])
 
-  // Handle date change and switch data source automatically
   const handleDateChange = (date) => {
     setSelectedDate(date)
-
-    // Check if the selected date is available in OpenWeather (usually 5 days)
     const openWeatherDates = getAvailableDates()
     const isAvailableInOpenWeather = openWeatherDates.includes(date)
-
-    // Determine target data source
     const targetSource = isAvailableInOpenWeather ? 'openweather' : 'arimax'
     setDataSource(targetSource)
-
-    // Update time selection based on new source
-    // We delay slightly to ensure state update or just recalculate times directly
     const times = targetSource === 'openweather'
       ? getAvailableTimes(date)
       : getArimaxTimes(date)
-
     if (times.length > 0) {
       setSelectedTime(times[0].value)
     }
   }
 
-  // Get chart data based on selection
   const getChartData = () => {
     if (activeCategory === 'weather') {
-      // Use real data from OpenWeather or ARIMAX
       if (dataSource === 'openweather' && forecast.length > 0) {
-        // OpenWeather: Show all available data (approx 5 days)
         return forecast.map(item => ({
           label: `${item.date.split('/')[0]}/${item.date.split('/')[1]} ${item.time}`,
-          month: item.time, // Use time as X-axis label
+          month: item.time,
           suhuPredicted: item.temp,
           suhuLower: item.temp - 2,
           suhuUpper: item.temp + 2,
@@ -373,21 +381,16 @@ export default function PrediksiPage() {
           fullDate: item.date
         }))
       } else if (dataSource === 'arimax' && arimaxPrediction?.predictions?.length > 0) {
-        // ARIMAX: Show next 7 days (hourly) for trend readability
-        // 7 days * 24 hours = 168 points
         const dataPoints = Math.min(168, arimaxPrediction.predictions.length)
         return arimaxPrediction.predictions.slice(0, dataPoints).map(item => {
-          // Format date from YYYY-MM-DD to DD/MM
           const [year, month, day] = item.date.split('-')
           const dateStr = `${day}/${month}`
-
           return {
             label: `${dateStr} ${item.time}`,
-            month: item.time, // We'll switch XAxis to use 'label' instead
+            month: item.time,
             suhuPredicted: item.temp,
             suhuLower: item.temp - 2,
             suhuUpper: item.temp + 2,
-            // Use humidity from prediction (includes LSTM data)
             kelembabanPredicted: item.humidity,
             kelembabanLower: item.humidity - 5,
             kelembabanUpper: item.humidity + 5,
@@ -395,17 +398,13 @@ export default function PrediksiPage() {
           }
         })
       }
-      // Fallback to mock data if no real data
       return weatherForecastData
     }
 
-
-    // Commodity predictions (jagung, cabai/cabe, kedelai) AND Food Commodities
     const foodKeys = ['berasPremium', 'berasMedium', 'minyakPremium', 'minyakita', 'telur'];
     const commodityKeys = ['jagung', 'cabai', 'cabe', 'kedelai'];
 
     if (commodityKeys.includes(selectedPrediction) || foodKeys.includes(selectedPrediction)) {
-      // Map frontend names to backend keys
       const commodityKeyMap = {
         'jagung': 'jagung',
         'cabai': 'cabe',
@@ -417,41 +416,27 @@ export default function PrediksiPage() {
         'minyakita': 'minyakita',
         'telur': 'telur'
       };
-
       const commodityKey = commodityKeyMap[selectedPrediction] || selectedPrediction;
-
-      // Use real data from commodity hook
       if (commodityData[commodityKey]?.forecast) {
         const chartData = getCommodityChartData(commodityKey);
-
-        // Format for chart display with proper field names
-        // Use 'cabai' for field names to match chart config if selectedPrediction is cabe
         let displayKey = selectedPrediction;
         if (selectedPrediction === 'cabe') displayKey = 'cabai';
-
-        // Limit data points based on selected time range (e.g. 3, 7, 14 days)
         const limit = parseInt(timeRange) || 30;
-
         return chartData.slice(0, limit).map(item => ({
-          month: item.month, // This contains DD/MM date string from hook
+          month: item.month,
           [`${displayKey}Predicted`]: item.predicted,
           [`${displayKey}Lower`]: item.lower,
           [`${displayKey}Upper`]: item.upper
         }));
       }
-
-      // Fallback to mock data if real data not available (only for original 3)
       if (commodityKeys.includes(selectedPrediction)) {
         return commodityForecastData;
       }
-
-      // Fallback for food items (mock)
       const limit = parseInt(timeRange) || 6;
       return otherCommodityData.slice(0, limit);
     }
   }
 
-  // Get chart config based on selection
   const getChartConfig = () => {
     const configs = {
       suhu: { lower: 'suhuLower', upper: 'suhuUpper', predicted: 'suhuPredicted', color: COLORS.temperature, unit: '°C', label: 'Suhu' },
@@ -479,18 +464,14 @@ export default function PrediksiPage() {
       className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-4 md:px-8 pb-8 text-white"
     >
       <Navbar />
-      {/* Centered Container */}
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Tombol Back removed */}
 
         {/* Header with Category Tabs */}
         <motion.div variants={itemVariants} className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            {/* Left side - Title only (Logo removed) */}
             <div className="flex items-center gap-4">
-              {/* Logo removed */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
+                <h2 className="text-2xl md:text-3xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
                   Prediksi & Peramalan
                 </h2>
                 <p className="text-white/50 text-sm md:text-base">
@@ -499,63 +480,62 @@ export default function PrediksiPage() {
               </div>
             </div>
 
-            {/* Right side - Category Tabs */}
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => { setActiveCategory('weather'); setSelectedPrediction('suhu'); }}
-                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${activeCategory === 'weather'
+                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${activeCategory === 'weather'
                   ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
                   }`}
               >
-                🌤️ Cuaca
+                <IoCloudOutline size={16} /> Cuaca
               </button>
               <button
                 onClick={() => { setActiveCategory('commodity'); setSelectedPrediction('jagung'); }}
-                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${activeCategory === 'commodity'
+                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${activeCategory === 'commodity'
                   ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
                   }`}
               >
-                🌾 Harga Komoditas
+                <FaSeedling size={14} /> Harga Komoditas
               </button>
               <button
                 onClick={() => { setActiveCategory('food'); setSelectedPrediction('berasPremium'); }}
-                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${activeCategory === 'food'
+                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${activeCategory === 'food'
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
                   }`}
               >
-                🍚 Harga Bahan Pangan
+                <FaBowlRice size={16} /> Harga Bahan Pangan
               </button>
             </div>
           </div>
         </motion.div>
 
-        {/* Info Bar - Data Update & Source */}
+        {/* Info Bar */}
         <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10">
           <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
             <span className="flex items-center gap-1.5">
-              🕐 <span className="text-white/80">Terakhir diperbarui:</span> 30 Jan 2026, 22:00 WIB
+              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 30 Jan 2026, 22:00 WIB
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              📅 <span className="text-white/80">Periode:</span> Nov 2025 - Apr 2026
+              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Nov 2025 - Apr 2026
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              🏛️ <span className="text-white/80">Sumber:</span> BMKG, Siskaperbapo
+              <MdAccountBalance size={14} /> <span className="text-white/80">Sumber:</span> BMKG, Siskaperbapo
             </span>
           </div>
           <div className="text-xs text-amber-400/80 flex items-center gap-1.5">
-            ⚠️ Prediksi dapat berubah tergantung kondisi aktual
+            <MdWarning size={14} /> Prediksi dapat berubah tergantung kondisi aktual
           </div>
         </motion.div>
+
         <motion.div variants={itemVariants} className={`${cardStyle}`}>
           <div className={`grid gap-4 ${activeCategory === 'weather' ? 'grid-cols-1 md:grid-cols-2' : activeCategory === 'commodity' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-5'}`}>
             {activeCategory === 'weather' ? (
               <>
-                {/* Weather Date/Time Picker & Forecast Display */}
                 <div className="col-span-full">
                   {weatherLoading ? (
                     <div className="flex justify-center items-center py-8">
@@ -571,7 +551,7 @@ export default function PrediksiPage() {
                       {/* Location & Current Weather */}
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl">📍</span>
+                          <MdLocationOn className="text-2xl text-green-400" />
                           <h4 className="font-semibold text-white text-lg">{location || 'Desa Sumberarum, Blitar'}</h4>
                         </div>
                         {liveWeather && (
@@ -584,24 +564,26 @@ export default function PrediksiPage() {
                         )}
                       </div>
 
-                      {/* Date & Time Picker - in one row */}
+                      {/* Date & Time Picker */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm text-white/60 mb-2">📅 Pilih Tanggal</label>
+                          <label className="flex items-center gap-1.5 text-sm text-white/60 mb-2">
+                            <MdCalendarMonth size={14} /> Pilih Tanggal
+                          </label>
                           <input
                             type="date"
                             value={selectedDate}
                             onChange={(e) => handleDateChange(e.target.value)}
-                            // Min date is today (from OpenWeather)
                             min={getAvailableDates()[0]}
-                            // Max date is from ARIMAX (30 days)
                             max={getArimaxDates().length > 0 ? getArimaxDates().slice(-1)[0] : getAvailableDates().slice(-1)[0]}
                             className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50"
                             style={{ colorScheme: 'dark' }}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm text-white/60 mb-2">🕐 Pilih Jam</label>
+                          <label className="flex items-center gap-1.5 text-sm text-white/60 mb-2">
+                            <MdAccessTime size={14} /> Pilih Jam
+                          </label>
                           <select
                             value={selectedTime}
                             onChange={(e) => setSelectedTime(e.target.value)}
@@ -629,7 +611,7 @@ export default function PrediksiPage() {
                             className="bg-gradient-to-br from-red-500/20 to-orange-500/10 rounded-xl p-4 border border-red-500/20"
                           >
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-2xl">🌡️</span>
+                              <WiThermometer className="text-3xl text-red-400" />
                               <span className="text-sm text-white/60">Suhu</span>
                             </div>
                             <p className="text-3xl font-bold text-white">{selectedForecast.temp}°C</p>
@@ -643,7 +625,7 @@ export default function PrediksiPage() {
                             className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20"
                           >
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-2xl">💧</span>
+                              <BsDropletFill className="text-xl text-blue-400" />
                               <span className="text-sm text-white/60">Kelembaban</span>
                             </div>
                             <p className="text-3xl font-bold text-white">{selectedForecast.humidity}%</p>
@@ -664,7 +646,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🌽 Prediksi Harga Jagung</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><GiMaize /> Prediksi Harga Jagung</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.jagung.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.jagung.mape).toFixed(1)}%</p>
                   <p className="text-xs text-orange-400">{predictionSummary.jagung.description}</p>
@@ -677,12 +659,9 @@ export default function PrediksiPage() {
                     }`}
                 >
                   <div className="absolute top-3 right-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                      <path d="M12 9v4" /><path d="M12 17h.01" />
-                    </svg>
+                    <MdWarning className="text-amber-400" size={18} />
                   </div>
-                  <h4 className="font-semibold text-white mb-1">🌶️ Prediksi Harga Cabai</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaPepperHot /> Prediksi Harga Cabai</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.cabai.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.cabai.mape).toFixed(1)}%</p>
                   <p className="text-xs text-orange-400">{predictionSummary.cabai.description}</p>
@@ -694,7 +673,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🫘 Prediksi Harga Kedelai</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><Bean size={16}/> Prediksi Harga Kedelai</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.kedelai.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.kedelai.mape).toFixed(1)}%</p>
                   <p className="text-xs text-orange-400">{predictionSummary.kedelai.description}</p>
@@ -709,7 +688,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🍚 Beras Premium</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBowlRice /> Beras Premium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasPremium.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.berasPremium.mape).toFixed(1)}%</p>
                 </div>
@@ -720,7 +699,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🍚 Beras Medium</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBowlRice /> Beras Medium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasMedium.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.berasMedium.mape).toFixed(1)}%</p>
                 </div>
@@ -731,7 +710,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🛢️ Minyak Premium</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBottleWater /> Minyak Premium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakPremium.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.minyakPremium.mape).toFixed(1)}%</p>
                 </div>
@@ -742,7 +721,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🛢️ MINYAKITA</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBottleWater /> MINYAKITA</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakita.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.minyakita.mape).toFixed(1)}%</p>
                 </div>
@@ -753,7 +732,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1">🥚 Telur Ayam</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaEgg /> Telur Ayam</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.telur.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.telur.mape).toFixed(1)}%</p>
                 </div>
@@ -791,9 +770,9 @@ export default function PrediksiPage() {
                   onChange={(e) => setSelectedPrediction(e.target.value)}
                   className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50" style={{ colorScheme: 'dark' }}
                 >
-                  <option value="jagung">🌽 Jagung</option>
-                  <option value="cabai">🌶️ Cabai Rawit</option>
-                  <option value="kedelai">🫘 Kedelai</option>
+                  <option value="jagung">Jagung</option>
+                  <option value="cabai">Cabai Rawit</option>
+                  <option value="kedelai">Kedelai</option>
                 </select>
               )}
               {activeCategory === 'food' && (
@@ -802,11 +781,11 @@ export default function PrediksiPage() {
                   onChange={(e) => setSelectedPrediction(e.target.value)}
                   className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50" style={{ colorScheme: 'dark' }}
                 >
-                  <option value="berasPremium">🍚 Beras Premium</option>
-                  <option value="berasMedium">🍚 Beras Medium</option>
-                  <option value="minyakPremium">🛢️ Minyak Goreng Premium</option>
-                  <option value="minyakita">🛢️ Minyak MINYAKITA</option>
-                  <option value="telur">🥚 Telur Ayam Ras</option>
+                  <option value="berasPremium">Beras Premium</option>
+                  <option value="berasMedium">Beras Medium</option>
+                  <option value="minyakPremium">Minyak Goreng Premium</option>
+                  <option value="minyakita">Minyak MINYAKITA</option>
+                  <option value="telur">Telur Ayam Ras</option>
                 </select>
               )}
               {activeCategory === 'weather' && (
@@ -815,11 +794,10 @@ export default function PrediksiPage() {
                   onChange={(e) => setSelectedPrediction(e.target.value)}
                   className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50" style={{ colorScheme: 'dark' }}
                 >
-                  <option value="suhu">🌡️ Suhu</option>
-                  <option value="kelembaban">💧 Kelembaban</option>
+                  <option value="suhu">Suhu</option>
+                  <option value="kelembaban">Kelembaban</option>
                 </select>
               )}
-              {/* Time range dropdown - only for commodity/food, not weather */}
               {activeCategory !== 'weather' && (
                 <select
                   value={timeRange}
@@ -834,7 +812,6 @@ export default function PrediksiPage() {
                   <option value="30">30 hari</option>
                 </select>
               )}
-              {/* Weather chart info removed */}
             </div>
           </div>
 
@@ -853,7 +830,6 @@ export default function PrediksiPage() {
                 tick={{ fill: 'rgba(255,255,255,0.5)' }}
                 tickFormatter={(value) => {
                   if (activeCategory === 'weather') {
-                    // Show only time (HH:mm) on XAxis ticks
                     return value.split(' ')[1]
                   }
                   return value
@@ -868,7 +844,6 @@ export default function PrediksiPage() {
                 contentStyle={tooltipStyle}
                 itemStyle={{ color: '#ffffff' }}
                 formatter={(value, name) => {
-                  // For all categories, show unified prediction label
                   const prefix = activeCategory === 'weather' ? 'Prediksi Nilai' : 'Prediksi Harga';
                   return [
                     activeCategory === 'weather' ? `${value}${chartConfig.unit}` : formatCurrency(value),
@@ -885,7 +860,6 @@ export default function PrediksiPage() {
                   return prefix;
                 }}
               />
-              {/* Single Area for ALL categories (no bounds) */}
               <Area
                 type="monotone"
                 dataKey={chartConfig.predicted}
@@ -897,7 +871,6 @@ export default function PrediksiPage() {
             </AreaChart>
           </ResponsiveContainer>
         </motion.div>
-
 
       </div>
     </motion.div>

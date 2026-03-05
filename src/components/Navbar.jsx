@@ -115,7 +115,7 @@ const Navbar = () => {
                            hover:opacity-90 transition-all duration-300"
                   onClick={() => setIsOpen(false)}
                 >
-                  Contact Us
+                  Aspirasi
                 </Link>
               </motion.div>
             </motion.div>
