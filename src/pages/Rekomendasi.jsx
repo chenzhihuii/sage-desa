@@ -234,7 +234,6 @@ export default function RekomendasiPage() {
       { value: "tidak_ada", label: "Tidak Ada" },
       { value: "sedikit",   label: "Sedikit" },
       { value: "cukup",     label: "Cukup" },
-      { value: "menengah",  label: "Menengah" },
       { value: "banyak",    label: "Banyak" },
     ]},
     { name: "pekerjaan_sampingan", label: "Pekerjaan Sampingan", options: [
@@ -385,7 +384,8 @@ export default function RekomendasiPage() {
                         m.price_summary.trend === "naik"  ? "text-green-400" :
                         m.price_summary.trend === "turun" ? "text-red-400"   : "text-yellow-400"
                       }`}>
-                        {m.price_summary.trend} ({m.price_summary.pct_change}%)
+                        {m.price_summary.trend}
+                        {m.price_summary.trend !== "stabil" && ` (${m.price_summary.pct_change}%)`}
                       </p>
                     </div>
                   )}

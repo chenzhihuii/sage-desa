@@ -20,7 +20,7 @@ import {
   FaBowlRice,
 } from "react-icons/fa6"
 import {
-  GiMaize,
+  GiCorn,
 } from "react-icons/gi"
 import {
   Bean
@@ -196,7 +196,7 @@ const CommodityLabel = ({ name }) => {
   const map = {
     suhu:         <><WiThermometer className="inline mr-1" /> Suhu</>,
     kelembaban:   <><WiHumidity className="inline mr-1" /> Kelembaban</>,
-    jagung:       <><GiMaize className="inline mr-1" /> Jagung</>,
+    jagung:       <><GiCorn className="inline mr-1" /> Jagung</>,
     cabai:        <><FaPepperHot className="inline mr-1" /> Cabai Rawit</>,
     kedelai:      <><Bean size={14}  className="inline mr-1" /> Kedelai</>,
     berasPremium: <><FaBowlRice className="inline mr-1" /> Beras Premium</>,
@@ -646,7 +646,7 @@ export default function PrediksiPage() {
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><GiMaize /> Prediksi Harga Jagung</h4>
+                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><GiCorn /> Prediksi Harga Jagung</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.jagung.model}</p>
                   <p className="text-sm text-green-400 mb-1">Akurasi: {(100 - modelMetrics.commodities.jagung.mape).toFixed(1)}%</p>
                   <p className="text-xs text-orange-400">{predictionSummary.jagung.description}</p>

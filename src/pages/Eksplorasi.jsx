@@ -12,7 +12,7 @@ import {
 } from "recharts"
 
 // Warna Chart
-const COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f97316", "#ef4444"]
+const COLORS = ["#22c55e", "#f97316", "#ef4444"]
 
 // Style tooltip custom
 const tooltipStyle = {
@@ -243,7 +243,7 @@ export default function EksplorasiPage() {
       {/* Table Section */}
       <motion.div variants={itemVariants} className={`${cardStyle} overflow-hidden !p-0`}>
         <div className="p-4 pb-2">
-          <h3 className="text-base font-semibold text-white">Clustering Petani (CLARA Analysis)</h3>
+          <h3 className="text-base font-semibold text-white">Klasterisasi Petani (KMeans Analysis)</h3>
           <p className="text-white/40 text-sm mt-0.5">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
         </div>
         <div className="overflow-x-auto p-2">
@@ -252,8 +252,7 @@ export default function EksplorasiPage() {
               <tr>
                 <th className="px-4 py-3 text-sm font-semibold text-green-400">Cluster</th>
                 <th className="px-4 py-3 text-sm font-semibold text-white/60">Jumlah Petani</th>
-                <th className="px-4 py-3 text-sm font-semibold text-white/60">Rata-rata Lahan</th>
-                <th className="px-4 py-3 text-sm font-semibold text-white/60">Rata-rata Pendapatan</th>
+                <th className="px-4 py-3 text-sm font-semibold text-white/60">Karakteristik</th>
                 <th className="px-4 py-3 text-sm font-semibold text-white/60">Level Ketahanan</th>
               </tr>
             </thead>
@@ -268,10 +267,9 @@ export default function EksplorasiPage() {
                 >
                   <td className="px-4 py-3 text-sm font-medium text-white">{cluster.cluster}</td>
                   <td className="px-4 py-3 text-sm text-white/60">{cluster.jumlah} petani</td>
-                  <td className="px-4 py-3 text-sm text-white/60">{cluster.avgLahan} ha</td>
-                  <td className="px-4 py-3 text-sm text-white/60">Rp {cluster.avgPendapatan} juta</td>
+                  <td className="px-4 py-3 text-sm text-white/60">{cluster.implikasi}</td>
                   <td className="px-4 py-3 text-sm">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${cluster.ketahanan === "Sangat Tinggi" ? "bg-green-600/10 text-green-500 border-green-600/20" :
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                         cluster.ketahanan === "Tinggi" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
                           cluster.ketahanan === "Sedang" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
                             cluster.ketahanan === "Rendah" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" :
