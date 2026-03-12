@@ -9,8 +9,8 @@ const Contact = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">Hubungi Kami</h1>
-          <p className="text-xl text-white/60">Kami terbuka dengan kritik dan saran</p>
+          <h1 className="text-3xl md:text-4xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">Hubungi Kami</h1>
+          <p className="text-white/50 text-sm md:text-base">Kami terbuka dengan kritik dan saran</p>
         </motion.div>
 
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="max-w-xl mx-auto backdrop-blur-xl bg-white/5 p-8 rounded-2xl border border-white/10">

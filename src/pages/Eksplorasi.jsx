@@ -4,6 +4,7 @@ import KPICard from "../components/KPI"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Navbar from "../components/Navbar"
+import { Users, Map, TrendingUp, ShieldCheck } from "lucide-react"
 
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
@@ -11,7 +12,7 @@ import {
 } from "recharts"
 
 // Warna Chart
-const COLORS = ["#22c55e", "#3b82f6", "#a855f7", "#f97316", "#ef4444"]
+const COLORS = ["#22c55e", "#f97316", "#ef4444", "#707ff1ff"]
 
 // Style tooltip custom
 const tooltipStyle = {
@@ -21,7 +22,7 @@ const tooltipStyle = {
   borderRadius: '0.75rem',
   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
   backdropFilter: 'blur(8px)',
-  padding: '12px'
+  padding: '10px'
 }
 
 const containerVariants = {
@@ -34,9 +35,10 @@ const itemVariants = {
   show: { y: 0, opacity: 1, transition: { duration: 0.5 } },
 }
 
+// ✅ Spacing dikecilkan: p-4 (dari p-6), gap dikecilkan juga
 const cardStyle = `
   bg-gradient-to-br from-green-400/5 via-blue-500/5 to-purple-500/5 
-  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-6
+  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-4
   hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
 `
 
@@ -82,14 +84,14 @@ export default function EksplorasiPage() {
       initial="hidden"
       animate="show"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-6 pb-6 space-y-8 text-white"
+      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-6 pb-6 space-y-5 text-white"
     >
       <Navbar />
 
-      {/* Header tanpa Logo Besar (Supaya mirip CropsData) */}
-      <motion.div variants={itemVariants} className="mb-8 text-center">
+      {/* Header */}
+      <motion.div variants={itemVariants} className="mb-4 text-center">
         <div className="space-y-1">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
+          <h2 className="text-4xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
             Eksplorasi Data Ketahanan Pangan
           </h2>
           <p className="text-white/60 text-lg">
@@ -99,19 +101,41 @@ export default function EksplorasiPage() {
       </motion.div>
 
       {/* KPI Cards Area */}
-      <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <motion.div variants={itemVariants} className={cardStyle}>
-          <KPICard title="🧑‍🌾Total Petani" value={data.petaniData.total} unit="Orang" trend="+12%" trendPositive />
-        </motion.div>
-        <motion.div variants={itemVariants} className={cardStyle}>
-          <KPICard title="🏔️Rata-rata Lahan" value={data.petaniData.avgLahan} unit="Ha" trend="-5%" trendPositive={false} />
-        </motion.div>
-        <motion.div variants={itemVariants} className={cardStyle}>
-          <KPICard title="🌽Rata-rata Produksi" value={data.petaniData.avgProduksi} unit="Kw/Ha" trend="+8%" trendPositive />
+          <KPICard
+            icon={<Users size={18} className="text-green-400" />}
+            title="Total Petani"
+            value={data.petaniData.total}
+            unit="Orang"
+            trend="+12%"
+            trendPositive
+          />
         </motion.div>
         <motion.div variants={itemVariants} className={cardStyle}>
           <KPICard
-            title="🌾Status Tahan Pangan"
+            icon={<Map size={18} className="text-blue-400" />}
+            title="Rata-rata Lahan"
+            value={data.petaniData.avgLahan}
+            unit="Ha"
+            trend="-5%"
+            trendPositive={false}
+          />
+        </motion.div>
+        <motion.div variants={itemVariants} className={cardStyle}>
+          <KPICard
+            icon={<TrendingUp size={18} className="text-purple-400" />}
+            title="Rata-rata Produksi"
+            value={data.petaniData.avgProduksi}
+            unit="Kw/Ha"
+            trend="+8%"
+            trendPositive
+          />
+        </motion.div>
+        <motion.div variants={itemVariants} className={cardStyle}>
+          <KPICard
+            icon={<ShieldCheck size={18} className="text-orange-400" />}
+            title="Status Tahan Pangan"
             value={data.petaniData.tahanPanganPct}
             unit="%"
             trend="Stabil"
@@ -121,10 +145,10 @@ export default function EksplorasiPage() {
       </motion.div>
 
       {/* Charts Area 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <motion.div variants={itemVariants} className={cardStyle}>
-          <h3 className="text-xl font-semibold mb-6 text-green-400">Distribusi Umur Petani</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <h3 className="text-base font-semibold mb-4 text-green-400">Distribusi Umur Petani</h3>
+          <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
                 data={data.umurChart}
@@ -132,7 +156,7 @@ export default function EksplorasiPage() {
                 cy="50%"
                 labelLine={false}
                 label={({ name, value }) => `${name} (${value})`}
-                outerRadius={100}
+                outerRadius={95}
                 fill="#8884d8"
                 dataKey="value"
                 stroke="none"
@@ -142,14 +166,14 @@ export default function EksplorasiPage() {
                 ))}
               </Pie>
               <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
-              <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
+              <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '16px' }} />
             </PieChart>
           </ResponsiveContainer>
         </motion.div>
 
         <motion.div variants={itemVariants} className={cardStyle}>
-          <h3 className="text-xl font-semibold mb-6 text-blue-400">Status Kemandirian Pangan</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <h3 className="text-base font-semibold mb-4 text-blue-400">Status Kemandirian Pangan</h3>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={data.kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
               <XAxis type="number" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
@@ -163,7 +187,7 @@ export default function EksplorasiPage() {
               <Bar
                 dataKey="jumlah"
                 radius={[0, 4, 4, 0]}
-                barSize={40}
+                barSize={36}
                 label={{
                   position: 'right',
                   fill: '#ffffff',
@@ -182,10 +206,10 @@ export default function EksplorasiPage() {
       </div>
 
       {/* Charts Area 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <motion.div variants={itemVariants} className={cardStyle}>
-          <h3 className="text-xl font-semibold mb-6 text-purple-400">Distribusi Pendapatan (Prediksi AI)</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <h3 className="text-base font-semibold mb-4 text-purple-400">Distribusi Pendapatan (Prediksi AI)</h3>
+          <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={data.pendapatanChart}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
               <XAxis dataKey="range" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} interval={0} />
@@ -203,8 +227,8 @@ export default function EksplorasiPage() {
         </motion.div>
 
         <motion.div variants={itemVariants} className={cardStyle}>
-          <h3 className="text-xl font-semibold mb-6 text-orange-400">Sebaran Ukuran Lahan</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <h3 className="text-base font-semibold mb-4 text-orange-400">Sebaran Ukuran Lahan</h3>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={data.lahanChart}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
               <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
@@ -217,20 +241,19 @@ export default function EksplorasiPage() {
       </div>
 
       {/* Table Section */}
-      <motion.div variants={itemVariants} className={`${cardStyle} overflow-hidden p-0`}>
-        <div className="p-6 pb-2">
-          <h3 className="text-xl font-semibold text-white">Clustering Petani (CLARA Analysis)</h3>
-          <p className="text-white/40 text-sm mt-1">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
+      <motion.div variants={itemVariants} className={`${cardStyle} overflow-hidden !p-0`}>
+        <div className="p-4 pb-2">
+          <h3 className="text-base font-semibold text-white">Klasterisasi Petani (KMeans Analysis)</h3>
+          <p className="text-white/40 text-sm mt-0.5">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
         </div>
         <div className="overflow-x-auto p-2">
           <table className="w-full text-left border-collapse">
             <thead className="border-b border-white/10 bg-white/5">
               <tr>
-                <th className="px-6 py-4 text-sm font-semibold text-green-400">Cluster</th>
-                <th className="px-6 py-4 text-sm font-semibold text-white/60">Jumlah Petani</th>
-                <th className="px-6 py-4 text-sm font-semibold text-white/60">Rata-rata Lahan</th>
-                <th className="px-6 py-4 text-sm font-semibold text-white/60">Rata-rata Pendapatan</th>
-                <th className="px-6 py-4 text-sm font-semibold text-white/60">Level Ketahanan</th>
+                <th className="px-4 py-3 text-sm font-semibold text-green-400">Cluster</th>
+                <th className="px-4 py-3 text-sm font-semibold text-white/60">Jumlah Petani</th>
+                <th className="px-4 py-3 text-sm font-semibold text-white/60">Karakteristik</th>
+                <th className="px-4 py-3 text-sm font-semibold text-white/60">Level Ketahanan</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -242,12 +265,11 @@ export default function EksplorasiPage() {
                   `}
                   onClick={() => setSelectedCluster(selectedCluster === cluster.id ? null : cluster.id)}
                 >
-                  <td className="px-6 py-4 text-sm font-medium text-white">{cluster.cluster}</td>
-                  <td className="px-6 py-4 text-sm text-white/60">{cluster.jumlah} petani</td>
-                  <td className="px-6 py-4 text-sm text-white/60">{cluster.avgLahan} ha</td>
-                  <td className="px-6 py-4 text-sm text-white/60">Rp {cluster.avgPendapatan} juta</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${cluster.ketahanan === "Sangat Tinggi" ? "bg-green-600/10 text-green-500 border-green-600/20" :
+                  <td className="px-4 py-3 text-sm font-medium text-white">{cluster.cluster}</td>
+                  <td className="px-4 py-3 text-sm text-white/60">{cluster.jumlah} petani</td>
+                  <td className="px-4 py-3 text-sm text-white/60">{cluster.implikasi}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                         cluster.ketahanan === "Tinggi" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
                           cluster.ketahanan === "Sedang" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
                             cluster.ketahanan === "Rendah" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" :
