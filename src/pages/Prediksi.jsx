@@ -113,18 +113,19 @@ const otherCommodityData = [
 // Model metrics
 const modelMetrics = {
   weather: {
-    suhu: { model: "LSTM + ARIMA Ensemble", rmse: 0.8, mae: 0.6, mape: 2.1 },
-    kelembaban: { model: "Prophet + XGBoost", rmse: 3.2, mae: 2.5, mape: 3.8 }
+    suhu: { model: "ARIMAX", mse: 1.62e+00, mae: 0.96, mape: 3.44 },
+    kelembaban: {
+      model: "LSTM", mse: 88.7, mae: 7.17, mape: 8.89 }
   },
   commodities: {
-    jagung: { model: "LSTM + ARIMA Ensemble", rmse: 245, mae: 198, mape: 3.5 },
-    cabai: { model: "XGBoost Regressor", rmse: 4820, mae: 3890, mape: 8.2 },
-    kedelai: { model: "Random Forest", rmse: 380, mae: 310, mape: 2.8 },
-    berasPremium: { model: "LSTM Neural Network", rmse: 487, mae: 356, mape: 3.2 },
-    berasMedium: { model: "Ridge Regression", rmse: 412, mae: 298, mape: 2.9 },
-    minyakPremium: { model: "Gradient Boosting", rmse: 520, mae: 420, mape: 2.7 },
-    minyakita: { model: "Linear Regression", rmse: 180, mae: 140, mape: 1.2 },
-    telur: { model: "ARIMA", rmse: 890, mae: 720, mape: 2.9 }
+    jagung: { model: "LSTM", mse: 9, mae: 3, mape: 0.04 },
+    cabai: { model: "LSTM", mse: 3.80e+06, mae: 1532, mape: 6.31 },
+    kedelai: { model: "LSTM", mse: 5.18e+05, mae: 259, mape: 1.85 },
+    berasPremium: { model: "ExtraTrees Regressor", mse: 1835, mae: 23.15, mape: 0.16 },
+    berasMedium: { model: "LSTM", mse: 17.2, mae: 4.01, mape: 0.03 },
+    minyakPremium: { model: "ARIMAX", mse: 2053, mae: 195.03, mape: 0.975 },
+    minyakita: { model: "ARIMAX", mse: 593.9, mae: 39.4, mape: 0.251 },
+    telur: { model: "ExtraTrees Regressor", mse: 5.94e+05, mae: 551.49, mape: 1.94}
   }
 }
 

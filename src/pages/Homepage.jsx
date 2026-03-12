@@ -2,9 +2,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaChartLine, FaBell, FaTint, FaMicroscope, FaSeedling, FaDatabase, FaUsers, FaHandHoldingWater, FaRobot, FaChartBar, FaBrain, FaHandsHelping } from "react-icons/fa";
+import { FaChartLine, FaBell, FaTint, FaMicroscope, FaSeedling, FaDatabase, FaUsers, FaHandHoldingWater, FaRobot, FaChartBar, FaBrain, FaHandsHelping, FaLightbulb, FaMagic } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import WeatherCard from "../components/WeatherCard";
+import { FaBullseye, FaRegLightbulb } from "react-icons/fa6";
 
 const FeatureIcon = ({ icon: Icon, label, path, description }) => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Homepage = () => {
       description: "Prediksi produksi, pendapatan, dan ketahanan pangan.",
     },
     {
-      icon: FaBrain,
+      icon: FaLightbulb,
       label: "Rekomendasi",
       path: "/Rekomendasi",
       description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network.",
@@ -68,7 +69,7 @@ const Homepage = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black relative">
       <Navbar />
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
           <h1 className="text-5xl md:text-6xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">SAGE-Desa</h1>
           <p className="text-xl text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>

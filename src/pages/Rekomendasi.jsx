@@ -8,7 +8,10 @@ import {
   FaChartLine, FaPepperHot, FaExclamationTriangle,
   FaCheckCircle, FaArrowRight, FaSync
 } from "react-icons/fa"
-import { GiCorn, GiPeas } from "react-icons/gi"
+import { GiCorn } from "react-icons/gi"
+import {
+  Bean
+} from "lucide-react" 
 import Navbar from "../components/Navbar"
 import { FaMagnifyingGlass } from "react-icons/fa6"
 
@@ -27,7 +30,7 @@ const COMMODITY_LABELS = {
 const COMMODITY_ICONS = {
   jagung:  <GiCorn className="inline mr-1" />,
   cabai:   <FaPepperHot className="inline mr-1" />,
-  kedelai: <GiPeas className="inline mr-1" />,
+  kedelai: <Bean size={14}  className="inline mr-1" />,
 }
 
 const tooltipStyle = {
@@ -225,9 +228,9 @@ export default function RekomendasiPage() {
 
   const row1 = [
     { name: "luas_lahan", label: "Luas Lahan", options: [
-      { value: "sangat_kecil", label: "Sangat Kecil (<0,1 ha)" },
-      { value: "kecil",        label: "Kecil (0,1 - 0,5 ha)" },
-      { value: "sedang",       label: "Sedang (0,5 - 1 ha)" },
+      { value: "sangat_kecil", label: "Sangat Kecil (<0.1 ha)" },
+      { value: "kecil",        label: "Kecil (0.1 - 0.5 ha)" },
+      { value: "sedang",       label: "Sedang (0.5 - 1 ha)" },
       { value: "besar",        label: "Besar (>1 ha)" },
     ]},
     { name: "stok_pupuk", label: "Stok Pupuk", options: [

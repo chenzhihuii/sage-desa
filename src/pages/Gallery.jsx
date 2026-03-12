@@ -42,64 +42,64 @@ const Gallery = () => {
     {
       id: '5',
       urls: {
-        small: '/assets/v5.jpg',
-        regular: '/assets/v5.jpg'
+        small: '/assets/v1.jpg',
+        regular: '/assets/v1.jpg'
       },
       alt_description: 'Image 5 description'
     },
     {
       id: '6',
       urls: {
-        small: '/assets/v6.jpg',
-        regular: '/assets/v6.jpg'
+        small: '/assets/v2.jpg',
+        regular: '/assets/v2.jpg'
       },
       alt_description: 'Image 6 description'
     },
     {
       id: '7',
       urls: {
-        small: '/assets/v7.jpg',
-        regular: '/assets/v7.jpg'
+        small: '/assets/v3.png',
+        regular: '/assets/v3.png'
       },
       alt_description: 'Image 7 description'
     },
     {
       id: '8',
       urls: {
-        small: '/assets/v8.jpg',
-        regular: '/assets/v8.jpg'
+        small: '/assets/v4.jpeg',
+        regular: '/assets/v4.jpeg'
       },
       alt_description: 'Image 8 description'
     },
     {
       id: '9',
       urls: {
-        small: '/assets/v9.jpg',
-        regular: '/assets/v9.jpg'
+        small: '/assets/h4.jpeg',
+        regular: '/assets/h4.jpeg'
       },
       alt_description: 'Image 9 description'
     },
     {
       id: '10',
       urls: {
-        small: '/assets/h10.jpg',
-        regular: '/assets/h10.jpg'
+        small: '/assets/h7.jpeg',
+        regular: '/assets/h7.jpeg'
       },
       alt_description: 'Image 10 description'
     },
     {
       id: '11',
       urls: {
-        small: '/assets/h11.jpg',
-        regular: '/assets/h11.jpg'
+        small: '/assets/h10.jpeg',
+        regular: '/assets/h10.jpg'
       },
       alt_description: 'Image 11 description'
     },
     {
       id: '12',
       urls: {
-        small: '/assets/h12.jpg',
-        regular: '/assets/h12.jpg'
+        small: '/assets/h9.jpeg',
+        regular: '/assets/h9.jpeg'
       },
       alt_description: 'Image 12 description'
     }
@@ -116,13 +116,13 @@ const Gallery = () => {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
-            Farm Gallery
+          <h1 className="text-4xl font-bold mb-2 pb-1 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
+            Dokumentsi Lapangan 
           </h1>
-          <p className="text-xl text-white/60">
-            Showcase of sustainable farming practices
+          <p className="text-white/50 text-sm md:text-base">
+            Dokumentasi kegiatan survei serta kondisi lahan pertanian di lokasi penelitian
           </p>
         </motion.div>
 

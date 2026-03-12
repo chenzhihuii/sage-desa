@@ -12,7 +12,7 @@ import {
 } from "recharts"
 
 // Warna Chart
-const COLORS = ["#22c55e", "#f97316", "#ef4444"]
+const COLORS = ["#22c55e", "#f97316", "#ef4444", "#707ff1ff"]
 
 // Style tooltip custom
 const tooltipStyle = {
