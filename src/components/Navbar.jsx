@@ -1,7 +1,7 @@
 // Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaArrowRight, FaBars, FaTimes, FaChevronDown, FaChartBar, FaChartLine, FaBrain, FaDatabase, FaHandsHelping } from "react-icons/fa";
+import { FaArrowRight, FaBars, FaTimes, FaChevronDown, FaChartBar, FaChartLine, FaLightbulb, FaDatabase, FaHandsHelping } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -21,7 +21,7 @@ const Navbar = () => {
   const featureLinks = [
     { title: "Eksplorasi", path: "/Eksplorasi", icon: FaChartBar, description: "Visualisasi karakteristik petani dan harga komoditas" },
     { title: "Prediksi", path: "/Prediksi", icon: FaChartLine, description: "Prediksi produksi, pendapatan, dan ketahanan pangan" },
-    { title: "Rekomendasi", path: "/Rekomendasi", icon: FaBrain, description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network" },
+    { title: "Rekomendasi", path: "/Rekomendasi", icon: FaLightbulb, description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network" },
     { title: "Data Komoditas", path: "/cropdata", icon: FaDatabase, description: "Informasi dan data tanaman pertanian" },
     { title: "Konsultasi", path: "/Expert", icon: FaHandsHelping, description: "Konsultasi dengan penyuluh" },
   ];
