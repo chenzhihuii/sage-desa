@@ -75,7 +75,7 @@ const Chatbot = () => {
       <Navbar />
 
       <div className="container mx-auto px-4 h-[calc(100%-5rem)] pt-20 flex flex-col">
-        <h1 className="text-center text-3xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">AI Asisten Agrikultur</h1>
+        <h1 className="text-center text-3xl md:text-4xl font-bold mt-6 mb-6 pb-2 leading-tight bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">AI Asisten Agrikultur</h1>
 
         <div className="flex-1 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 space-y-4">

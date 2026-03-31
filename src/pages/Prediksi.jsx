@@ -517,11 +517,11 @@ export default function PrediksiPage() {
         <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10">
           <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
             <span className="flex items-center gap-1.5">
-              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 30 Jan 2026, 22:00 WIB
+              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 11 Mar 2026, 22:00 WIB
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Nov 2025 - Apr 2026
+              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Nov 2025 - Mar 2026
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">

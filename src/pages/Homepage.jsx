@@ -1,11 +1,8 @@
-// Homepage.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaChartLine, FaBell, FaTint, FaMicroscope, FaSeedling, FaDatabase, FaUsers, FaHandHoldingWater, FaRobot, FaChartBar, FaBrain, FaHandsHelping, FaLightbulb, FaMagic } from "react-icons/fa";
-import Navbar from "../components/Navbar";
+import { FaChartLine, FaDatabase, FaHandsHelping, FaRobot, FaChartBar, FaLightbulb } from "react-icons/fa";
 import WeatherCard from "../components/WeatherCard";
-import { FaBullseye, FaRegLightbulb } from "react-icons/fa6";
 
 const FeatureIcon = ({ icon: Icon, label, path, description }) => {
   const navigate = useNavigate();
@@ -67,8 +64,6 @@ const Homepage = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black relative">
-      <Navbar />
-
       <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
           <h1 className="text-5xl md:text-6xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">SAGE-Desa</h1>
@@ -79,7 +74,7 @@ const Homepage = () => {
           <WeatherCard />
         </div>
 
-        <motion.div variants={container} initial="hidden" animate="show" className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto pb-24">
+        <motion.div variants={container} initial="hidden" animate="show" className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto pb-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
