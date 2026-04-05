@@ -8,7 +8,7 @@ import { Users, Map, TrendingUp, ShieldCheck } from "lucide-react"
 
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, AreaChart, Area, Legend
+  Tooltip, ResponsiveContainer, AreaChart, Area, Legend, Label
 } from "recharts"
 
 // Warna Chart
@@ -208,12 +208,16 @@ export default function EksplorasiPage() {
       {/* Charts Area 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <motion.div variants={itemVariants} className={cardStyle}>
-          <h3 className="text-base font-semibold mb-4 text-purple-400">Distribusi Pendapatan (Prediksi AI)</h3>
+          <h3 className="text-base font-semibold mb-4 text-purple-400">Distribusi Pendapatan Petani</h3>
           <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={data.pendapatanChart}>
+            <AreaChart data={data.pendapatanChart} margin={{ top: 10, right: 20, left: 20, bottom: 40 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-              <XAxis dataKey="range" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} interval={0} />
-              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
+              <XAxis dataKey="range" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} interval={0}>
+                <Label value="Rentang Pendapatan" offset={-10} position="insideBottom" fill="rgba(255,255,255,0.5)" fontSize={12} />
+              </XAxis>
+              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
+                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill="rgba(255,255,255,0.5)" fontSize={12} dy={50} />
+              </YAxis>
               <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
@@ -229,10 +233,14 @@ export default function EksplorasiPage() {
         <motion.div variants={itemVariants} className={cardStyle}>
           <h3 className="text-base font-semibold mb-4 text-orange-400">Sebaran Ukuran Lahan</h3>
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={data.lahanChart}>
+            <BarChart data={data.lahanChart} margin={{ top: 10, right: 20, left: 20, bottom: 40 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-              <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
-              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
+              <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
+                <Label value="Ukuran Lahan (Ha)" offset={-10} position="insideBottom" fill="rgba(255,255,255,0.5)" fontSize={12} />
+              </XAxis>
+              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
+                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill="rgba(255,255,255,0.5)" fontSize={12} dy={50} />
+              </YAxis>
               <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
               <Bar dataKey="value" fill="#f97316" radius={[4, 4, 0, 0]} />
             </BarChart>

@@ -457,6 +457,17 @@ export default function PrediksiPage() {
   const chartData = getChartData()
   const chartConfig = getChartConfig()
 
+  const yDomain = (() => {
+    if (!chartData || chartData.length === 0 || activeCategory === 'weather') return ['auto', 'auto']
+    const values = chartData.map(d => d[chartConfig.predicted]).filter(v => v != null && !isNaN(v))
+    if (values.length === 0) return ['auto', 'auto']
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    const range = max - min
+    const padding = range > 0 ? range * 0.5 : max * 0.005
+    return [Math.floor(min - padding), Math.ceil(max + padding)]
+  })()
+
   return (
     <motion.div
       initial="hidden"
@@ -839,7 +850,21 @@ export default function PrediksiPage() {
               <YAxis
                 stroke="rgba(255,255,255,0.5)"
                 tick={{ fill: 'rgba(255,255,255,0.5)' }}
-                tickFormatter={(value) => activeCategory === 'commodity' ? `${(value / 1000).toFixed(0)}rb` : value}
+                domain={yDomain}
+                tickFormatter={(value) => {
+                  if (activeCategory === 'weather') return value
+                  if (value >= 1_000_000) {
+                    const rangeJt = (yDomain[1] - yDomain[0]) / 1_000_000
+                    const dec = rangeJt >= 1 ? 0 : rangeJt >= 0.1 ? 1 : 2
+                    return `${(value / 1_000_000).toFixed(dec)}jt`
+                  }
+                  if (value >= 1000) {
+                    const rangeRb = (yDomain[1] - yDomain[0]) / 1000
+                    const dec = rangeRb >= 10 ? 0 : rangeRb >= 1 ? 1 : rangeRb >= 0.1 ? 2 : 3
+                    return `${(value / 1000).toFixed(dec)}rb`
+                  }
+                  return value
+                }}
               />
               <Tooltip
                 contentStyle={tooltipStyle}
