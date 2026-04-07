@@ -2,11 +2,11 @@ import { useState } from "react"
 import {
   LineChart, Line,
   XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend
+  Tooltip, ResponsiveContainer,
 } from "recharts"
 import {
   FaChartLine, FaPepperHot, FaExclamationTriangle,
-  FaCheckCircle, FaSync
+  FaCheckCircle, FaSync, FaChevronDown
 } from "react-icons/fa"
 import { GiCorn } from "react-icons/gi"
 import { Bean } from "lucide-react"
@@ -14,36 +14,54 @@ import Navbar from "../components/Navbar"
 import { FaMagnifyingGlass } from "react-icons/fa6"
 
 const COMMODITY_COLORS = {
-  jagung:  "#f59e0b",
-  cabai:   "#ef4444",
+  jagung: "#f59e0b",
+  cabai: "#ef4444",
   kedelai: "#22c55e",
 }
 
 const COMMODITY_LABELS = {
-  jagung:  "Jagung",
-  cabai:   "Cabai",
+  jagung: "Jagung",
+  cabai: "Cabai",
   kedelai: "Kedelai",
 }
 
 const COMMODITY_ICONS = {
-  jagung:  <GiCorn className="inline mr-1" />,
-  cabai:   <FaPepperHot className="inline mr-1" />,
+  jagung: <GiCorn className="inline mr-1" />,
+  cabai: <FaPepperHot className="inline mr-1" />,
   kedelai: <Bean size={14} className="inline mr-1" />,
 }
 
-const HARVEST_MONTHS = {
-  cabai:   3,
-  jagung:  4,
-  kedelai: 4,
+const TAG_ICONS = {
+  pendapatan: "💰",
+  strategi_jual: "📦",
+  pengolahan: "🛠️",
+  tumpangsari: "🌱",
+  risiko: "⚠️",
+}
+
+const TAG_LABELS = {
+  pendapatan: "Pendapatan",
+  strategi_jual: "Strategi Jual",
+  pengolahan: "Pengolahan",
+  tumpangsari: "Tumpangsari",
+  risiko: "Risiko",
+}
+
+const TAG_COLORS = {
+  pendapatan: { bg: "rgba(16,185,129,0.1)", border: "rgba(16,185,129,0.3)", text: "#10b981" },
+  strategi_jual: { bg: "rgba(59,130,246,0.1)", border: "rgba(59,130,246,0.3)", text: "#3b82f6" },
+  pengolahan: { bg: "rgba(168,85,247,0.1)", border: "rgba(168,85,247,0.3)", text: "#a855f7" },
+  tumpangsari: { bg: "rgba(34,197,94,0.1)", border: "rgba(34,197,94,0.3)", text: "#22c55e" },
+  risiko: { bg: "rgba(245,158,11,0.1)", border: "rgba(245,158,11,0.3)", text: "#f59e0b" },
 }
 
 const tooltipStyle = {
   backgroundColor: "rgba(10, 15, 30, 0.97)",
-  borderColor:     "rgba(255,255,255,0.08)",
-  color:           "#f3f4f6",
-  borderRadius:    "0.75rem",
-  padding:         "12px",
-  boxShadow:       "0 8px 32px rgba(0,0,0,0.4)",
+  borderColor: "rgba(255,255,255,0.08)",
+  color: "#f3f4f6",
+  borderRadius: "0.75rem",
+  padding: "12px",
+  boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
 }
 
 const formatCurrency = (v) =>
@@ -53,255 +71,171 @@ const formatCurrency = (v) =>
 
 const cardStyle = "bg-white/5 border border-white/10 shadow-lg rounded-2xl p-6"
 
-function getMonthLabel(offsetMonths) {
-  const d = new Date()
-  d.setMonth(d.getMonth() + offsetMonths)
-  return d.toLocaleDateString("id-ID", { month: "short", year: "numeric" })
+function CommodityDropdown({ models, selected, onSelect }) {
+  if (models.length <= 1) return null
+  return (
+    <div className="relative shrink-0">
+      <select
+        value={selected}
+        onChange={(e) => onSelect(e.target.value)}
+        className="appearance-none bg-white/10 border border-white/20 text-white text-sm
+          rounded-lg px-3 py-1.5 pr-7 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30"
+        style={{ colorScheme: "dark" }}
+      >
+        {models.map(m => (
+          <option key={m.commodity} value={m.commodity} className="bg-gray-900">
+            {COMMODITY_LABELS[m.commodity]}
+          </option>
+        ))}
+      </select>
+      <FaChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 text-xs pointer-events-none" />
+    </div>
+  )
 }
 
-// ✅ Sort berdasarkan month_offset biar X axis tidak acak
-function buildPostHarvestData(models, key) {
-  const labelMap = new Map()
+function PriceForecastChart({ models }) {
+  const isTumpangsari = models.length > 1
+  const [selected, setSelected] = useState(models[0]?.commodity || "")
 
-  models.forEach(m => {
-    ;(m.harvest_projection || []).forEach(p => {
-      if (!labelMap.has(p.label)) {
-        labelMap.set(p.label, { label: p.label, month_offset: p.month_offset })
-      }
-    })
-  })
-
-  const allLabels = Array.from(labelMap.values())
-    .sort((a, b) => a.month_offset - b.month_offset)
-    .map(x => x.label)
-
-  return allLabels.map(label => {
-    const point = { label }
-    models.forEach(m => {
-      const found = (m.harvest_projection || []).find(p => p.label === label)
-      point[m.commodity]           = found ? found[key] : null
-      point[`${m.commodity}_meta`] = found || null
-    })
-    return point
-  })
-}
-
-function HarvestChart({ models }) {
   if (!models || models.length === 0) return null
-  const hasProjection = models.some(m => (m.harvest_projection || []).length > 0)
-  if (!hasProjection) return null
 
-  const priceData  = buildPostHarvestData(models, "projected_price")
-  const incomeData = buildPostHarvestData(models, "projected_income")
+  const activeModel = models.find(m => m.commodity === selected) || models[0]
+  const isCabai = activeModel.commodity === "cabai"
+  const color = COMMODITY_COLORS[activeModel.commodity] || "#888"
+  const forecast = activeModel.price_forecast || {}
 
-  // Custom dot: titik panen lebih besar + ring glow
-  const CustomDot = (commodity) => (props) => {
-    const { cx, cy, payload } = props
-    const meta = payload[`${commodity}_meta`]
-    if (!meta || payload[commodity] == null) return null
-    const isHarvest = meta.is_harvest
+  const chartData = isCabai
+    ? (forecast.daily_forecast || []).map(p => ({
+      label: p.label,
+      value: p.projected_price,
+      pct_change: p.price_change_pct,
+    }))
+    : (forecast.monthly_forecast || []).map(p => ({
+      label: p.label,
+      value: p.projected_price,
+      pct_change: p.price_change_pct,
+    }))
+
+  if (chartData.length === 0) return null
+
+  const trend = forecast.trend || "stabil"
+  const riskLevel = forecast.risk_level || "rendah"
+  const trendColor = trend === "naik" ? "#22c55e" : trend === "turun" ? "#ef4444" : "#94a3b8"
+  const trendIcon = trend === "naik" ? "📈" : trend === "turun" ? "📉" : "➡️"
+  const riskColor = riskLevel === "tinggi" ? "#ef4444" : riskLevel === "sedang" ? "#f59e0b" : "#22c55e"
+
+  const CustomDot = (props) => {
+    const { cx, cy } = props
+    if (cx == null || cy == null) return null
     return (
-      <g key={`dot-${commodity}-${payload.label}`}>
-        {isHarvest && (
-          <circle cx={cx} cy={cy} r={18}
-            fill={COMMODITY_COLORS[commodity] + "20"}
-            stroke={COMMODITY_COLORS[commodity] + "60"}
-            strokeWidth={1}
-          />
-        )}
-        <circle
-          cx={cx} cy={cy}
-          r={isHarvest ? 9 : 5}
-          fill={COMMODITY_COLORS[commodity]}
-          stroke={isHarvest ? "#fff" : COMMODITY_COLORS[commodity] + "80"}
-          strokeWidth={isHarvest ? 2.5 : 1}
-        />
+      <g key={`pdot-${cx}-${cy}`}>
+        <circle cx={cx} cy={cy} r={4} fill={color} stroke={color + "80"} strokeWidth={1} />
       </g>
     )
   }
 
-  // Label nilai di atas tiap titik
-  const CustomLabel = (commodity, formatter) => (props) => {
+  const CustomLabel = (props) => {
     const { x, y, value } = props
     if (value == null) return null
+    const fmt = value >= 1_000_000
+      ? `${(value / 1_000_000).toFixed(1)}jt`
+      : value >= 1_000
+        ? `${(value / 1_000).toFixed(0)}rb`
+        : value
     return (
-      <text
-        x={x} y={y - 14}
-        textAnchor="middle"
-        fill={COMMODITY_COLORS[commodity]}
-        fontSize={10}
-        fontWeight={600}
-      >
-        {formatter(value)}
-      </text>
+      <text x={x} y={y - 10} textAnchor="middle"
+        fill={color} fontSize={10} fontWeight={600}>{fmt}</text>
     )
   }
 
-  // Tooltip informatif
   const CustomTooltip = ({ active, payload, label }) => {
-    if (!active || !payload || !payload.length) return null
-    const validPayload = payload.filter(p => p.value != null)
-    if (!validPayload.length) return null
-
+    if (!active || !payload?.length) return null
+    const pct = payload[0]?.payload?.pct_change
     return (
-      <div style={tooltipStyle} className="min-w-[180px]">
-        <p className="text-white/50 text-xs mb-3 font-medium border-b border-white/10 pb-2">
-          📅 {label}
+      <div style={tooltipStyle} className="min-w-[150px]">
+        <p className="text-white/50 text-xs mb-2 pb-2 border-b border-white/10">
+          {isCabai ? `🌶️ ${label}` : `📅 ${label}`}
         </p>
-        {validPayload.map((p) => {
-          const commodity = p.dataKey
-          const isHarvest = priceData.find(d => d.label === label)?.[`${commodity}_meta`]?.is_harvest
-          const pctChange = priceData.find(d => d.label === label)?.[`${commodity}_meta`]?.price_change_pct
-
-          return (
-            <div key={commodity} className="mb-2 last:mb-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: COMMODITY_COLORS[commodity] }} />
-                <span style={{ color: COMMODITY_COLORS[commodity] }} className="font-semibold text-sm">
-                  {COMMODITY_LABELS[commodity]}
-                </span>
-                {isHarvest && (
-                  <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded-full text-white/60 ml-auto">
-                    🌾 Panen
-                  </span>
-                )}
-              </div>
-              <p className="text-white text-sm pl-4">
-                {typeof p.value === "number" && p.value > 100_000
-                  ? formatCurrency(p.value)
-                  : `Rp ${p.value?.toLocaleString("id-ID")}/kg`}
-                {pctChange != null && pctChange !== 0 && (
-                  <span className={`ml-2 text-xs ${pctChange > 0 ? "text-green-400" : "text-red-400"}`}>
-                    {pctChange > 0 ? "▲" : "▼"} {Math.abs(pctChange)}%
-                  </span>
-                )}
-              </p>
-            </div>
-          )
-        })}
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+          <span style={{ color }} className="font-semibold text-sm">
+            {COMMODITY_LABELS[activeModel.commodity]}
+          </span>
+        </div>
+        <p className="text-white text-sm pl-4">
+          Rp {payload[0].value.toLocaleString("id-ID")}/kg
+          {pct != null && pct !== 0 && (
+            <span className={`ml-2 text-xs ${pct > 0 ? "text-green-400" : "text-red-400"}`}>
+              {pct > 0 ? "▲" : "▼"} {Math.abs(pct)}%
+            </span>
+          )}
+        </p>
       </div>
     )
   }
-
-  const sharedProps = (commodity, formatter) => ({
-    type:         "monotone",
-    dataKey:      commodity,
-    stroke:       COMMODITY_COLORS[commodity] || "#888",
-    strokeWidth:  2.5,
-    dot:          CustomDot(commodity),
-    activeDot:    { r: 10, strokeWidth: 2, stroke: "#fff" },
-    connectNulls: false,
-    label:        CustomLabel(commodity, formatter),
-  })
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      {/* Grafik Proyeksi Harga */}
-      <div className={cardStyle}>
-        <div className="flex items-center gap-2 mb-1">
-          <FaChartLine className="text-amber-400" />
-          <h4 className="text-white font-semibold">Proyeksi Harga Jual</h4>
+    <div className={cardStyle}>
+      <div className="flex items-start justify-between gap-4 mb-1">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <FaChartLine style={{ color }} />
+            <h4 className="text-white font-semibold">
+              {isCabai
+                ? "Prediksi Harga Cabai (7 Hari)"
+                : `Prediksi Harga ${COMMODITY_LABELS[activeModel.commodity]} (4 Bulan)`}
+            </h4>
+          </div>
+          <p className="text-white/40 text-xs">
+            {isCabai
+              ? "Prediksi fluktuasi harga cabai 7 hari ke depan berdasarkan data historis"
+              : "Prediksi tren harga pasar 4 bulan ke depan berdasarkan data historis"}
+          </p>
         </div>
-        <p className="text-white/40 text-xs mb-1">
-          Perkiraan harga per kg saat panen dan 2 bulan setelahnya
-        </p>
-        <div className="flex items-center gap-4 mb-5">
-          <span className="flex items-center gap-1.5 text-white/30 text-xs">
-            <span className="inline-block w-4 h-4 rounded-full border-2 border-white/60 bg-white/10" />
-            Bulan panen
-          </span>
-        </div>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={priceData} margin={{ top: 28, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis
-              dataKey="label"
-              stroke="rgba(255,255,255,0.2)"
-              tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }}
-              tickLine={false}
-            />
-            <YAxis
-              stroke="rgba(255,255,255,0.2)"
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}rb` : v}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              formatter={(val) => (
-                <span style={{ color: COMMODITY_COLORS[val], fontSize: 12 }}>
-                  {COMMODITY_LABELS[val] || val}
-                </span>
-              )}
-            />
-            {models.map((m) => (
-              <Line
-                key={m.commodity}
-                {...sharedProps(m.commodity, (v) => `${(v / 1000).toFixed(0)}rb`)}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
+        {isTumpangsari && (
+          <CommodityDropdown models={models} selected={selected} onSelect={setSelected} />
+        )}
       </div>
 
-      {/* Grafik Proyeksi Pendapatan */}
-      <div className={cardStyle}>
-        <div className="flex items-center gap-2 mb-1">
-          <FaChartLine className="text-emerald-400" />
-          <h4 className="text-white font-semibold">Proyeksi Pendapatan Jual</h4>
-        </div>
-        <p className="text-white/40 text-xs mb-1">
-          Perkiraan pendapatan jika dijual saat panen atau ditahan 1–2 bulan
-        </p>
-        <div className="flex items-center gap-4 mb-5">
-          <span className="flex items-center gap-1.5 text-white/30 text-xs">
-            <span className="inline-block w-4 h-4 rounded-full border-2 border-white/60 bg-white/10" />
-            Bulan panen
-          </span>
-        </div>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={incomeData} margin={{ top: 28, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis
-              dataKey="label"
-              stroke="rgba(255,255,255,0.2)"
-              tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }}
-              tickLine={false}
-            />
-            <YAxis
-              stroke="rgba(255,255,255,0.2)"
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(v) =>
-                v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}jt`
+      <div className="flex items-center gap-3 mt-3 mb-5">
+        <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+          style={{ backgroundColor: trendColor + "20", color: trendColor }}>
+          {trendIcon} Tren {trend}
+        </span>
+        <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+          style={{ backgroundColor: riskColor + "20", color: riskColor }}>
+          Risiko {riskLevel}
+        </span>
+        <span className="text-white/30 text-xs ml-auto">
+          Harga dasar: Rp {(forecast.base_price || 0).toLocaleString("id-ID")}/kg
+        </span>
+      </div>
+
+      <ResponsiveContainer width="100%" height={240}>
+        <LineChart data={chartData} margin={{ top: 24, right: 20, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+          <XAxis dataKey="label" stroke="rgba(255,255,255,0.2)"
+            tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} tickLine={false} />
+          <YAxis stroke="rgba(255,255,255,0.2)"
+            tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+            tickLine={false} axisLine={false}
+            tickFormatter={(v) =>
+              v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}jt`
                 : v >= 1000 ? `${(v / 1000).toFixed(0)}rb` : v
-              }
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              formatter={(val) => (
-                <span style={{ color: COMMODITY_COLORS[val], fontSize: 12 }}>
-                  {COMMODITY_LABELS[val] || val}
-                </span>
-              )}
-            />
-            {models.map((m) => (
-              <Line
-                key={m.commodity}
-                {...sharedProps(m.commodity, (v) =>
-                  v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}jt`
-                  : `${(v / 1000).toFixed(0)}rb`
-                )}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
+            }
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={2.5}
+            dot={CustomDot}
+            activeDot={{ r: 8, strokeWidth: 2, stroke: "#fff" }}
+            label={<CustomLabel />}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   )
 }
@@ -332,16 +266,24 @@ function SelectField({ label, name, value, onChange, options }) {
   )
 }
 
+// ── Helper: normalisasi satu item reason ──────────────────────────────────────
+function normalizeReason(r) {
+  if (!r) return null
+  if (typeof r === "string") return { tag: "info", text: r }
+  if (typeof r === "object" && typeof r.text === "string") return r
+  return null
+}
+
 const defaultInputs = {
   luas_lahan: "", stok_pupuk: "", pekerjaan_sampingan: "",
   kekurangan_pangan: "", jumlah_tanggungan: "",
 }
 
 export default function RekomendasiPage() {
-  const [inputs,  setInputs]  = useState(defaultInputs)
-  const [result,  setResult]  = useState(null)
+  const [inputs, setInputs] = useState(defaultInputs)
+  const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState(null)
+  const [error, setError] = useState(null)
 
   const handleChange = (e) => setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   const allFilled = Object.values(inputs).every(v => v !== "")
@@ -351,23 +293,32 @@ export default function RekomendasiPage() {
     setLoading(true); setResult(null); setError(null)
     try {
       const response = await fetch("http://localhost:8000/api/recommendation", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(inputs),
+        body: JSON.stringify(inputs),
       })
       if (!response.ok) throw new Error(`Server error: ${response.status}`)
       const data = await response.json()
+
+      // Kumpulkan semua reasons dari berbagai field, normalisasi jadi { tag, text }
+      const allReasons = [
+        ...(Array.isArray(data.reasons) ? data.reasons : []),
+        ...(Array.isArray(data.reason) ? data.reason : []),
+        ...(Array.isArray(data.food_reasons) ? data.food_reasons : []),
+        ...(Array.isArray(data.sufficiency_reasons) ? data.sufficiency_reasons : []),
+      ]
+        .map(normalizeReason)
+        .filter(r => r !== null && !r.text.includes("Ada sisa sekitar"))
+
       setResult({
-        recommendation:     data.recommendation,
-        commodities:        data.commodities,
-        econReasons:        data.reason              || [],
-        foodReasons:        data.food_reasons        || [],
-        sufficiencyReasons: data.sufficiency_reasons || [],
-        conclusion:         data.conclusion,
-        marketContext:      data.market_context,
-        models:             data.models              || [],
-        targetIncome:       data.target_income       || 0,
-        tanggunganLabel:    data.tanggungan_label     || "",
+        recommendation: data.recommendation,
+        commodities: data.commodities,
+        reasons: allReasons,
+        conclusion: data.conclusion,
+        marketContext: data.market_context,
+        models: Array.isArray(data.models) ? data.models : [],
+        targetIncome: data.target_income || 0,
+        tanggunganLabel: data.tanggungan_label || "",
       })
     } catch (err) {
       setError(err.message)
@@ -377,47 +328,58 @@ export default function RekomendasiPage() {
   }
 
   const row1 = [
-    { name: "luas_lahan", label: "Luas Lahan", options: [
-      { value: "sangat_kecil", label: "Sangat Kecil (<0.1 ha)" },
-      { value: "kecil",        label: "Kecil (0.1 - 0.5 ha)" },
-      { value: "sedang",       label: "Sedang (0.5 - 1 ha)" },
-      { value: "besar",        label: "Besar (>1 ha)" },
-    ]},
-    { name: "stok_pupuk", label: "Stok Pupuk", options: [
-      { value: "tidak_ada", label: "Tidak Ada" },
-      { value: "sedikit",   label: "Sedikit" },
-      { value: "cukup",     label: "Cukup" },
-      { value: "banyak",    label: "Banyak" },
-    ]},
-    { name: "pekerjaan_sampingan", label: "Pekerjaan Sampingan", options: [
-      { value: "ada",       label: "Ada" },
-      { value: "tidak_ada", label: "Tidak Ada" },
-    ]},
+    {
+      name: "luas_lahan", label: "Luas Lahan", options: [
+        { value: "sangat_kecil", label: "Sangat Kecil (<0.1 ha)" },
+        { value: "kecil", label: "Kecil (0.1 - 0.5 ha)" },
+        { value: "sedang", label: "Sedang (0.5 - 1 ha)" },
+        { value: "besar", label: "Besar (>1 ha)" },
+      ]
+    },
+    {
+      name: "stok_pupuk", label: "Stok Pupuk", options: [
+        { value: "tidak_ada", label: "Tidak Ada" },
+        { value: "sedikit", label: "Sedikit" },
+        { value: "cukup", label: "Cukup" },
+        { value: "banyak", label: "Banyak" },
+      ]
+    },
+    {
+      name: "pekerjaan_sampingan", label: "Pekerjaan Sampingan", options: [
+        { value: "ada", label: "Ada" },
+        { value: "tidak_ada", label: "Tidak Ada" },
+      ]
+    },
   ]
 
   const row2 = [
-    { name: "kekurangan_pangan", label: "Frekuensi Kekurangan Pangan", options: [
-      { value: "tidak_pernah", label: "Tidak Pernah" },
-      { value: "jarang",       label: "Jarang" },
-      { value: "kadang",       label: "Kadang-kadang" },
-      { value: "sering",       label: "Sering" },
-    ]},
-    { name: "jumlah_tanggungan", label: "Jumlah Tanggungan Keluarga", options: [
-      { value: "satu_dua",   label: "1–2 orang" },
-      { value: "tiga_empat", label: "3–4 orang" },
-      { value: "lima_lebih", label: "5 orang atau lebih" },
-    ]},
+    {
+      name: "kekurangan_pangan", label: "Frekuensi Kekurangan Pangan", options: [
+        { value: "tidak_pernah", label: "Tidak Pernah" },
+        { value: "jarang", label: "Jarang" },
+        { value: "kadang", label: "Kadang-kadang" },
+        { value: "sering", label: "Sering" },
+      ]
+    },
+    {
+      name: "jumlah_tanggungan", label: "Jumlah Tanggungan Keluarga", options: [
+        { value: "satu_dua", label: "1–2 orang" },
+        { value: "tiga_empat", label: "3–4 orang" },
+        { value: "lima_lebih", label: "5 orang atau lebih" },
+      ]
+    },
   ]
 
-  const isTumpangsari   = result?.models?.length > 1
-  const totalIncome     = result?.models?.reduce((s, m) => s + (m.income?.value || 0), 0) || 0
-  const targetIncome    = result?.targetIncome || 0
+  const isTumpangsari = result?.models?.length > 1
+  const totalIncome = result?.models?.reduce((s, m) => s + (m.income?.value || 0), 0) || 0
 
-  const allReasons = [
-    ...(result?.sufficiencyReasons || []),
-    ...(result?.foodReasons        || []),
-    ...(result?.econReasons        || []),
-  ]
+  // Group reasons by tag untuk ditampilkan per seksi
+  const groupedReasons = result?.reasons?.reduce((acc, r) => {
+    const tag = r.tag || "info"
+    if (!acc[tag]) acc[tag] = []
+    acc[tag].push(r.text)
+    return acc
+  }, {}) || {}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-4 md:px-8 pb-12 text-white">
@@ -489,11 +451,11 @@ export default function RekomendasiPage() {
                     <span key={c}
                       className="px-3 py-1.5 rounded-lg text-sm font-medium border flex items-center gap-1"
                       style={{
-                        borderColor:     (COMMODITY_COLORS[c] || "#888") + "60",
-                        color:           COMMODITY_COLORS[c] || "#888",
+                        borderColor: (COMMODITY_COLORS[c] || "#888") + "60",
+                        color: COMMODITY_COLORS[c] || "#888",
                         backgroundColor: (COMMODITY_COLORS[c] || "#888") + "15",
                       }}>
-                      {COMMODITY_ICONS[c]}
+                      <span>{COMMODITY_ICONS[c]}</span>
                       {COMMODITY_LABELS[c] || c}
                     </span>
                   ))}
@@ -502,117 +464,118 @@ export default function RekomendasiPage() {
               <p className="text-white/60 text-sm leading-relaxed">{result.conclusion}</p>
             </div>
 
-            {/* Grafik Proyeksi Pasca Panen */}
-            <HarvestChart models={result.models} />
+            {/* 2 Card Estimasi */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {/* Card per Komoditas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {result.models.map((m) => (
-                <div key={m.commodity} className={cardStyle}>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span style={{ color: COMMODITY_COLORS[m.commodity] || "#888" }}>
-                      {COMMODITY_ICONS[m.commodity]}
-                    </span>
-                    <h4 className="text-white font-semibold text-base">
-                      {COMMODITY_LABELS[m.commodity] || m.commodity}
-                    </h4>
-                    <span className="ml-auto text-xs text-white/30">
-                      Panen ~{getMonthLabel(HARVEST_MONTHS[m.commodity] || 4)}
-                    </span>
+              {/* Card Estimasi Produksi */}
+              <div className={cardStyle}>
+                <p className="text-white/50 text-sm mb-4">Estimasi Produksi</p>
+                {!isTumpangsari ? (
+                  <div>
+                    <p className="text-5xl font-bold"
+                      style={{ color: COMMODITY_COLORS[result.models[0].commodity] }}>
+                      {result.models[0].production?.value ?? "-"}
+                    </p>
+                    <p className="text-white/40 text-sm mt-2">kwintal/ha</p>
                   </div>
-
-                  <div className="flex gap-3 mb-3">
-                    <div className="flex-1 bg-white/5 rounded-xl p-4">
-                      <p className="text-white/40 text-xs mb-1">Estimasi Produksi</p>
-                      <p className="text-white font-bold text-lg">
-                        {m.production?.value?.toLocaleString("id-ID")}
-                        <span className="text-white/40 text-xs font-normal ml-1">{m.production?.unit}</span>
-                      </p>
-                    </div>
-                    <div className="flex-1 bg-white/5 rounded-xl p-4">
-                      <p className="text-white/40 text-xs mb-1">Estimasi Pendapatan</p>
-                      <p className="text-white font-bold text-lg">
-                        {formatCurrency(m.income?.value || 0)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    {m.price_summary?.avg_price > 0 && (
-                      <div className="flex-1 bg-white/5 rounded-xl p-3">
-                        <p className="text-white/40 text-xs mb-0.5">Harga Pasar</p>
-                        <p className="text-white font-semibold text-sm">
-                          Rp {m.price_summary.avg_price?.toLocaleString("id-ID")}/kg
-                        </p>
-                        <p className="text-white/30 text-xs">rata-rata 7 hari</p>
+                ) : (
+                  <div className="space-y-4">
+                    {result.models.map(m => (
+                      <div key={m.commodity} className="flex items-center justify-between">
+                        <span className="flex items-center gap-2 text-sm font-medium"
+                          style={{ color: COMMODITY_COLORS[m.commodity] }}>
+                          <span>{COMMODITY_ICONS[m.commodity]}</span>
+                          {COMMODITY_LABELS[m.commodity]}
+                        </span>
+                        <div className="text-right">
+                          <span className="font-bold text-white text-xl">
+                            {m.production?.value ?? "-"}
+                          </span>
+                          <span className="text-white/40 text-xs ml-1">kwintal/ha</span>
+                        </div>
                       </div>
-                    )}
-                    {m.price_summary?.trend && (
-                      <div className="flex-1 bg-white/5 rounded-xl p-3">
-                        <p className="text-white/40 text-xs mb-0.5">Tren Harga</p>
-                        <p className={`font-semibold text-sm capitalize ${
-                          m.price_summary.trend === "naik"  ? "text-green-400" :
-                          m.price_summary.trend === "turun" ? "text-red-400"   : "text-yellow-400"
-                        }`}>
-                          {m.price_summary.trend === "naik"  ? "📈 Naik" :
-                           m.price_summary.trend === "turun" ? "📉 Turun" : "➡️ Stabil"}
-                          {m.price_summary.trend !== "stabil" && ` ${m.price_summary.pct_change}%`}
-                        </p>
-                      </div>
-                    )}
+                    ))}
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
+
+              {/* Card Estimasi Pendapatan */}
+              <div className={cardStyle}>
+                <p className="text-white/50 text-sm mb-4">Estimasi Pendapatan</p>
+                {!isTumpangsari ? (
+                  <div>
+                    <p className="text-4xl font-bold text-emerald-400">
+                      {formatCurrency(result.models[0].income?.value || 0)}
+                    </p>
+                    <p className="text-white/40 text-sm mt-2">per panen</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-4xl font-bold text-emerald-400">
+                      {formatCurrency(totalIncome)}
+                    </p>
+                    <div className="flex gap-4 flex-wrap pt-1">
+                      {result.models.map(m => (
+                        <span key={m.commodity} className="text-xs">
+                          <span style={{ color: COMMODITY_COLORS[m.commodity] }}
+                            className="flex items-center gap-1">
+                            <span>{COMMODITY_ICONS[m.commodity]}</span>
+                            {COMMODITY_LABELS[m.commodity]}
+                          </span>
+                          <span className="text-white/50 mt-0.5 block">
+                            {formatCurrency(m.income?.value || 0)}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
             </div>
 
-            {/* Akumulasi tumpangsari */}
-            {isTumpangsari && (
-              <div className={`${cardStyle} flex items-center justify-between gap-4`}>
-                <div>
-                  <p className="text-white/50 text-sm mb-1">Total Pendapatan Tumpangsari</p>
-                  <p className="text-3xl font-bold text-emerald-400">{formatCurrency(totalIncome)}</p>
-                </div>
-                <div className={`text-sm px-4 py-2 rounded-xl font-semibold ${
-                  totalIncome >= targetIncome
-                    ? "bg-green-500/15 text-green-400"
-                    : "bg-red-500/15 text-red-400"
-                }`}>
-                  {totalIncome >= targetIncome ? "✅ Mencukupi" : "⚠️ Belum Mencukupi"}
+            {/* Grafik Prediksi Harga */}
+            <PriceForecastChart models={result.models} />
+
+            {/* Analisis & Saran — dikelompokkan per tag */}
+            {result.reasons.length > 0 && (
+              <div className={cardStyle}>
+                <h4 className="text-white font-semibold mb-5">Analisis & Saran</h4>
+                <div className="space-y-6">
+                  {Object.entries(groupedReasons).map(([tag, texts]) => {
+                    const colors = TAG_COLORS[tag] || TAG_COLORS["pendapatan"]
+                    const icon = TAG_ICONS[tag] || "ℹ️"
+                    const label = TAG_LABELS[tag] || tag
+                    return (
+                      <div key={tag}>
+                        {/* Tag label */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
+                            style={{
+                              backgroundColor: colors.bg,
+                              border: `1px solid ${colors.border}`,
+                              color: colors.text,
+                            }}>
+                            {icon} {label}
+                          </span>
+                        </div>
+                        {/* Reason items */}
+                        <div className="space-y-2.5 pl-1">
+                          {texts.map((text, i) => (
+                            <div key={`${tag}-${i}`}
+                              className="flex items-start gap-3 text-sm text-white/70
+                                pb-2.5 border-b border-white/5 last:border-0 last:pb-0">
+                              <FaCheckCircle className="mt-0.5 shrink-0" style={{ color: colors.text }} />
+                              <span className="leading-relaxed">{text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
-
-            {/* Akumulasi mono */}
-            {!isTumpangsari && result.models[0] && (
-              <div className={`${cardStyle} flex items-center justify-between gap-4`}>
-                <div>
-                  <p className="text-white/50 text-sm mb-1">Estimasi Pendapatan Panen</p>
-                  <p className="text-3xl font-bold text-emerald-400">
-                    {formatCurrency(result.models[0].income?.value || 0)}
-                  </p>
-                </div>
-                <div className={`text-sm px-4 py-2 rounded-xl font-semibold ${
-                  result.models[0].meets_target
-                    ? "bg-green-500/15 text-green-400"
-                    : "bg-red-500/15 text-red-400"
-                }`}>
-                  {result.models[0].meets_target ? "✅ Mencukupi" : "⚠️ Belum Mencukupi"}
-                </div>
-              </div>
-            )}
-
-            {/* Saran */}
-            <div className={cardStyle}>
-              <h4 className="text-white font-semibold mb-4">Saran untuk Kamu</h4>
-              <div className="space-y-3">
-                {allReasons.map((r, i) => (
-                  <div key={i} className="flex items-start gap-3 text-sm text-white/70 pb-3 border-b border-white/5 last:border-0 last:pb-0">
-                    <FaCheckCircle className="text-green-400 mt-0.5 shrink-0" />
-                    <span>{r}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Catatan */}
             <div className="bg-white/3 border border-white/8 rounded-xl px-5 py-3 flex items-center gap-3">
