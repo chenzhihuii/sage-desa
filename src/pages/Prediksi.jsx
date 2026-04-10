@@ -174,33 +174,40 @@ const CommodityLabel = ({ name }) => {
 }
 
 // ── MapeBadge component ──────────────────────────────────────────────────────
-const MapeBadge = ({ mape }) => {
+const MapeBadge = ({ mae, mape }) => {
   const [show, setShow] = useState(false)
   const isGood = mape < 10
 
   return (
-    <div className="flex items-center gap-1.5 mb-1">
-      <span className={`text-sm font-medium ${isGood ? 'text-green-400' : 'text-amber-400'}`}>
-        MAPE: {mape}%
-      </span>
-      <div className="relative">
-        <button
-          onClick={(e) => { e.stopPropagation(); setShow(!show) }}
-          className="text-white/30 hover:text-white/70 transition-colors"
-        >
-          <MdInfo size={14} />
-        </button>
-        {show && (
-          <>
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setShow(false)}
-            />
-            <div className="absolute left-0 bottom-6 z-50 w-56 bg-gray-900 border border-white/10 rounded-xl p-3 shadow-xl text-xs text-white/80 leading-relaxed">
-              Nilai tergolong {isGood ? <span className="text-green-400">baik</span> : <span className="text-amber-400">cukup</span>} {isGood ? '(<10%).' : '(≥10%).'}
-            </div>
-          </>
-        )}
+    <div className="flex flex-col gap-0.5 mb-1">
+      {mae !== undefined && (
+        <span className="text-sm font-medium text-blue-300">
+          MAE: {mae} <span className="text-xs font-normal text-white/40">Rp/kg</span>
+        </span>
+      )}
+      <div className="flex items-center gap-1.5">
+        <span className={`text-sm font-medium ${isGood ? 'text-green-400' : 'text-amber-400'}`}>
+          MAPE: {mape}%
+        </span>
+        <div className="relative">
+          <button
+            onClick={(e) => { e.stopPropagation(); setShow(!show) }}
+            className="text-white/30 hover:text-white/70 transition-colors"
+          >
+            <MdInfo size={14} />
+          </button>
+          {show && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShow(false)}
+              />
+              <div className="absolute left-0 bottom-6 z-50 w-56 bg-gray-900 border border-white/10 rounded-xl p-3 shadow-xl text-xs text-white/80 leading-relaxed">
+                Nilai tergolong {isGood ? <span className="text-green-400">baik</span> : <span className="text-amber-400">cukup</span>} {isGood ? '(<10%).' : '(≥10%).'}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -508,7 +515,7 @@ export default function PrediksiPage() {
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Nov 2025 - Mar 2026
+              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Apr 2025 - Mar 2026
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
@@ -630,7 +637,7 @@ export default function PrediksiPage() {
                   )}
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><GiCorn /> Prediksi Harga Jagung</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.jagung.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.jagung.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.jagung.mae} mape={modelMetrics.commodities.jagung.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription('jagung')}</p>
                 </div>
 
@@ -644,7 +651,7 @@ export default function PrediksiPage() {
                   )}
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaPepperHot /> Prediksi Harga Cabai</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.cabai.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.cabai.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.cabai.mae} mape={modelMetrics.commodities.cabai.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription('cabe')}</p>
                 </div>
 
@@ -658,7 +665,7 @@ export default function PrediksiPage() {
                   )}
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><Bean size={16} /> Prediksi Harga Kedelai</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.kedelai.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.kedelai.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.kedelai.mae} mape={modelMetrics.commodities.kedelai.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription('kedelai')}</p>
                 </div>
               </>
@@ -672,7 +679,7 @@ export default function PrediksiPage() {
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBowlRice /> Beras Premium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasPremium.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.berasPremium.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.berasPremium.mae} mape={modelMetrics.commodities.berasPremium.mape} />
                 </div>
                 {/* Beras Medium */}
                 <div
@@ -681,7 +688,7 @@ export default function PrediksiPage() {
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBowlRice /> Beras Medium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasMedium.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.berasMedium.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.berasMedium.mae} mape={modelMetrics.commodities.berasMedium.mape} />
                 </div>
                 {/* Minyak Premium */}
                 <div
@@ -690,7 +697,7 @@ export default function PrediksiPage() {
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBottleWater /> Minyak Premium</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakPremium.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.minyakPremium.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.minyakPremium.mae} mape={modelMetrics.commodities.minyakPremium.mape} />
                 </div>
                 {/* MINYAKITA */}
                 <div
@@ -699,7 +706,7 @@ export default function PrediksiPage() {
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaBottleWater /> MINYAKITA</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakita.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.minyakita.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.minyakita.mae} mape={modelMetrics.commodities.minyakita.mape} />
                 </div>
                 {/* Telur */}
                 <div
@@ -708,7 +715,7 @@ export default function PrediksiPage() {
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2"><FaEgg /> Telur Ayam</h4>
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.telur.model}</p>
-                  <MapeBadge mape={modelMetrics.commodities.telur.mape} />
+                  <MapeBadge mae={modelMetrics.commodities.telur.mae} mape={modelMetrics.commodities.telur.mape} />
                 </div>
               </>
             )}
@@ -727,7 +734,7 @@ export default function PrediksiPage() {
                     ? selectedPrediction === 'suhu' ? `${currentWeather.suhu}°C` : `${currentWeather.kelembaban}%`
                     : activeCategory === 'commodity'
                       ? formatCurrency(realCurrentPrices[selectedPrediction === 'cabai' ? 'cabe' : selectedPrediction] || currentPrices[selectedPrediction])
-                      : formatCurrency(currentPrices[selectedPrediction])
+                      : formatCurrency(realCurrentPrices[selectedPrediction] || currentPrices[selectedPrediction])
                   }
                 </span>
                 {(activeCategory === 'commodity' || activeCategory === 'food') && <span className="text-white/40 text-xs">/kg</span>}
@@ -773,7 +780,7 @@ export default function PrediksiPage() {
           </div>
 
           <ResponsiveContainer width="100%" height={350}>
-            <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
               <defs>
                 <linearGradient id={`color${selectedPrediction}`} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={chartConfig.color} stopOpacity={0.3} />
@@ -784,26 +791,23 @@ export default function PrediksiPage() {
               <XAxis
                 dataKey={activeCategory === 'weather' ? "label" : "month"}
                 stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
                 tickFormatter={(value) => activeCategory === 'weather' ? value.split(' ')[1] : value}
               />
               <YAxis
                 stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: 'rgba(255,255,255,0.5)' }}
+                tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
                 domain={yDomain}
+                label={activeCategory !== 'weather' ? {
+                  value: 'Rp',
+                  angle: -90,
+                  position: 'insideLeft',
+                  offset: 10,
+                  style: { fill: 'rgba(255,255,255,0.4)', fontSize: 12 }
+                } : undefined}
                 tickFormatter={(value) => {
                   if (activeCategory === 'weather') return value
-                  if (value >= 1_000_000) {
-                    const rangeJt = (yDomain[1] - yDomain[0]) / 1_000_000
-                    const dec = rangeJt >= 1 ? 0 : rangeJt >= 0.1 ? 1 : 2
-                    return `${(value / 1_000_000).toFixed(dec)}jt`
-                  }
-                  if (value >= 1000) {
-                    const rangeRb = (yDomain[1] - yDomain[0]) / 1000
-                    const dec = rangeRb >= 10 ? 0 : rangeRb >= 1 ? 1 : rangeRb >= 0.1 ? 2 : 3
-                    return `${(value / 1000).toFixed(dec)}rb`
-                  }
-                  return value
+                  return value.toLocaleString("id-ID")
                 }}
               />
               <Tooltip

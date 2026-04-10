@@ -118,6 +118,12 @@ function PriceForecastChart({ models }) {
 
   if (chartData.length === 0) return null
 
+  const values = chartData.map(d => d.value).filter(Boolean)
+  const minVal = Math.min(...values)
+  const maxVal = Math.max(...values)
+  const pad = (maxVal - minVal) * 0.3 || maxVal * 0.02
+  const yDomain = [Math.floor(minVal - pad), Math.ceil(maxVal + pad)]
+
   const trend = forecast.trend || "stabil"
   const riskLevel = forecast.risk_level || "rendah"
   const trendColor = trend === "naik" ? "#22c55e" : trend === "turun" ? "#ef4444" : "#94a3b8"
@@ -137,11 +143,7 @@ function PriceForecastChart({ models }) {
   const CustomLabel = (props) => {
     const { x, y, value } = props
     if (value == null) return null
-    const fmt = value >= 1_000_000
-      ? `${(value / 1_000_000).toFixed(1)}jt`
-      : value >= 1_000
-        ? `${(value / 1_000).toFixed(0)}rb`
-        : value
+    const fmt = value.toLocaleString("id-ID")
     return (
       <text x={x} y={y - 10} textAnchor="middle"
         fill={color} fontSize={10} fontWeight={600}>{fmt}</text>
@@ -212,17 +214,16 @@ function PriceForecastChart({ models }) {
       </div>
 
       <ResponsiveContainer width="100%" height={240}>
-        <LineChart data={chartData} margin={{ top: 24, right: 20, left: 0, bottom: 5 }}>
+        <LineChart data={chartData} margin={{ top: 24, right: 20, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
           <XAxis dataKey="label" stroke="rgba(255,255,255,0.2)"
             tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} tickLine={false} />
           <YAxis stroke="rgba(255,255,255,0.2)"
             tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
             tickLine={false} axisLine={false}
-            tickFormatter={(v) =>
-              v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}jt`
-                : v >= 1000 ? `${(v / 1000).toFixed(0)}rb` : v
-            }
+            domain={yDomain}
+            label={{ value: 'Rp', angle: -90, position: 'insideLeft', offset: 10, style: { fill: 'rgba(255,255,255,0.4)', fontSize: 12 } }}
+            tickFormatter={(v) => v.toLocaleString("id-ID")}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line

@@ -16,7 +16,7 @@ const Contact = () => {
   const formRef = useRef();
   const [showPopup, setShowPopup] = useState(false);
 
-  const surveyLink = "https://forms.gle/oTvdHyMBuLY8TqX68";
+  const surveyLink = "https://forms.gle/zNheQxLeC1GEV1Uw7";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(surveyLink);
