@@ -84,75 +84,6 @@ function GroupedReasons({ reasons }) {
   );
 }
 
-// ─── Banner Kecukupan (Opsi C) ────────────────────────────────────────────────
-function SufficiencyBanner({ totalIncome, targetIncome, targetSiklus, durasi, selfConsumption, tanggunganLabel }) {
-  const scTotal = selfConsumption?.total || 0;
-  const bulanBertahan = targetIncome > 0 ? totalIncome / targetIncome : 0;
-  const cukupSiklus = totalIncome >= targetSiklus;
-  const pct = targetSiklus > 0 ? Math.min(Math.round((totalIncome / targetSiklus) * 100), 100) : 0;
-  const durasi_str = formatDurasi(bulanBertahan);
-
-  const borderColor = cukupSiklus ? "#1D9E75" : pct >= 70 ? "#BA7517" : "#E24B4A";
-  const textColor = cukupSiklus ? "#22c55e" : pct >= 70 ? "#f59e0b" : "#ef4444";
-  const barColor = borderColor;
-
-  const gap = targetSiklus - totalIncome;
-  const surplus = totalIncome - targetSiklus;
-
-  return (
-    <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden" style={{ borderLeft: `3px solid ${borderColor}`, borderRadius: "0 1rem 1rem 0" }}>
-      <div className="p-5 flex items-center gap-6 flex-wrap">
-        {/* Kiri: label + durasi */}
-        <div className="min-w-[140px]">
-          <p className="text-white/40 text-xs mb-1">Ketahanan pangan</p>
-          <p className="text-2xl font-bold leading-tight" style={{ color: textColor }}>
-            {cukupSiklus ? "Mencukupi" : durasi_str}
-          </p>
-          <p className="text-white/40 text-xs mt-1">{cukupSiklus ? `satu siklus tanam penuh (${durasi} bln)` : `dari ${durasi} bulan siklus tanam`}</p>
-        </div>
-
-        {/* Tengah: progress bar + keterangan */}
-        <div className="flex-1 min-w-[200px]">
-          <div className="flex justify-between text-xs text-white/30 mb-1.5">
-            <span>Pendapatan panen</span>
-            <span>{formatCurrency(totalIncome)}</span>
-          </div>
-          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-            <div className="h-2 rounded-full transition-all duration-700" style={{ width: `${pct}%`, backgroundColor: barColor }} />
-          </div>
-          <div className="flex justify-between text-xs text-white/30 mt-1.5">
-            <span>
-              Target {durasi} bln ({tanggunganLabel})
-            </span>
-            <span>{formatCurrency(targetSiklus)}</span>
-          </div>
-          {scTotal > 0 && <p className="text-xs text-emerald-400/60 mt-1.5">+ hemat konsumsi sendiri ~{formatCurrency(scTotal)}/bulan</p>}
-        </div>
-
-        {/* Kanan: status kekurangan/surplus */}
-        <div className="text-right min-w-[130px]">
-          {cukupSiklus ? (
-            <>
-              <p className="text-xs text-white/30 mb-1">Surplus per bulan</p>
-              <p className="text-base font-semibold" style={{ color: "#22c55e" }}>
-                +{formatCurrency(Math.round(surplus / durasi))}
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-xs text-white/30 mb-1">Kekurangan per bulan</p>
-              <p className="text-base font-semibold" style={{ color: "#ef4444" }}>
-                ~{formatCurrency(Math.round(gap / durasi))}
-              </p>
-              <p className="text-xs text-white/20 mt-0.5">dari {formatCurrency(targetIncome)}/bln</p>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Dropdown Komoditas ───────────────────────────────────────────────────────
 function CommodityDropdown({ models, selected, onSelect }) {
   if (models.length <= 1) return null;
@@ -571,9 +502,6 @@ export default function RekomendasiPage() {
 
             {/* Grafik Prediksi Harga */}
             <PriceForecastChart models={result.models} />
-
-            {/* Banner Kecukupan — Opsi C, setelah grafik */}
-            <SufficiencyBanner totalIncome={totalIncome} targetIncome={result.targetIncome} targetSiklus={result.targetSiklus} durasi={result.durasi} selfConsumption={result.selfConsumption} tanggunganLabel={result.tanggunganLabel} />
 
             {/* Analisis & Saran */}
             {result.reasons.length > 0 && <GroupedReasons reasons={result.reasons} />}
