@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine } from "recharts";
 import useWeatherForecast from "../hooks/useWeatherForecast";
 import useCommodityForecast from "../hooks/useCommodityForecast";
 import WeatherIcon from "../components/WeatherIcon";
@@ -9,7 +9,7 @@ import { WiThermometer, WiHumidity } from "react-icons/wi";
 import { FaSeedling, FaPepperHot, FaBottleWater, FaEgg, FaBowlRice } from "react-icons/fa6";
 import { GiCorn } from "react-icons/gi";
 import { Bean } from "lucide-react";
-import { MdLocationOn, MdAccessTime, MdCalendarMonth, MdAccountBalance, MdWarning, MdOutlineWaterDrop, MdInfo } from "react-icons/md";
+import { MdLocationOn, MdAccessTime, MdCalendarMonth, MdAccountBalance, MdWarning, MdOutlineWaterDrop, MdInfo, MdClose, MdHistory } from "react-icons/md";
 import { IoCloudOutline } from "react-icons/io5";
 import { BsDropletFill } from "react-icons/bs";
 
@@ -21,7 +21,7 @@ const COLORS = {
   kedelai: "#22c55e",
   berasPremium: "#ceb0fa",
   berasMedium: "#a78bfa",
-  minyakPremium: "#fde047",
+  berasSphp: "#60a5fa",
   minyakita: "#eab308",
   telur: "#f97316",
 };
@@ -34,6 +34,28 @@ const tooltipStyle = {
   boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
   backdropFilter: "blur(8px)",
   padding: "12px",
+};
+
+const HIDDEN_KEYS = new Set(["bandBase", "bandSize"]);
+
+const PriceTooltip = ({ active, payload, label, unit = "Rp/kg" }) => {
+  if (!active || !payload?.length) return null;
+  const visible = payload.filter((p) => !HIDDEN_KEYS.has(p.dataKey) && p.value != null);
+  if (!visible.length) return null;
+  return (
+    <div style={tooltipStyle}>
+      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, marginBottom: 6 }}>Tanggal: {label}</p>
+      {visible.map((entry, i) => (
+        <p key={i} style={{ color: entry.color || "#fff", fontSize: 13, margin: "2px 0" }}>
+          {entry.name}:{" "}
+          <span style={{ fontWeight: 600 }}>
+            {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(entry.value)}
+          </span>
+          <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 11 }}> /{unit === "Rp/L" ? "L" : "kg"}</span>
+        </p>
+      ))}
+    </div>
+  );
 };
 
 const containerVariants = {
@@ -79,9 +101,9 @@ const otherCommodityData = [
     berasMediumLower: 12500,
     berasMediumUpper: 13500,
     berasMediumPredicted: 13000,
-    minyakPremiumLower: 18000,
-    minyakPremiumUpper: 19500,
-    minyakPremiumPredicted: 18800,
+    berasSphpLower: 12000,
+    berasSphpUpper: 13000,
+    berasSphpPredicted: 12500,
     minyakitaLower: 14000,
     minyakitaUpper: 14500,
     minyakitaPredicted: 14200,
@@ -183,18 +205,18 @@ const otherCommodityData = [
 
 const modelMetrics = {
   weather: {
-    suhu: { model: "ARIMAX", mse: 1.62, mae: 0.96, mape: 3.44 },
-    kelembaban: { model: "LSTM", mse: 88.7, mae: 7.17, mape: 8.69 },
+    suhu: { model: "ARIMAX", rmse: 1.62, mae: 0.96, mape: 3.44 },
+    kelembaban: { model: "LSTM", rmse: 88.7, mae: 7.17, mape: 8.69 },
   },
   commodities: {
-    jagung: { model: "LSTM", mse: 9, mae: 3, mape: 0.04 },
-    cabai: { model: "LSTM", mse: 3.8e6, mae: 1532, mape: 6.31 },
-    kedelai: { model: "LSTM", mse: 5.18e5, mae: 259, mape: 1.85 },
-    berasPremium: { model: "ExtraTrees Regressor", mse: 1835, mae: 23.15, mape: 0.16 },
-    berasMedium: { model: "LSTM", mse: 17.2, mae: 4.01, mape: 0.03 },
-    minyakPremium: { model: "ARIMAX", mse: 2053, mae: 195.03, mape: 0.97 },
-    minyakita: { model: "ARIMAX", mse: 593.9, mae: 39.4, mape: 0.251 },
-    telur: { model: "ExtraTrees Regressor", mse: 5.94e5, mae: 551.49, mape: 1.94 },
+    jagung:        { model: "Bidirectional LSTM",    rmse: 94.77,   mae: 63.86,   mape: 1.03 },
+    cabai:         { model: "Bidirectional LSTM",    rmse: 1459.13, mae: 930.18,  mape: 1.63 },
+    kedelai:       { model: "Bidirectional LSTM",    rmse: 29.44,   mae: 20.24,   mape: 0.16 },
+    berasPremium:  { model: "Bidirectional LSTM",    rmse: 17.99,   mae: 16.16,   mape: 0.11 },
+    berasMedium:   { model: "Bidirectional LSTM",    rmse: 0.82,    mae: 0.71,    mape: 0.005},
+    berasSphp:     { model: "Bidirectional LSTM",    rmse: 2.57,    mae: 2.09,    mape: 0.018},
+    minyakita:     { model: "Exponential Smoothing", rmse: 47.40,   mae: 11.24,   mape: 0.07 },
+    telur:         { model: "Bidirectional LSTM",    rmse: 218.60,  mae: 117.53,  mape: 0.43 },
   },
 };
 
@@ -206,13 +228,14 @@ const predictionSummary = {
   kedelai: { current: 12200, trend: "+4.1%", trendUp: true, description: "Tren naik stabil hingga Februari" },
 };
 
+// Harga fallback statis (dipakai hanya jika API gagal)
 const currentPrices = {
   jagung: 5500,
   cabai: 50000,
   kedelai: 12200,
   berasPremium: 14600,
   berasMedium: 13000,
-  minyakPremium: 18800,
+  berasSphp: 11600,
   minyakita: 14200,
   telur: 29500,
 };
@@ -268,9 +291,9 @@ const CommodityLabel = ({ name }) => {
         <FaBowlRice className="inline mr-1" /> Beras Medium
       </>
     ),
-    minyakPremium: (
+    berasSphp: (
       <>
-        <FaBottleWater className="inline mr-1" /> Minyak Goreng Premium
+        <FaBowlRice className="inline mr-1" /> Beras SPHP Bulog
       </>
     ),
     minyakita: (
@@ -393,6 +416,31 @@ export default function PrediksiPage() {
   const [selectedForecast, setSelectedForecast] = useState(null);
   const [dataSource, setDataSource] = useState("openweather");
 
+  // Modal data aktual historis
+  const [showHistoricalModal, setShowHistoricalModal] = useState(false);
+  const [allHistoricalData, setAllHistoricalData] = useState([]);
+  const [loadingAllHistorical, setLoadingAllHistorical] = useState(false);
+  const [filterMonthYear, setFilterMonthYear] = useState("all");
+
+  const MONTH_NAMES_ID = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+  const PREDICTION_TO_API_KEY = {
+    jagung: "jagung", cabai: "cabe", cabe: "cabe", kedelai: "kedelai",
+    berasPremium: "beras-premium", berasMedium: "beras-medium",
+    berasSphp: "beras-sphp", minyakita: "minyakita", telur: "telur",
+  };
+
+  const handleViewAllHistorical = async () => {
+    setShowHistoricalModal(true);
+    setAllHistoricalData([]);
+    setLoadingAllHistorical(true);
+    setFilterMonthYear("all");
+    const apiKey = PREDICTION_TO_API_KEY[selectedPrediction] || selectedPrediction;
+    const data = await fetchHistoricalData(apiKey, 730); // ambil hingga 2 tahun ke belakang
+    setAllHistoricalData(data || []);
+    setLoadingAllHistorical(false);
+  };
+
   const {
     currentWeather: liveWeather,
     forecast,
@@ -413,7 +461,7 @@ export default function PrediksiPage() {
     getArimaxDailySummary,
   } = useWeatherForecast();
 
-  const { commodityData, currentPrices: realCurrentPrices, loading: commodityLoading, error: commodityError, getChartData: getCommodityChartData, getPriceStats } = useCommodityForecast();
+  const { commodityData, historicalData, currentPrices: realCurrentPrices, loading: commodityLoading, error: commodityError, getChartData: getCommodityChartData, getPriceStats, fetchHistoricalData } = useCommodityForecast();
 
   useEffect(() => {
     if (forecast.length > 0 && !selectedDate && dataSource === "openweather") {
@@ -502,6 +550,12 @@ export default function PrediksiPage() {
     if (!stats) return false;
     return stats.trend === "up" && parseFloat(stats.change) >= 5;
   };
+  const COMMODITY_KEY_MAP = {
+    jagung: "jagung", cabai: "cabe", cabe: "cabe", kedelai: "kedelai",
+    berasPremium: "berasPremium", berasMedium: "berasMedium",
+    berasSphp: "berasSphp", minyakita: "minyakita", telur: "telur",
+  };
+
   const getChartData = () => {
     if (activeCategory === "weather") {
       if (dataSource === "openweather" && forecast.length > 0) {
@@ -519,7 +573,7 @@ export default function PrediksiPage() {
       } else if (dataSource === "arimax" && arimaxPrediction?.predictions?.length > 0) {
         const dataPoints = Math.min(168, arimaxPrediction.predictions.length);
         return arimaxPrediction.predictions.slice(0, dataPoints).map((item) => {
-          const [year, month, day] = item.date.split("-");
+          const [, month, day] = item.date.split("-");
           const dateStr = `${day}/${month}`;
           return {
             label: `${dateStr} ${item.time}`,
@@ -537,37 +591,44 @@ export default function PrediksiPage() {
       return weatherForecastData;
     }
 
-    const foodKeys = ["berasPremium", "berasMedium", "minyakPremium", "minyakita", "telur"];
+    const foodKeys = ["berasPremium", "berasMedium", "berasSphp", "minyakita", "telur"];
     const commodityKeys = ["jagung", "cabai", "cabe", "kedelai"];
 
     if (commodityKeys.includes(selectedPrediction) || foodKeys.includes(selectedPrediction)) {
-      const commodityKeyMap = {
-        jagung: "jagung",
-        cabai: "cabe",
-        cabe: "cabe",
-        kedelai: "kedelai",
-        berasPremium: "berasPremium",
-        berasMedium: "berasMedium",
-        minyakPremium: "minyakPremium",
-        minyakita: "minyakita",
-        telur: "telur",
-      };
-      const commodityKey = commodityKeyMap[selectedPrediction] || selectedPrediction;
+      const commodityKey = COMMODITY_KEY_MAP[selectedPrediction] || selectedPrediction;
+      let displayKey = selectedPrediction === "cabe" ? "cabai" : selectedPrediction;
+      const limit = parseInt(timeRange) || 30;
+
       if (commodityData[commodityKey]?.forecast) {
-        const chartData = getCommodityChartData(commodityKey);
-        let displayKey = selectedPrediction;
-        if (selectedPrediction === "cabe") displayKey = "cabai";
-        const limit = parseInt(timeRange) || 30;
-        return chartData.slice(0, limit).map((item) => ({
+        const forecastPoints = getCommodityChartData(commodityKey).slice(0, limit).map((item) => ({
           month: item.month,
           [`${displayKey}Predicted`]: item.predicted,
           [`${displayKey}Lower`]: item.lower,
           [`${displayKey}Upper`]: item.upper,
+          bandSize: item.upper != null && item.lower != null ? item.upper - item.lower : null,
+          bandBase: item.lower,
+          actual: null,
         }));
+
+        const histPoints = (historicalData?.[commodityKey] || []).slice(-limit).map((item) => ({
+          month: item.month,
+          actual: item.price,
+          [`${displayKey}Predicted`]: null,
+          [`${displayKey}Lower`]: null,
+          [`${displayKey}Upper`]: null,
+          bandSize: null,
+          bandBase: null,
+        }));
+
+        // Bridge: last historical point gets the same value as predicted start
+        if (histPoints.length > 0 && forecastPoints.length > 0) {
+          histPoints[histPoints.length - 1][`${displayKey}Predicted`] = histPoints[histPoints.length - 1].actual;
+        }
+
+        return [...histPoints, ...forecastPoints];
       }
       if (commodityKeys.includes(selectedPrediction)) return commodityForecastData;
-      const limit = parseInt(timeRange) || 6;
-      return otherCommodityData.slice(0, limit);
+      return otherCommodityData.slice(0, parseInt(timeRange) || 6);
     }
   };
 
@@ -580,7 +641,7 @@ export default function PrediksiPage() {
       kedelai: { lower: "kedelaiLower", upper: "kedelaiUpper", predicted: "kedelaiPredicted", color: COLORS.kedelai, unit: "Rp/kg", label: "Kedelai" },
       berasPremium: { lower: "berasPremiumLower", upper: "berasPremiumUpper", predicted: "berasPremiumPredicted", color: COLORS.berasPremium, unit: "Rp/kg", label: "Beras Premium" },
       berasMedium: { lower: "berasMediumLower", upper: "berasMediumUpper", predicted: "berasMediumPredicted", color: COLORS.berasMedium, unit: "Rp/kg", label: "Beras Medium" },
-      minyakPremium: { lower: "minyakPremiumLower", upper: "minyakPremiumUpper", predicted: "minyakPremiumPredicted", color: COLORS.minyakPremium, unit: "Rp/L", label: "Minyak Goreng Premium" },
+      berasSphp: { lower: "berasSphpLower", upper: "berasSphpUpper", predicted: "berasSphpPredicted", color: COLORS.berasSphp, unit: "Rp/kg", label: "Beras SPHP Bulog" },
       minyakita: { lower: "minyakitaLower", upper: "minyakitaUpper", predicted: "minyakitaPredicted", color: COLORS.minyakita, unit: "Rp/L", label: "Minyak MINYAKITA" },
       telur: { lower: "telurLower", upper: "telurUpper", predicted: "telurPredicted", color: COLORS.telur, unit: "Rp/kg", label: "Telur Ayam Ras" },
     };
@@ -592,7 +653,9 @@ export default function PrediksiPage() {
 
   const yDomain = (() => {
     if (!chartData || chartData.length === 0 || activeCategory === "weather") return ["auto", "auto"];
-    const values = chartData.map((d) => d[chartConfig.predicted]).filter((v) => v != null && !isNaN(v));
+    const predicted = chartData.map((d) => d[chartConfig.predicted]).filter((v) => v != null && !isNaN(v));
+    const actual = chartData.map((d) => d.actual).filter((v) => v != null && !isNaN(v));
+    const values = [...predicted, ...actual];
     if (values.length === 0) return ["auto", "auto"];
     const min = Math.min(...values);
     const max = Math.max(...values);
@@ -602,6 +665,7 @@ export default function PrediksiPage() {
   })();
 
   return (
+    <>
     <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-4 md:px-8 pb-8 text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
@@ -656,11 +720,11 @@ export default function PrediksiPage() {
         <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10">
           <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
             <span className="flex items-center gap-1.5">
-              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 11 Mar 2026, 22:00 WIB
+              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 18 Apr 2026
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Apr 2025 - Mar 2026
+              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Apr 2025 - Apr 2026
             </span>
             <span className="hidden sm:block text-white/20">|</span>
             <span className="flex items-center gap-1.5">
@@ -836,16 +900,16 @@ export default function PrediksiPage() {
                   <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasMedium.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.berasMedium.mae} mape={modelMetrics.commodities.berasMedium.mape} />
                 </div>
-                {/* Minyak Premium */}
+                {/* Beras SPHP Bulog */}
                 <div
-                  onClick={() => setSelectedPrediction("minyakPremium")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "minyakPremium" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  onClick={() => setSelectedPrediction("berasSphp")}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasSphp" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
-                    <FaBottleWater /> Minyak Premium
+                    <FaBowlRice /> Beras SPHP Bulog
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakPremium.model}</p>
-                  <MapeBadge mae={modelMetrics.commodities.minyakPremium.mae} mape={modelMetrics.commodities.minyakPremium.mape} unit="Rp/L" />
+                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasSphp.model}</p>
+                  <MapeBadge mae={modelMetrics.commodities.berasSphp.mae} mape={modelMetrics.commodities.berasSphp.mape} />
                 </div>
                 {/* MINYAKITA */}
                 <div
@@ -915,7 +979,7 @@ export default function PrediksiPage() {
                 >
                   <option value="berasPremium">Beras Premium</option>
                   <option value="berasMedium">Beras Medium</option>
-                  <option value="minyakPremium">Minyak Goreng Premium</option>
+                  <option value="berasSphp">Beras SPHP Bulog</option>
                   <option value="minyakita">Minyak MINYAKITA</option>
                   <option value="telur">Telur Ayam Ras</option>
                 </select>
@@ -945,59 +1009,325 @@ export default function PrediksiPage() {
                   <option value="30">30 hari</option>
                 </select>
               )}
+              {activeCategory !== "weather" && (
+                <button
+                  onClick={handleViewAllHistorical}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white hover:border-green-500/40 transition-all duration-200"
+                >
+                  <MdHistory size={16} />
+                  Data Aktual Lengkap
+                </button>
+              )}
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height={350}>
-            <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
-              <defs>
-                <linearGradient id={`color${selectedPrediction}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={chartConfig.color} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={chartConfig.color} stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-              <XAxis
-                dataKey={activeCategory === "weather" ? "label" : "month"}
-                stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
-                tickFormatter={(value) => (activeCategory === "weather" ? value.split(" ")[1] : value)}
-              />
-              <YAxis
-                stroke="rgba(255,255,255,0.5)"
-                tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
-                domain={yDomain}
-                label={
-                  activeCategory !== "weather"
-                    ? {
-                        value: chartConfig.unit, // ✅ DINAMIS (Rp/kg atau Rp/L)
-                        angle: -90,
-                        position: "insideLeft",
-                        offset: 10,
-                        style: { fill: "rgba(255,255,255,0.4)", fontSize: 12 },
-                      }
-                    : undefined
-                }
-                tickFormatter={(value) => {
-                  if (activeCategory === "weather") return value;
-                  return value.toLocaleString("id-ID");
-                }}
-              />
-              <Tooltip
-                contentStyle={tooltipStyle}
-                itemStyle={{ color: "#ffffff" }}
-                formatter={(value, name) => {
-                  const prefix = activeCategory === "weather" ? "Prediksi Nilai" : "Prediksi Harga";
-                  return [activeCategory === "weather" ? `${value}${chartConfig.unit}` : formatCurrency(value), prefix];
-                }}
-                labelFormatter={(label) => (activeCategory === "weather" ? `Waktu: ${label}` : `Tanggal: ${label}`)}
-              />
-              <Legend verticalAlign="bottom" height={36} formatter={() => (activeCategory === "weather" ? "Prediksi Nilai" : "Prediksi Harga")} />
-              <Area type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} fill={`url(#color${selectedPrediction})`} fillOpacity={0.5} />
-            </AreaChart>
-          </ResponsiveContainer>
+          {(() => {
+            const cutoffLabel = (() => {
+              if (activeCategory === "weather" || !chartData) return null;
+              const last = [...chartData].reverse().find((d) => d.actual != null);
+              return last?.month ?? null;
+            })();
+            const hasActual = activeCategory !== "weather" && chartData?.some((d) => d.actual != null);
+
+            const sharedAxes = (
+              <>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                <XAxis
+                  dataKey={activeCategory === "weather" ? "label" : "month"}
+                  stroke="rgba(255,255,255,0.5)"
+                  tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
+                  tickFormatter={(value) => (activeCategory === "weather" ? value.split(" ")[1] : value)}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  stroke="rgba(255,255,255,0.5)"
+                  tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
+                  domain={yDomain}
+                  label={
+                    activeCategory !== "weather"
+                      ? { value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.4)", fontSize: 12 } }
+                      : undefined
+                  }
+                  tickFormatter={(value) => (activeCategory === "weather" ? value : value.toLocaleString("id-ID"))}
+                />
+                <Tooltip
+                  contentStyle={tooltipStyle}
+                  itemStyle={{ color: "#ffffff" }}
+                  formatter={(value, name) => {
+                    if (value == null) return [null, name];
+                    if (name === "Harga Aktual") return [formatCurrency(value), name];
+                    return [activeCategory === "weather" ? `${value}${chartConfig.unit}` : formatCurrency(value), "Prediksi Harga"];
+                  }}
+                  labelFormatter={(label) => (activeCategory === "weather" ? `Waktu: ${label}` : `Tanggal: ${label}`)}
+                />
+              </>
+            );
+
+            return (
+              <ResponsiveContainer width="100%" height={350}>
+                {activeCategory === "weather" ? (
+                  <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id={`color${selectedPrediction}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={chartConfig.color} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={chartConfig.color} stopOpacity={0.05} />
+                      </linearGradient>
+                    </defs>
+                    {sharedAxes}
+                    <Legend verticalAlign="bottom" height={36} formatter={() => "Prediksi Nilai"} />
+                    <Area type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} fill={`url(#color${selectedPrediction})`} fillOpacity={0.5} />
+                  </AreaChart>
+                ) : (
+                  <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id={`color${selectedPrediction}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={chartConfig.color} stopOpacity={0.25} />
+                        <stop offset="95%" stopColor={chartConfig.color} stopOpacity={0.03} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                    <XAxis dataKey="month" stroke="rgba(255,255,255,0.5)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} interval="preserveStartEnd" />
+                    <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} domain={yDomain} label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.4)", fontSize: 12 } }} tickFormatter={(v) => v.toLocaleString("id-ID")} />
+                    <Tooltip content={<PriceTooltip unit={chartConfig.unit} />} />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      formatter={(value) => (value === "Harga Aktual" ? "Harga Aktual" : "Prediksi Harga")}
+                    />
+                    {/* Predicted forecast line */}
+                    <Line type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} strokeDasharray={hasActual ? "5 4" : "0"} dot={false} name="Prediksi Harga" connectNulls={false} />
+                    {/* Actual historical line */}
+                    {hasActual && <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} dot={false} name="Harga Aktual" connectNulls={false} />}
+                    {/* Cutoff reference line */}
+                    {cutoffLabel && (
+                      <ReferenceLine x={cutoffLabel} stroke="rgba(255,255,255,0.35)" strokeDasharray="4 3">
+                      </ReferenceLine>
+                    )}
+                  </ComposedChart>
+                )}
+              </ResponsiveContainer>
+            );
+          })()}
         </motion.div>
       </div>
     </motion.div>
+
+    {/* ── Modal Data Aktual Lengkap ────────────────────────────────────────── */}
+    {showHistoricalModal && (
+      <>
+        {/* Backdrop */}
+        <div
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm"
+          onClick={() => setShowHistoricalModal(false)}
+        />
+
+        {/* Modal container */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="bg-gray-950 border border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col pointer-events-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <div>
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <MdHistory size={20} className="text-green-400" />
+                  Data Aktual Historis — {chartConfig.label}
+                </h3>
+                <p className="text-xs text-white/40 mt-0.5">Seluruh data harga aktual yang tersedia (maks. 365 hari)</p>
+              </div>
+              <button
+                onClick={() => setShowHistoricalModal(false)}
+                className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+              >
+                <MdClose size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5">
+              {loadingAllHistorical ? (
+                <div className="flex justify-center items-center py-20">
+                  <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400" />
+                  <span className="ml-3 text-white/60">Memuat data historis...</span>
+                </div>
+              ) : allHistoricalData.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-white/30 gap-3">
+                  <MdHistory size={40} />
+                  <p>Tidak ada data historis tersedia</p>
+                </div>
+              ) : (
+                <>
+                  {/* Statistik ringkas — ikuti filter bulan */}
+                  {(() => {
+                    const filtered = filterMonthYear === "all"
+                      ? allHistoricalData
+                      : allHistoricalData.filter(d => d.date?.startsWith(filterMonthYear));
+                    const prices = filtered.map(d => d.price);
+                    if (prices.length === 0) return null;
+                    const min = Math.min(...prices);
+                    const max = Math.max(...prices);
+                    const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+                    const fmt = (v) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(v);
+                    return (
+                      <div className="grid grid-cols-3 gap-3">
+                        {[
+                          { label: "Terendah", value: fmt(min), color: "text-blue-400" },
+                          { label: "Rata-rata", value: fmt(avg), color: "text-white" },
+                          { label: "Tertinggi", value: fmt(max), color: "text-amber-400" },
+                        ].map(({ label, value, color }) => (
+                          <div key={label} className="bg-white/5 rounded-xl px-4 py-3 border border-white/5">
+                            <p className="text-xs text-white/40 mb-1">{label}</p>
+                            <p className={`text-sm font-semibold ${color}`}>{value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Chart — selalu tampilkan semua data sebagai overview */}
+                  <ResponsiveContainer width="100%" height={260}>
+                    <LineChart data={allHistoricalData} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" vertical={false} />
+                      <XAxis
+                        dataKey="month"
+                        stroke="rgba(255,255,255,0.3)"
+                        tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 11 }}
+                        interval="preserveStartEnd"
+                      />
+                      <YAxis
+                        stroke="rgba(255,255,255,0.3)"
+                        tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 11 }}
+                        tickFormatter={(v) => v.toLocaleString("id-ID")}
+                        label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.3)", fontSize: 11 } }}
+                        width={70}
+                      />
+                      <Tooltip content={<PriceTooltip unit={chartConfig.unit} />} />
+                      <Line type="monotone" dataKey="price" stroke="#10b981" strokeWidth={2} dot={false} name="Harga Aktual" connectNulls={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+
+                  {/* Filter bulan/tahun + Tabel */}
+                  {(() => {
+                    // Kumpulkan tahun & bulan unik dari data
+                    const allYM = [...new Set(allHistoricalData.map(d => d.date?.slice(0, 7)).filter(Boolean))].sort().reverse();
+                    const uniqueYears = [...new Set(allYM.map(ym => ym.slice(0, 4)))];
+                    const [selYear, selMonth] = filterMonthYear === "all" ? ["all", "all"] : filterMonthYear.split("-");
+
+                    // Bulan tersedia untuk tahun terpilih
+                    const availableMonths = selYear === "all"
+                      ? []
+                      : [...new Set(allYM.filter(ym => ym.startsWith(selYear)).map(ym => ym.slice(5, 7)))].sort();
+
+                    const handleYearChange = (y) => {
+                      if (y === "all") { setFilterMonthYear("all"); }
+                      else { setFilterMonthYear(`${y}-all`); }
+                    };
+                    const handleMonthChange = (m) => {
+                      if (m === "all") { setFilterMonthYear(selYear === "all" ? "all" : `${selYear}-all`); }
+                      else { setFilterMonthYear(`${selYear}-${m}`); }
+                    };
+
+                    // Filter baris tabel
+                    const filteredRows = (() => {
+                      let rows = [...allHistoricalData].reverse();
+                      if (selYear !== "all") rows = rows.filter(d => d.date?.startsWith(selYear));
+                      if (selMonth !== "all" && selMonth) rows = rows.filter(d => d.date?.slice(5, 7) === selMonth);
+                      return rows;
+                    })();
+
+                    return (
+                      <div className="space-y-3">
+                        {/* Filter row */}
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="text-xs text-white/40 whitespace-nowrap">Filter:</span>
+                          {/* Dropdown Tahun */}
+                          <select
+                            value={selYear}
+                            onChange={(e) => handleYearChange(e.target.value)}
+                            className="bg-gray-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-green-500/50"
+                            style={{ colorScheme: "dark" }}
+                          >
+                            <option value="all">Semua Tahun</option>
+                            {uniqueYears.map(y => (
+                              <option key={y} value={y}>{y}</option>
+                            ))}
+                          </select>
+                          {/* Dropdown Bulan — hanya aktif jika tahun dipilih */}
+                          <select
+                            value={selMonth || "all"}
+                            onChange={(e) => handleMonthChange(e.target.value)}
+                            disabled={selYear === "all"}
+                            className="bg-gray-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-green-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+                            style={{ colorScheme: "dark" }}
+                          >
+                            <option value="all">Semua Bulan</option>
+                            {availableMonths.map(m => (
+                              <option key={m} value={m}>{MONTH_NAMES_ID[parseInt(m) - 1]}</option>
+                            ))}
+                          </select>
+                          {/* Tombol reset */}
+                          {filterMonthYear !== "all" && (
+                            <button
+                              onClick={() => setFilterMonthYear("all")}
+                              className="text-xs text-white/40 hover:text-white/70 transition-colors underline underline-offset-2"
+                            >
+                              Reset
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Tabel */}
+                        <div className="rounded-xl border border-white/10 overflow-hidden">
+                          <div className="max-h-56 overflow-y-auto">
+                            <table className="w-full text-sm">
+                              <thead className="sticky top-0 bg-gray-900 z-10">
+                                <tr className="border-b border-white/10">
+                                  <th className="text-left text-white/40 font-medium py-2.5 px-4">#</th>
+                                  <th className="text-left text-white/40 font-medium py-2.5 px-4">Tanggal</th>
+                                  <th className="text-right text-white/40 font-medium py-2.5 px-4">Harga Aktual</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {filteredRows.length === 0 ? (
+                                  <tr>
+                                    <td colSpan={3} className="py-8 text-center text-white/30 text-sm">
+                                      Tidak ada data untuk bulan ini
+                                    </td>
+                                  </tr>
+                                ) : (
+                                  filteredRows.map((item, i) => (
+                                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                      <td className="py-2 px-4 text-white/25 text-xs">{filteredRows.length - i}</td>
+                                      <td className="py-2 px-4 text-white/60">
+                                        {item.date
+                                          ? new Date(item.date + "T00:00:00").toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
+                                          : item.month}
+                                      </td>
+                                      <td className="py-2 px-4 text-right font-medium text-green-400">
+                                        {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(item.price)}
+                                      </td>
+                                    </tr>
+                                  ))
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <p className="text-xs text-white/25 text-right">{filteredRows.length} data ditampilkan</p>
+                      </div>
+                    );
+                  })()}
+                </>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </>
+    )}
+    </>
   );
 }

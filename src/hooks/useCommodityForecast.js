@@ -12,35 +12,36 @@ const COMMODITIES = {
     // Food Commodities
     berasPremium: { key: 'beras-premium', name: 'Beras Premium', icon: '🍚', unit: 'Rp/kg' },
     berasMedium: { key: 'beras-medium', name: 'Beras Medium', icon: '🍚', unit: 'Rp/kg' },
+    berasSphp: { key: 'beras-sphp', name: 'Beras SPHP Bulog', icon: '🍚', unit: 'Rp/kg' },
     minyakPremium: { key: 'minyak-premium', name: 'Minyak Goreng Premium', icon: '🛢️', unit: 'Rp/L' },
     minyakita: { key: 'minyakita', name: 'Minyakita', icon: '🛢️', unit: 'Rp/L' },
     telur: { key: 'telur', name: 'Telur Ayam Ras', icon: '🥚', unit: 'Rp/kg' }
 };
 
-export default function useCommodityForecast() {
-    const [commodityData, setCommodityData] = useState({
-        jagung: null,
-        cabe: null,
-        kedelai: null,
-        berasPremium: null,
-        berasMedium: null,
-        minyakPremium: null,
-        minyakita: null,
-        telur: null
-    });
+const STATE_KEY_MAP = {
+    'jagung': 'jagung',
+    'cabe': 'cabe',
+    'kedelai': 'kedelai',
+    'beras-premium': 'berasPremium',
+    'beras-medium': 'berasMedium',
+    'beras-sphp': 'berasSphp',
+    'minyak-premium': 'minyakPremium',
+    'minyakita': 'minyakita',
+    'telur': 'telur'
+};
 
+const EMPTY_STATE = {
+    jagung: null, cabe: null, kedelai: null,
+    berasPremium: null, berasMedium: null, berasSphp: null,
+    minyakPremium: null, minyakita: null, telur: null
+};
+
+export default function useCommodityForecast() {
+    const [commodityData, setCommodityData] = useState({ ...EMPTY_STATE });
+    const [historicalData, setHistoricalData] = useState({ ...EMPTY_STATE });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentPrices, setCurrentPrices] = useState({
-        jagung: null,
-        cabe: null,
-        kedelai: null,
-        berasPremium: null,
-        berasMedium: null,
-        minyakPremium: null,
-        minyakita: null,
-        telur: null
-    });
+    const [currentPrices, setCurrentPrices] = useState({ ...EMPTY_STATE });
 
     // Fetch prediction for a specific commodity
     const fetchCommodityPrediction = useCallback(async (commodityKey, days = 30) => {
@@ -73,18 +74,7 @@ export default function useCommodityForecast() {
                     currentPrice: currentPrice
                 };
 
-                // Map API key to State key
-                const stateKeyMap = {
-                    'jagung': 'jagung',
-                    'cabe': 'cabe',
-                    'kedelai': 'kedelai',
-                    'beras-premium': 'berasPremium',
-                    'beras-medium': 'berasMedium',
-                    'minyak-premium': 'minyakPremium',
-                    'minyakita': 'minyakita',
-                    'telur': 'telur'
-                };
-                const stateKey = stateKeyMap[commodityKey] || commodityKey;
+                const stateKey = STATE_KEY_MAP[commodityKey] || commodityKey;
 
                 // Update State
                 setCommodityData(prev => ({
@@ -108,16 +98,41 @@ export default function useCommodityForecast() {
         }
     }, []);
 
+    // Fetch historical prices for a commodity
+    const fetchHistoricalData = useCallback(async (commodityKey, days = 30) => {
+        try {
+            const response = await axios.get(
+                `${BACKEND_API_URL}/market-insight/historical/${commodityKey}`,
+                { params: { days } }
+            );
+            if (response.data?.historical) {
+                const formatted = response.data.historical.map(item => {
+                    const date = new Date(item.date + 'T00:00:00');
+                    const label = date.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+                    return { month: label, date: item.date, price: item.price };
+                });
+                const stateKey = STATE_KEY_MAP[commodityKey] || commodityKey;
+                setHistoricalData(prev => ({ ...prev, [stateKey]: formatted }));
+                return formatted;
+            }
+        } catch (err) {
+            console.error(`Error fetching historical for ${commodityKey}:`, err);
+        }
+        return [];
+    }, []);
+
     // Fetch all commodities on mount
     const fetchAllCommodities = useCallback(async () => {
         setLoading(true);
         setError(null);
 
+        const KEYS = ['jagung', 'cabe', 'kedelai', 'beras-premium', 'beras-medium', 'beras-sphp', 'minyak-premium', 'minyakita', 'telur'];
+
         try {
             // Fetch all commodities in parallel
             const [
                 jagungData, cabeData, kedelaiData,
-                berasPremiumData, berasMediumData,
+                berasPremiumData, berasMediumData, berasSphpData,
                 minyakPremiumData, minyakitaData, telurData
             ] = await Promise.all([
                 fetchCommodityPrediction('jagung', 30),
@@ -125,10 +140,14 @@ export default function useCommodityForecast() {
                 fetchCommodityPrediction('kedelai', 30),
                 fetchCommodityPrediction('beras-premium', 30),
                 fetchCommodityPrediction('beras-medium', 30),
+                fetchCommodityPrediction('beras-sphp', 30),
                 fetchCommodityPrediction('minyak-premium', 30),
                 fetchCommodityPrediction('minyakita', 30),
                 fetchCommodityPrediction('telur', 30)
             ]);
+
+            // Fetch historical data in parallel (don't block UI)
+            Promise.all(KEYS.map(k => fetchHistoricalData(k, 30))).catch(() => {});
 
             setCommodityData({
                 jagung: jagungData,
@@ -136,6 +155,7 @@ export default function useCommodityForecast() {
                 kedelai: kedelaiData,
                 berasPremium: berasPremiumData,
                 berasMedium: berasMediumData,
+                berasSphp: berasSphpData,
                 minyakPremium: minyakPremiumData,
                 minyakita: minyakitaData,
                 telur: telurData
@@ -147,6 +167,7 @@ export default function useCommodityForecast() {
                 kedelai: kedelaiData?.currentPrice,
                 berasPremium: berasPremiumData?.currentPrice,
                 berasMedium: berasMediumData?.currentPrice,
+                berasSphp: berasSphpData?.currentPrice,
                 minyakPremium: minyakPremiumData?.currentPrice,
                 minyakita: minyakitaData?.currentPrice,
                 telur: telurData?.currentPrice
@@ -158,7 +179,7 @@ export default function useCommodityForecast() {
         } finally {
             setLoading(false);
         }
-    }, [fetchCommodityPrediction]);
+    }, [fetchCommodityPrediction, fetchHistoricalData]);
 
     // Initialize on mount
     useEffect(() => {
@@ -220,6 +241,7 @@ export default function useCommodityForecast() {
     return {
         // Data
         commodityData,
+        historicalData,
         currentPrices,
 
         // State
@@ -228,6 +250,7 @@ export default function useCommodityForecast() {
 
         // Functions
         fetchCommodityPrediction,
+        fetchHistoricalData,
         fetchAllCommodities,
 
         // Helpers

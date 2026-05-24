@@ -42,6 +42,133 @@ const cardStyle = `
   hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
 `
 
+const KEMANDIRIAN_COLOR = {
+  'Tahan pangan': '#4ade80',
+  'Kekurangan sementara': '#fbbf24',
+  'Rentan': '#f87171',
+}
+
+const FIELD_LABELS = {
+  komoditas: 'Komoditas',
+  luas_lahan: 'Luas Lahan (ha)',
+  status_lahan: 'Status Lahan',
+  pendidikan: 'Pendidikan',
+  status_petani: 'Status Petani',
+  produksi: 'Produksi (kw/ha)',
+  subsidi: 'Subsidi',
+  pelatihan: 'Pelatihan',
+  cadangan_pangan: 'Cadangan Pangan',
+}
+
+function KemandirianChart({ kemandirianChart }) {
+  const [hoveredEntry, setHoveredEntry] = useState(null)
+  const [petaniMap, setPetaniMap] = useState({})
+  const [loadingStatus, setLoadingStatus] = useState(null)
+
+  const fetchPetani = async (status) => {
+    if (petaniMap[status]) return
+    setLoadingStatus(status)
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/analytics/kemandirian-petani?status=${encodeURIComponent(status)}`)
+      const data = await res.json()
+      setPetaniMap(prev => ({ ...prev, [status]: data.petani || [] }))
+    } catch (e) {
+      setPetaniMap(prev => ({ ...prev, [status]: [] }))
+    } finally {
+      setLoadingStatus(null)
+    }
+  }
+
+  const handleBarEnter = (entry) => {
+    setHoveredEntry(entry)
+    fetchPetani(entry.status)
+  }
+
+  return (
+    <div className="flex gap-4">
+      <div className="flex-shrink-0" style={{ width: hoveredEntry ? '45%' : '100%', transition: 'width 0.2s' }}>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
+            <XAxis type="number" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
+            <YAxis dataKey="status" type="category" width={130} stroke="rgba(255,255,255,0.8)" tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 13 }} />
+            <Tooltip
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null
+                const entry = payload[0].payload
+                const color = KEMANDIRIAN_COLOR[entry.status] || '#ffffff'
+                return (
+                  <div style={tooltipStyle}>
+                    <p style={{ color, fontWeight: 700, fontSize: 13 }}>{entry.status}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 11 }}>{entry.jumlah} Petani — hover untuk detail</p>
+                  </div>
+                )
+              }}
+            />
+            <Bar
+              dataKey="jumlah"
+              radius={[0, 4, 4, 0]}
+              barSize={36}
+              label={{ position: 'right', fill: '#ffffff', fontSize: 12, fontWeight: 'bold', formatter: (v) => `${v} Petani` }}
+              onMouseEnter={(entry) => handleBarEnter(entry)}
+              onMouseLeave={() => setHoveredEntry(null)}
+            >
+              {kemandirianChart.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={KEMANDIRIAN_COLOR[entry.status] || '#94a3b8'} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {hoveredEntry && (
+        <div
+          className="flex-1 overflow-hidden rounded-xl border border-white/10"
+          style={{ background: 'rgba(17,24,39,0.97)', minWidth: 0 }}
+          onMouseEnter={() => setHoveredEntry(hoveredEntry)}
+          onMouseLeave={() => setHoveredEntry(null)}
+        >
+          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+            <span style={{ color: KEMANDIRIAN_COLOR[hoveredEntry.status] || '#fff', fontWeight: 700, fontSize: 13 }}>
+              {hoveredEntry.status}
+            </span>
+            <span className="text-white/40 text-xs">{hoveredEntry.jumlah} Petani</span>
+          </div>
+          <div className="overflow-auto" style={{ maxHeight: 240 }}>
+            {loadingStatus === hoveredEntry.status ? (
+              <div className="flex items-center justify-center py-8 text-white/40 text-xs">Memuat data...</div>
+            ) : (
+            <table className="w-full text-left border-collapse" style={{ fontSize: 11 }}>
+              <thead>
+                <tr className="sticky top-0" style={{ background: 'rgba(17,24,39,0.98)' }}>
+                  {Object.keys(FIELD_LABELS).map(k => (
+                    <th key={k} className="px-3 py-2 text-white/50 font-semibold whitespace-nowrap border-b border-white/10">
+                      {FIELD_LABELS[k]}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(petaniMap[hoveredEntry.status] || []).map((p, i) => (
+                  <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    {Object.keys(FIELD_LABELS).map(k => (
+                      <td key={k} className="px-3 py-1.5 text-white/80 whitespace-nowrap">
+                        {k === 'luas_lahan' || k === 'produksi' ? Number(p[k]).toLocaleString('id-ID') : (p[k] ?? '-')}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function EksplorasiPage() {
   const [selectedCluster, setSelectedCluster] = useState(null)
   const [data, setData] = useState(null)
@@ -171,37 +298,9 @@ export default function EksplorasiPage() {
           </ResponsiveContainer>
         </motion.div>
 
-        <motion.div variants={itemVariants} className={cardStyle}>
+        <motion.div variants={itemVariants} className={`${cardStyle} relative`}>
           <h3 className="text-base font-semibold mb-4 text-blue-400">Status Kemandirian Pangan</h3>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={data.kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
-              <XAxis type="number" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
-              <YAxis dataKey="status" type="category" width={130} stroke="rgba(255,255,255,0.8)" tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 13 }} />
-              <Tooltip
-                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                contentStyle={tooltipStyle}
-                itemStyle={{ color: '#ffffff' }}
-                formatter={(value) => [`${value} Petani`, 'Jumlah']}
-              />
-              <Bar
-                dataKey="jumlah"
-                radius={[0, 4, 4, 0]}
-                barSize={36}
-                label={{
-                  position: 'right',
-                  fill: '#ffffff',
-                  fontSize: 12,
-                  fontWeight: 'bold',
-                  formatter: (value) => `${value} Petani`
-                }}
-              >
-                {data.kemandirianChart.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.status === 'Tahan pangan' ? '#4ade80' : entry.status === 'Kekurangan sementara' ? '#fbbf24' : '#f87171'} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <KemandirianChart kemandirianChart={data.kemandirianChart} />
         </motion.div>
       </div>
 
