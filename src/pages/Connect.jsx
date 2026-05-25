@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { FaPhone, FaWhatsapp, FaUser } from "react-icons/fa";
@@ -14,24 +14,24 @@ const Connect = () => {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       <div className="container mx-auto px-4 py-8">
         {/* HEADER */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-10 px-4">
           <h1 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight max-w-3xl mx-auto bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">Hubungi Penyuluh</h1>
-          <p className="text-xl text-gray-500 dark:text-white/60">Konsultasi pertanian Desa Sumberarum, Kabupaten Blitar</p>
+          <p className="text-xl text-gray-700 dark:text-white/60">Konsultasi pertanian Desa Sumberarum, Kabupaten Blitar</p>
         </motion.div>
 
         {/* CARD */}
         <div className="flex justify-center items-center min-h-[70vh]">
-          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="max-w-md w-full backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-[#91C6BC]/30 dark:border-white/10 pt-20 pb-8">
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="max-w-md w-full backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-[#87a96b]/40 dark:border-white/10 pt-20 pb-8">
             <div className="p-6 flex flex-col items-center">
               {/* FOTO */}
               <div className="w-32 h-32 -mt-14 mb-4 relative">
                 <div className="absolute inset-0 rounded-full shadow-lg"></div>
-                <img src={contact.imageUrl} alt={contact.name} className="w-full h-full rounded-full object-cover border-4 border-[#91C6BC]/30 dark:border-white/10 shadow-xl" />
+                <img src={contact.imageUrl} alt={contact.name} className="w-full h-full rounded-full object-cover border-4 border-[#87a96b]/40 dark:border-white/10 shadow-xl" />
               </div>
 
               {/* INFO */}

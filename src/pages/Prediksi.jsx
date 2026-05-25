@@ -1,6 +1,7 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
+import { useTheme } from "../context/ThemeContext";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine } from "recharts";
 import useWeatherForecast from "../hooks/useWeatherForecast";
 import useCommodityForecast from "../hooks/useCommodityForecast";
@@ -70,8 +71,8 @@ const itemVariants = {
 
 const cardStyle = `
   bg-white dark:bg-white/5
-  backdrop-blur-xl border border-[#91C6BC]/30 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-6
-  hover:shadow-[0_4px_16px_rgba(145,198,188,0.15)] dark:hover:shadow-green-500/10 hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition-all duration-300
+  backdrop-blur-xl border border-[#87a96b]/40 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-6
+  hover:shadow-[0_4px_16px_rgba(135,169,107,0.25)] dark:hover:shadow-green-500/10 hover:border-[#87a96b]/55 dark:hover:border-white/20 transition-all duration-300
 `;
 
 const weatherForecastData = [
@@ -408,6 +409,16 @@ const MetricsCard = ({ title, metrics, color }) => (
 );
 
 export default function PrediksiPage() {
+  const { isDark } = useTheme();
+  const cGrid  = isDark ? 'rgba(255,255,255,0.1)'  : 'rgba(135,169,107,0.25)';
+  const cAxis  = isDark ? 'rgba(255,255,255,0.5)'  : '#4b5563';
+  const cTick  = isDark ? 'rgba(255,255,255,0.5)'  : '#374151';
+  const cTickD = isDark ? 'rgba(255,255,255,0.4)'  : '#6b7280';
+  const cRef   = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(135,169,107,0.6)';
+  const cGridS = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(135,169,107,0.2)';
+  const cAxisS = isDark ? 'rgba(255,255,255,0.3)'  : '#6b7280';
+  const cTickS = isDark ? 'rgba(255,255,255,0.45)' : '#4b5563';
+
   const [activeCategory, setActiveCategory] = useState("weather");
   const [selectedPrediction, setSelectedPrediction] = useState("suhu");
   const [timeRange, setTimeRange] = useState("30");
@@ -666,7 +677,7 @@ export default function PrediksiPage() {
 
   return (
     <>
-    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-8 text-gray-900 dark:text-white">
+    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-8 text-gray-900 dark:text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
@@ -675,7 +686,7 @@ export default function PrediksiPage() {
             <div className="flex items-center gap-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">Prediksi & Peramalan</h2>
-                <p className="text-gray-500 dark:text-white/50 text-sm md:text-base">Model prediktif berbasis AI untuk harga pangan dan kondisi iklim</p>
+                <p className="text-gray-700 dark:text-white/50 text-sm md:text-base">Model prediktif berbasis AI untuk harga pangan dan kondisi iklim</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -685,7 +696,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("suhu");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "weather" ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
+                  activeCategory === "weather" ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25" : "bg-[#F0EDE5] dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#E8E4DA] dark:hover:bg-white/10 border border-[#87a96b]/40 dark:border-white/10"
                 }`}
               >
                 <IoCloudOutline size={16} /> Cuaca
@@ -696,7 +707,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("jagung");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "commodity" ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
+                  activeCategory === "commodity" ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25" : "bg-[#F0EDE5] dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#E8E4DA] dark:hover:bg-white/10 border border-[#87a96b]/40 dark:border-white/10"
                 }`}
               >
                 <FaSeedling size={14} /> Harga Komoditas
@@ -707,7 +718,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("berasPremium");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "food" ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
+                  activeCategory === "food" ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25" : "bg-[#F0EDE5] dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#E8E4DA] dark:hover:bg-white/10 border border-[#87a96b]/40 dark:border-white/10"
                 }`}
               >
                 <FaBowlRice size={16} /> Harga Bahan Pangan
@@ -717,8 +728,8 @@ export default function PrediksiPage() {
         </motion.div>
 
         {/* Info Bar */}
-        <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-[#91C6BC]/30 dark:border-white/10">
-          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-white/60">
+        <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-[#87a96b]/40 dark:border-white/10">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 dark:text-white/60">
             <span className="flex items-center gap-1.5">
               <MdAccessTime size={14} /> <span className="text-gray-700 dark:text-white/80">Terakhir diperbarui:</span> 18 Apr 2026
             </span>
@@ -744,7 +755,7 @@ export default function PrediksiPage() {
                 {weatherLoading ? (
                   <div className="flex justify-center items-center py-8">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400"></div>
-                    <span className="ml-3 text-gray-500 dark:text-white/60">Memuat data cuaca...</span>
+                    <span className="ml-3 text-gray-700 dark:text-white/60">Memuat data cuaca...</span>
                   </div>
                 ) : weatherError ? (
                   <div className="bg-red-500/10 rounded-xl p-4 text-center text-red-400">Error: {weatherError}</div>
@@ -775,7 +786,7 @@ export default function PrediksiPage() {
                           onChange={(e) => handleDateChange(e.target.value)}
                           min={getAvailableDates()[0]}
                           max={getArimaxDates().length > 0 ? getArimaxDates().slice(-1)[0] : getAvailableDates().slice(-1)[0]}
-                          className="w-full bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                          className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                           style={{ colorScheme: "dark" }}
                         />
                       </div>
@@ -786,7 +797,7 @@ export default function PrediksiPage() {
                         <select
                           value={selectedTime}
                           onChange={(e) => setSelectedTime(e.target.value)}
-                          className="w-full bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                          className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                           style={{ colorScheme: "dark" }}
                         >
                           {(dataSource === "openweather" ? getAvailableTimes(selectedDate) : getArimaxTimes(selectedDate)).map((time) => (
@@ -802,7 +813,7 @@ export default function PrediksiPage() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-red-500/20 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
                           <div className="flex items-center gap-2 mb-2">
                             <WiThermometer className="text-3xl text-red-400" />
-                            <span className="text-sm text-gray-500 dark:text-white/60">Suhu</span>
+                            <span className="text-sm text-gray-700 dark:text-white/60">Suhu</span>
                           </div>
                           <p className="text-3xl font-bold text-white">{selectedForecast.temp}°C</p>
                           <p className="text-xs text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
@@ -810,7 +821,7 @@ export default function PrediksiPage() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
                           <div className="flex items-center gap-2 mb-2">
                             <BsDropletFill className="text-xl text-blue-400" />
-                            <span className="text-sm text-gray-500 dark:text-white/60">Kelembaban</span>
+                            <span className="text-sm text-gray-700 dark:text-white/60">Kelembaban</span>
                           </div>
                           <p className="text-3xl font-bold text-white">{selectedForecast.humidity}%</p>
                           <p className="text-xs text-white/50 mt-1">Tingkat kelembaban udara</p>
@@ -825,7 +836,7 @@ export default function PrediksiPage() {
                 {/* Jagung */}
                 <div
                   onClick={() => setSelectedPrediction("jagung")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "jagung" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "jagung" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("jagung") && (
                     <div className="absolute top-3 right-3">
@@ -843,7 +854,7 @@ export default function PrediksiPage() {
                 {/* Cabai */}
                 <div
                   onClick={() => setSelectedPrediction("cabai")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "cabai" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "cabai" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("cabe") && (
                     <div className="absolute top-3 right-3">
@@ -861,7 +872,7 @@ export default function PrediksiPage() {
                 {/* Kedelai */}
                 <div
                   onClick={() => setSelectedPrediction("kedelai")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "kedelai" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "kedelai" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("kedelai") && (
                     <div className="absolute top-3 right-3">
@@ -881,7 +892,7 @@ export default function PrediksiPage() {
                 {/* Beras Premium */}
                 <div
                   onClick={() => setSelectedPrediction("berasPremium")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasPremium" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasPremium" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras Premium
@@ -892,7 +903,7 @@ export default function PrediksiPage() {
                 {/* Beras Medium */}
                 <div
                   onClick={() => setSelectedPrediction("berasMedium")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasMedium" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasMedium" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras Medium
@@ -903,7 +914,7 @@ export default function PrediksiPage() {
                 {/* Beras SPHP Bulog */}
                 <div
                   onClick={() => setSelectedPrediction("berasSphp")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasSphp" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasSphp" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras SPHP Bulog
@@ -914,7 +925,7 @@ export default function PrediksiPage() {
                 {/* MINYAKITA */}
                 <div
                   onClick={() => setSelectedPrediction("minyakita")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "minyakita" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "minyakita" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBottleWater /> MINYAKITA
@@ -925,7 +936,7 @@ export default function PrediksiPage() {
                 {/* Telur */}
                 <div
                   onClick={() => setSelectedPrediction("telur")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "telur" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "telur" ? "bg-[#E8F0DC] dark:bg-white/10 border-[#87a96b]/60" : "bg-white dark:bg-white/5 border-[#87a96b]/40 dark:border-white/10 hover:bg-[#EDE9E0] dark:hover:bg-white/10"}`}
                 >
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaEgg /> Telur Ayam
@@ -944,7 +955,7 @@ export default function PrediksiPage() {
             <div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Prediksi {chartConfig.label}</h3>
               <div className="flex items-center gap-3 text-sm">
-                <span className="text-gray-500 dark:text-white/50">{activeCategory === "weather" ? "Nilai saat ini:" : "Harga saat ini:"}</span>
+                <span className="text-gray-700 dark:text-white/50">{activeCategory === "weather" ? "Nilai saat ini:" : "Harga saat ini:"}</span>
                 <span className="text-lg font-bold text-green-400">
                   {activeCategory === "weather"
                     ? selectedPrediction === "suhu"
@@ -962,7 +973,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="jagung">Jagung</option>
@@ -974,7 +985,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="berasPremium">Beras Premium</option>
@@ -988,7 +999,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="suhu">Suhu</option>
@@ -999,7 +1010,7 @@ export default function PrediksiPage() {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="3">3 hari</option>
@@ -1012,7 +1023,7 @@ export default function PrediksiPage() {
               {activeCategory !== "weather" && (
                 <button
                   onClick={handleViewAllHistorical}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#91C6BC]/15 dark:bg-white/5 border border-[#91C6BC]/30 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white hover:border-green-500/40 transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#F0EDE5] dark:bg-white/5 border border-[#87a96b]/40 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#E8E4DA] dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white hover:border-green-500/40 transition-all duration-200"
                 >
                   <MdHistory size={16} />
                   Data Aktual Lengkap
@@ -1031,21 +1042,21 @@ export default function PrediksiPage() {
 
             const sharedAxes = (
               <>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
                 <XAxis
                   dataKey={activeCategory === "weather" ? "label" : "month"}
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
+                  stroke={cAxis}
+                  tick={{ fill: cTick, fontSize: 12 }}
                   tickFormatter={(value) => (activeCategory === "weather" ? value.split(" ")[1] : value)}
                   interval="preserveStartEnd"
                 />
                 <YAxis
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }}
+                  stroke={cAxis}
+                  tick={{ fill: cTick, fontSize: 12 }}
                   domain={yDomain}
                   label={
                     activeCategory !== "weather"
-                      ? { value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.4)", fontSize: 12 } }
+                      ? { value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: cTickD, fontSize: 12 } }
                       : undefined
                   }
                   tickFormatter={(value) => (activeCategory === "weather" ? value : value.toLocaleString("id-ID"))}
@@ -1085,9 +1096,9 @@ export default function PrediksiPage() {
                         <stop offset="95%" stopColor={chartConfig.color} stopOpacity={0.03} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-                    <XAxis dataKey="month" stroke="rgba(255,255,255,0.5)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} interval="preserveStartEnd" />
-                    <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} domain={yDomain} label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.4)", fontSize: 12 } }} tickFormatter={(v) => v.toLocaleString("id-ID")} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
+                    <XAxis dataKey="month" stroke={cAxis} tick={{ fill: cTick, fontSize: 12 }} interval="preserveStartEnd" />
+                    <YAxis stroke={cAxis} tick={{ fill: cTick, fontSize: 12 }} domain={yDomain} label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: cTickD, fontSize: 12 } }} tickFormatter={(v) => v.toLocaleString("id-ID")} />
                     <Tooltip content={<PriceTooltip unit={chartConfig.unit} />} />
                     <Legend
                       verticalAlign="bottom"
@@ -1100,7 +1111,7 @@ export default function PrediksiPage() {
                     {hasActual && <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} dot={false} name="Harga Aktual" connectNulls={false} />}
                     {/* Cutoff reference line */}
                     {cutoffLabel && (
-                      <ReferenceLine x={cutoffLabel} stroke="rgba(255,255,255,0.35)" strokeDasharray="4 3">
+                      <ReferenceLine x={cutoffLabel} stroke={cRef} strokeDasharray="4 3">
                       </ReferenceLine>
                     )}
                   </ComposedChart>
@@ -1128,10 +1139,10 @@ export default function PrediksiPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="bg-white dark:bg-gray-950 border border-[#91C6BC]/30 dark:border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col pointer-events-auto"
+            className="bg-[#FAFAF7] dark:bg-gray-950 border border-[#87a96b]/40 dark:border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col pointer-events-auto"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#91C6BC]/30 dark:border-white/10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#87a96b]/40 dark:border-white/10">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                   <MdHistory size={20} className="text-green-400" />
@@ -1141,7 +1152,7 @@ export default function PrediksiPage() {
               </div>
               <button
                 onClick={() => setShowHistoricalModal(false)}
-                className="p-2 rounded-lg text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
+                className="p-2 rounded-lg text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white hover:bg-[#EDE9E0] dark:hover:bg-white/10 transition-all"
               >
                 <MdClose size={20} />
               </button>
@@ -1152,7 +1163,7 @@ export default function PrediksiPage() {
               {loadingAllHistorical ? (
                 <div className="flex justify-center items-center py-20">
                   <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400" />
-                  <span className="ml-3 text-gray-500 dark:text-white/60">Memuat data historis...</span>
+                  <span className="ml-3 text-gray-700 dark:text-white/60">Memuat data historis...</span>
                 </div>
               ) : allHistoricalData.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-white/30 gap-3">
@@ -1179,7 +1190,7 @@ export default function PrediksiPage() {
                           { label: "Rata-rata", value: fmt(avg), color: "text-white" },
                           { label: "Tertinggi", value: fmt(max), color: "text-amber-400" },
                         ].map(({ label, value, color }) => (
-                          <div key={label} className="bg-[#91C6BC]/15 dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-200 dark:border-white/5">
+                          <div key={label} className="bg-[#F0EDE5] dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-200 dark:border-white/5">
                             <p className="text-xs text-gray-400 dark:text-white/40 mb-1">{label}</p>
                             <p className={`text-sm font-semibold ${color}`}>{value}</p>
                           </div>
@@ -1191,18 +1202,18 @@ export default function PrediksiPage() {
                   {/* Chart — selalu tampilkan semua data sebagai overview */}
                   <ResponsiveContainer width="100%" height={260}>
                     <LineChart data={allHistoricalData} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" vertical={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke={cGridS} vertical={false} />
                       <XAxis
                         dataKey="month"
-                        stroke="rgba(255,255,255,0.3)"
-                        tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 11 }}
+                        stroke={cAxisS}
+                        tick={{ fill: cTickS, fontSize: 11 }}
                         interval="preserveStartEnd"
                       />
                       <YAxis
-                        stroke="rgba(255,255,255,0.3)"
-                        tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 11 }}
+                        stroke={cAxisS}
+                        tick={{ fill: cTickS, fontSize: 11 }}
                         tickFormatter={(v) => v.toLocaleString("id-ID")}
-                        label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: "rgba(255,255,255,0.3)", fontSize: 11 } }}
+                        label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: cAxisS, fontSize: 11 } }}
                         width={70}
                       />
                       <Tooltip content={<PriceTooltip unit={chartConfig.unit} />} />
@@ -1248,7 +1259,7 @@ export default function PrediksiPage() {
                           <select
                             value={selYear}
                             onChange={(e) => handleYearChange(e.target.value)}
-                            className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                            className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                             style={{ colorScheme: "dark" }}
                           >
                             <option value="all">Semua Tahun</option>
@@ -1261,7 +1272,7 @@ export default function PrediksiPage() {
                             value={selMonth || "all"}
                             onChange={(e) => handleMonthChange(e.target.value)}
                             disabled={selYear === "all"}
-                            className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
                             style={{ colorScheme: "dark" }}
                           >
                             <option value="all">Semua Bulan</option>
@@ -1281,11 +1292,11 @@ export default function PrediksiPage() {
                         </div>
 
                         {/* Tabel */}
-                        <div className="rounded-xl border border-[#91C6BC]/30 dark:border-white/10 overflow-hidden">
+                        <div className="rounded-xl border border-[#87a96b]/40 dark:border-white/10 overflow-hidden">
                           <div className="max-h-56 overflow-y-auto">
                             <table className="w-full text-sm">
                               <thead className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10">
-                                <tr className="border-b border-[#91C6BC]/30 dark:border-white/10">
+                                <tr className="border-b border-[#87a96b]/40 dark:border-white/10">
                                   <th className="text-left text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">#</th>
                                   <th className="text-left text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">Tanggal</th>
                                   <th className="text-right text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">Harga Aktual</th>
@@ -1300,9 +1311,9 @@ export default function PrediksiPage() {
                                   </tr>
                                 ) : (
                                   filteredRows.map((item, i) => (
-                                    <tr key={i} className="border-b border-gray-100 dark:border-white/5 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5 transition-colors">
+                                    <tr key={i} className="border-b border-gray-100 dark:border-white/5 hover:bg-[#F0EDE5] dark:hover:bg-white/5 transition-colors">
                                       <td className="py-2 px-4 text-gray-300 dark:text-white/25 text-xs">{filteredRows.length - i}</td>
-                                      <td className="py-2 px-4 text-gray-500 dark:text-white/60">
+                                      <td className="py-2 px-4 text-gray-700 dark:text-white/60">
                                         {item.date
                                           ? new Date(item.date + "T00:00:00").toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
                                           : item.month}

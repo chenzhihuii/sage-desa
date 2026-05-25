@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { FaEnvelope, FaUser, FaPencilAlt, FaPaperPlane, FaCopy, FaCheckCircle } from "react-icons/fa";
@@ -28,7 +28,7 @@ const Contact = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="min-h-screen pt-16 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
+      className="min-h-screen pt-16 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       <div className="container mx-auto px-4 py-6">
@@ -36,12 +36,12 @@ const Contact = () => {
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
             Aspirasi & Kontak
           </h1>
-          <p className="text-gray-500 dark:text-white/50 text-sm">Kami terbuka dengan kritik dan saran</p>
+          <p className="text-gray-700 dark:text-white/50 text-sm">Kami terbuka dengan kritik dan saran</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* LEFT - Survei */}
-          <motion.div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-[#91C6BC]/30 dark:border-white/10 text-center">
+          <motion.div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-[#87a96b]/40 dark:border-white/10 text-center">
             <h2 className="text-xl font-bold mb-5 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
               Survei Pengalaman Pengguna
             </h2>
@@ -69,7 +69,7 @@ const Contact = () => {
               </a>
             </div>
 
-            <div className="mt-6 border-t border-[#91C6BC]/30 dark:border-white/10 pt-4 text-left text-gray-500 dark:text-white/60 text-sm space-y-2">
+            <div className="mt-6 border-t border-[#87a96b]/40 dark:border-white/10 pt-4 text-left text-gray-500 dark:text-white/60 text-sm space-y-2">
               <p className="font-medium text-gray-700 dark:text-white/80">Isi survei meliputi:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Kemudahan penggunaan aplikasi</li>
@@ -82,7 +82,7 @@ const Contact = () => {
           </motion.div>
 
           {/* RIGHT - Form */}
-          <motion.div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-[#91C6BC]/30 dark:border-white/10 flex flex-col">
+          <motion.div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-[#87a96b]/40 dark:border-white/10 flex flex-col">
             <h2 className="text-xl font-bold text-center mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
               Hubungi Kami
             </h2>
@@ -98,7 +98,7 @@ const Contact = () => {
                   <div className="relative mt-1">
                     {icon}
                     <input type={type} name={name} placeholder={placeholder}
-                      className="w-full pl-10 py-2 bg-white dark:bg-white/5 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:border-purple-400" />
+                      className="w-full pl-10 py-2 bg-white dark:bg-white/5 border border-[#87a96b]/45 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:border-purple-400" />
                   </div>
                 </div>
               ))}
@@ -106,7 +106,7 @@ const Contact = () => {
               <div className="flex flex-col flex-1">
                 <label className="text-gray-700 dark:text-white/80 text-sm">Pesan</label>
                 <textarea name="message" placeholder="Tuliskan pesan, kritik, atau saran Anda di sini..."
-                  className="w-full mt-1 px-3 py-2 bg-white dark:bg-white/5 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg text-gray-900 dark:text-white resize-none flex-1 min-h-[120px] placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:border-purple-400" />
+                  className="w-full mt-1 px-3 py-2 bg-white dark:bg-white/5 border border-[#87a96b]/45 dark:border-white/10 rounded-lg text-gray-900 dark:text-white resize-none flex-1 min-h-[120px] placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:border-purple-400" />
               </div>
 
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} type="submit"
@@ -124,7 +124,7 @@ const Contact = () => {
           <motion.div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-gray-50 dark:bg-gray-900 border border-[#91C6BC]/30 dark:border-white/10 rounded-2xl p-6 w-[90%] max-w-sm text-center shadow-xl">
+              className="bg-gray-50 dark:bg-gray-900 border border-[#87a96b]/40 dark:border-white/10 rounded-2xl p-6 w-[90%] max-w-sm text-center shadow-xl">
               <FaCheckCircle className="text-green-400 text-4xl mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Berhasil!</h3>
               <p className="text-gray-500 dark:text-white/60 text-sm mb-4">Pesan Anda telah berhasil dikirim.</p>

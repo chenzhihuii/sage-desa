@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { FaLeaf, FaSeedling, FaHandHoldingHeart } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { FaLeaf, FaSeedling, FaHandHoldingHeart } from "react-icons/fa";
 const About = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       {/* Hero Section */}
@@ -47,7 +47,7 @@ const About = () => {
       </div>
 
       {/* Values Section */}
-      <div className="bg-gray-100/80 dark:bg-white/5 backdrop-blur-xl py-12">
+      <div className="bg-white dark:bg-white/5 backdrop-blur-xl py-12">
         <div className="container mx-auto px-4">
           <motion.h2 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-3xl font-semibold text-gray-900 dark:text-white text-center mb-8">
             Komitmen Kami
@@ -62,7 +62,7 @@ const About = () => {
               <motion.div key={index} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 + index * 0.1 }} className="text-center">
                 <value.icon className="text-4xl text-green-500 dark:text-green-400 mb-3 mx-auto" />
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{value.title}</h3>
-                <p className="text-sm text-gray-500 dark:text-white/60">{value.description}</p>
+                <p className="text-sm text-gray-700 dark:text-white/60">{value.description}</p>
               </motion.div>
             ))}
           </div>

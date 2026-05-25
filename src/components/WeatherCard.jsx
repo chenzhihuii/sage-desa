@@ -66,7 +66,7 @@ export default function WeatherCard() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto px-4">
-      <div className="bg-white dark:bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-[#91C6BC]/30 dark:border-white/10 shadow-sm dark:shadow-none">
+      <div className="bg-white dark:bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-[#87a96b]/40 dark:border-white/10 shadow-sm dark:shadow-none">
 
         {/* HEADER */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
@@ -99,11 +99,11 @@ export default function WeatherCard() {
             { icon: <FaTint className="text-blue-400 text-2xl" />, label: "Kelembapan", value: `${weather.main.humidity}%` },
             { icon: <FaWind className="text-purple-400 text-2xl" />, label: "Kecepatan Angin", value: `${weather.wind.speed} m/s` },
           ].map(({ icon, label, value }) => (
-            <div key={label} className="bg-[#f0faf9] dark:bg-white/5 p-4 rounded-xl border border-[#91C6BC]/25 dark:border-white/10">
+            <div key={label} className="bg-[#F6F3EB] dark:bg-white/5 p-4 rounded-xl border border-[#87a96b]/35 dark:border-white/10">
               <div className="flex items-center gap-3">
                 {icon}
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-white/60">{label}</p>
+                  <p className="text-sm text-gray-700 dark:text-white/60">{label}</p>
                   <p className="text-lg font-semibold text-gray-900 dark:text-white">{value}</p>
                 </div>
               </div>
@@ -115,13 +115,13 @@ export default function WeatherCard() {
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Perkiraan Cuaca</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {forecast.list.slice(0, 6).map((item, i) => (
-            <div key={i} className="bg-[#f0faf9] dark:bg-white/5 p-4 rounded-xl border border-[#91C6BC]/25 dark:border-white/10">
+            <div key={i} className="bg-[#F6F3EB] dark:bg-white/5 p-4 rounded-xl border border-[#87a96b]/35 dark:border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <WeatherIcon weather={item.weather[0]} size="text-3xl text-green-500 dark:text-white" />
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{Math.round(item.main.temp)}°C</p>
-                    <p className="text-xs text-gray-500 dark:text-white/60">
+                    <p className="text-xs text-gray-700 dark:text-white/60">
                       {new Date(item.dt * 1000).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>

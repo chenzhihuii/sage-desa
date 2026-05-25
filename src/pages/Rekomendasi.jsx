@@ -1,5 +1,6 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useTheme } from "../context/ThemeContext";
 import { FaChartLine, FaPepperHot, FaExclamationTriangle, FaCheckCircle, FaSync, FaChevronDown } from "react-icons/fa";
 import { GiCorn } from "react-icons/gi";
 import { Bean } from "lucide-react";
@@ -29,7 +30,7 @@ const tooltipStyle = {
   padding: "12px",
   boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
 };
-const cardStyle = "bg-white dark:bg-white/5 border border-[#91C6BC]/30 dark:border-white/10 shadow-lg rounded-2xl p-6";
+const cardStyle = "bg-white dark:bg-white/5 border border-[#87a96b]/40 dark:border-white/10 shadow-lg rounded-2xl p-6";
 
 const formatCurrency = (v) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(v);
 
@@ -92,7 +93,7 @@ function CommodityDropdown({ models, selected, onSelect }) {
       <select
         value={selected}
         onChange={(e) => onSelect(e.target.value)}
-        className="appearance-none bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white text-sm
+        className="appearance-none bg-white dark:bg-white/10 border border-[#87a96b]/30 dark:border-white/20 text-gray-900 dark:text-white text-sm
           rounded-lg px-3 py-1.5 pr-7 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30"
         style={{ colorScheme: "dark" }}
       >
@@ -111,6 +112,11 @@ function CommodityDropdown({ models, selected, onSelect }) {
 function PriceForecastChart({ models }) {
   const isTumpangsari = models.length > 1;
   const [selected, setSelected] = useState(models[0]?.commodity || "");
+  const { isDark } = useTheme();
+  const cGrid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(135,169,107,0.2)';
+  const cAxis = isDark ? 'rgba(255,255,255,0.2)'  : '#6b7280';
+  const cTick = isDark ? 'rgba(255,255,255,0.5)'  : '#374151';
+  const cTickD = isDark ? 'rgba(255,255,255,0.4)' : '#6b7280';
   if (!models || models.length === 0) return null;
 
   const activeModel = models.find((m) => m.commodity === selected) || models[0];
@@ -214,11 +220,11 @@ function PriceForecastChart({ models }) {
 
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={chartData} margin={{ top: 24, right: 20, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-          <XAxis dataKey="label" stroke="rgba(255,255,255,0.2)" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} tickLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
+          <XAxis dataKey="label" stroke={cAxis} tick={{ fill: cTick, fontSize: 11 }} tickLine={false} />
           <YAxis
-            stroke="rgba(255,255,255,0.2)"
-            tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+            stroke={cAxis}
+            tick={{ fill: cTickD, fontSize: 11 }}
             tickLine={false}
             axisLine={false}
             domain={yDomain}
@@ -370,13 +376,13 @@ export default function RekomendasiPage() {
   const totalIncome = result?.models?.reduce((s, m) => s + (m.income?.value || 0), 0) || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-12 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-12 text-gray-900 dark:text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">Rekomendasi Ketahanan Pangan</h1>
-          <p className="text-gray-500 dark:text-white/50 text-sm md:text-base">Sistem Rekomendasi berbasis Deep Reinforcement Learning</p>
+          <p className="text-gray-700 dark:text-white/50 text-sm md:text-base">Sistem Rekomendasi berbasis Deep Reinforcement Learning</p>
         </div>
 
         {/* Input Card */}
@@ -427,7 +433,7 @@ export default function RekomendasiPage() {
             <div className="bg-teal-500/10 border border-teal-500/30 rounded-2xl p-6">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
                 <div className="flex-1">
-                  <p className="text-gray-500 dark:text-white/50 text-sm mb-1">Rekomendasi Tanaman</p>
+                  <p className="text-gray-700 dark:text-white/50 text-sm mb-1">Rekomendasi Tanaman</p>
                   <h2 className="text-2xl md:text-3xl font-bold text-teal-400">{result.recommendation}</h2>
                 </div>
                 <div className="flex gap-2 flex-wrap">
@@ -448,7 +454,7 @@ export default function RekomendasiPage() {
             {/* 2 Card Estimasi */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className={cardStyle}>
-                <p className="text-gray-500 dark:text-white/50 text-sm mb-4">Estimasi Produksi</p>
+                <p className="text-gray-700 dark:text-white/50 text-sm mb-4">Estimasi Produksi</p>
                 {!isTumpangsari ? (
                   <div>
                     <p className="text-5xl font-bold" style={{ color: COMMODITY_COLORS[result.models[0].commodity] }}>
@@ -475,7 +481,7 @@ export default function RekomendasiPage() {
               </div>
 
               <div className={cardStyle}>
-                <p className="text-gray-500 dark:text-white/50 text-sm mb-4">Estimasi Pendapatan</p>
+                <p className="text-gray-700 dark:text-white/50 text-sm mb-4">Estimasi Pendapatan</p>
                 {!isTumpangsari ? (
                   <div>
                     <p className="text-4xl font-bold text-emerald-400">{formatCurrency(result.models[0].income?.value || 0)}</p>
@@ -507,7 +513,7 @@ export default function RekomendasiPage() {
             {result.reasons.length > 0 && <GroupedReasons reasons={result.reasons} />}
 
             {/* Catatan */}
-            <div className="bg-amber-50 dark:bg-white/3 border border-amber-200 dark:border-white/8 rounded-xl px-5 py-3 flex items-center gap-3">
+            <div className="bg-[#FFF8EC] dark:bg-white/3 border border-amber-200/70 dark:border-white/8 rounded-xl px-5 py-3 flex items-center gap-3">
               <FaExclamationTriangle className="text-amber-400 shrink-0" />
               <p className="text-gray-500 dark:text-white/40 text-xs">Rekomendasi ini bersifat pendukung keputusan dan perlu disesuaikan dengan kondisi lapangan aktual.</p>
             </div>

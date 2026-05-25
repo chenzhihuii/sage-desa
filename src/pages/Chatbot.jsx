@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaPaperPlane } from "react-icons/fa";
 import Navbar from "../components/Navbar";
@@ -71,24 +71,24 @@ const Chatbot = () => {
   }, []);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black" style={{ height: "calc(var(--vh, 1vh) * 100)" }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black" style={{ height: "calc(var(--vh, 1vh) * 100)" }}>
       <Navbar />
 
       <div className="container mx-auto px-4 h-[calc(100%-5rem)] pt-20 flex flex-col">
         <h1 className="text-center text-3xl md:text-4xl font-bold mt-6 mb-6 pb-2 leading-tight bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">AI Asisten Agrikultur</h1>
 
-        <div className="flex-1 bg-white dark:bg-white/5 backdrop-blur-xl border border-[#91C6BC]/30 dark:border-white/10 rounded-2xl flex flex-col overflow-hidden">
+        <div className="flex-1 bg-white dark:bg-white/5 backdrop-blur-xl border border-[#87a96b]/40 dark:border-white/10 rounded-2xl flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {chat.map((msg, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[80%] p-4 rounded-2xl ${msg.role === "user" ? "bg-gradient-to-r from-green-400 to-blue-500 text-white" : "bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white/90"}`}>{msg.content}</div>
+                <div className={`max-w-[80%] p-4 rounded-2xl ${msg.role === "user" ? "bg-gradient-to-r from-green-400 to-blue-500 text-white" : "bg-[#F0EDE5] dark:bg-white/10 text-gray-900 dark:text-white/90"}`}>{msg.content}</div>
               </motion.div>
             ))}
 
             {loading && <div className="text-gray-400 dark:text-white/60">Sedang mengetik...</div>}
           </div>
 
-          <div className="p-4 border-t border-[#91C6BC]/30 dark:border-white/10">
+          <div className="p-4 border-t border-[#87a96b]/40 dark:border-white/10">
             <div className="flex gap-2">
               <input
                 className="flex-grow bg-white dark:bg-white/10 text-gray-900 dark:text-white border border-gray-300 dark:border-white/20 rounded-xl px-4 py-3 focus:outline-none placeholder-gray-400 dark:placeholder-white/40"

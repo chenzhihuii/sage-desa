@@ -1,10 +1,11 @@
-﻿"use client"
+"use client"
 
 import KPICard from "../components/KPI"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Navbar from "../components/Navbar"
 import { Users, Map, TrendingUp, ShieldCheck } from "lucide-react"
+import { useTheme } from "../context/ThemeContext"
 
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
@@ -38,8 +39,8 @@ const itemVariants = {
 // ✅ Spacing dikecilkan: p-4 (dari p-6), gap dikecilkan juga
 const cardStyle = `
   bg-white dark:bg-white/5
-  backdrop-blur-xl border border-[#91C6BC]/30 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-4
-  hover:shadow-[0_4px_16px_rgba(145,198,188,0.15)] dark:hover:shadow-green-500/10 hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition-all duration-300
+  backdrop-blur-xl border border-[#87a96b]/40 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-4
+  hover:shadow-[0_4px_16px_rgba(135,169,107,0.25)] dark:hover:shadow-green-500/10 hover:border-[#87a96b]/55 dark:hover:border-white/20 transition-all duration-300
 `
 
 const KEMANDIRIAN_COLOR = {
@@ -64,6 +65,13 @@ function KemandirianChart({ kemandirianChart }) {
   const [hoveredEntry, setHoveredEntry] = useState(null)
   const [petaniMap, setPetaniMap] = useState({})
   const [loadingStatus, setLoadingStatus] = useState(null)
+  const { isDark } = useTheme()
+  const cGrid  = isDark ? 'rgba(255,255,255,0.1)'  : 'rgba(135,169,107,0.25)'
+  const cAxis  = isDark ? 'rgba(255,255,255,0.5)'  : '#4b5563'
+  const cTick  = isDark ? 'rgba(255,255,255,0.5)'  : '#374151'
+  const cTickB = isDark ? 'rgba(255,255,255,0.8)'  : '#1f2937'
+  const cCur   = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(135,169,107,0.15)'
+  const cLabel = isDark ? '#ffffff'                : '#374151'
 
   const fetchPetani = async (status) => {
     if (petaniMap[status]) return
@@ -89,11 +97,11 @@ function KemandirianChart({ kemandirianChart }) {
       <div className="flex-shrink-0" style={{ width: hoveredEntry ? '45%' : '100%', transition: 'width 0.2s' }}>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
-            <XAxis type="number" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }} />
-            <YAxis dataKey="status" type="category" width={130} stroke="rgba(255,255,255,0.8)" tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 13 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={cGrid} horizontal={false} />
+            <XAxis type="number" stroke={cAxis} tick={{ fill: cTick }} />
+            <YAxis dataKey="status" type="category" width={130} stroke={cTickB} tick={{ fill: cTickB, fontSize: 13 }} />
             <Tooltip
-              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              cursor={{ fill: cCur }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null
                 const entry = payload[0].payload
@@ -110,7 +118,7 @@ function KemandirianChart({ kemandirianChart }) {
               dataKey="jumlah"
               radius={[0, 4, 4, 0]}
               barSize={36}
-              label={{ position: 'right', fill: '#ffffff', fontSize: 12, fontWeight: 'bold', formatter: (v) => `${v} Petani` }}
+              label={{ position: 'right', fill: cLabel, fontSize: 12, fontWeight: 'bold', formatter: (v) => `${v} Petani` }}
               onMouseEnter={(entry) => handleBarEnter(entry)}
               onMouseLeave={() => setHoveredEntry(null)}
             >
@@ -173,6 +181,11 @@ export default function EksplorasiPage() {
   const [selectedCluster, setSelectedCluster] = useState(null)
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const { isDark } = useTheme()
+  const cGrid  = isDark ? 'rgba(255,255,255,0.1)'  : 'rgba(135,169,107,0.25)'
+  const cAxis  = isDark ? 'rgba(255,255,255,0.5)'  : '#4b5563'
+  const cTick  = isDark ? 'rgba(255,255,255,0.5)'  : '#374151'
+  const cCur   = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(135,169,107,0.15)'
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,7 +204,7 @@ export default function EksplorasiPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#c5e3de] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
+      <div className="min-h-screen bg-[#F6F3EB] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="animate-pulse font-medium">Mengambil data SAGE-Desa...</p>
@@ -201,7 +214,7 @@ export default function EksplorasiPage() {
   }
 
   if (!data) return (
-    <div className="min-h-screen bg-[#c5e3de] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-[#F6F3EB] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
       <p>Data tidak ditemukan. Pastikan backend menyala.</p>
     </div>
   )
@@ -211,7 +224,7 @@ export default function EksplorasiPage() {
       initial="hidden"
       animate="show"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-6 pb-6 space-y-5 text-gray-900 dark:text-white"
+      className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-6 pb-6 space-y-5 text-gray-900 dark:text-white"
     >
       <Navbar />
 
@@ -310,12 +323,12 @@ export default function EksplorasiPage() {
           <h3 className="text-base font-semibold mb-4 text-purple-400">Distribusi Pendapatan Petani</h3>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={data.pendapatanChart} margin={{ top: 10, right: 20, left: 20, bottom: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-              <XAxis dataKey="range" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} interval={0}>
-                <Label value="Rentang Pendapatan" offset={-10} position="insideBottom" fill="rgba(255,255,255,0.5)" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
+              <XAxis dataKey="range" stroke={cAxis} tick={{ fill: cTick, fontSize: 11 }} interval={0}>
+                <Label value="Rentang Pendapatan" offset={-10} position="insideBottom" fill={cAxis} fontSize={12} />
               </XAxis>
-              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
-                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill="rgba(255,255,255,0.5)" fontSize={12} dy={50} />
+              <YAxis stroke={cAxis} tick={{ fill: cTick }}>
+                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill={cAxis} fontSize={12} dy={50} />
               </YAxis>
               <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
               <defs>
@@ -333,14 +346,14 @@ export default function EksplorasiPage() {
           <h3 className="text-base font-semibold mb-4 text-orange-400">Sebaran Ukuran Lahan</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={data.lahanChart} margin={{ top: 10, right: 20, left: 20, bottom: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-              <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
-                <Label value="Ukuran Lahan (Ha)" offset={-10} position="insideBottom" fill="rgba(255,255,255,0.5)" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
+              <XAxis dataKey="name" stroke={cAxis} tick={{ fill: cTick }}>
+                <Label value="Ukuran Lahan (Ha)" offset={-10} position="insideBottom" fill={cAxis} fontSize={12} />
               </XAxis>
-              <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: 'rgba(255,255,255,0.5)' }}>
-                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill="rgba(255,255,255,0.5)" fontSize={12} dy={50} />
+              <YAxis stroke={cAxis} tick={{ fill: cTick }}>
+                <Label value="Jumlah Petani" angle={-90} position="insideLeft" fill={cAxis} fontSize={12} dy={50} />
               </YAxis>
-              <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
+              <Tooltip cursor={{ fill: cCur }} contentStyle={tooltipStyle} itemStyle={{ color: '#ffffff' }} />
               <Bar dataKey="value" fill="#f97316" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -355,12 +368,12 @@ export default function EksplorasiPage() {
         </div>
         <div className="overflow-x-auto p-2">
           <table className="w-full text-left border-collapse">
-            <thead className="border-b border-[#91C6BC]/30 dark:border-white/10 bg-[#91C6BC]/15 dark:bg-white/5">
+            <thead className="border-b border-[#87a96b]/40 dark:border-white/10 bg-[#F0EDE5] dark:bg-white/5">
               <tr>
                 <th className="px-4 py-3 text-sm font-semibold text-green-500 dark:text-green-400">Cluster</th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Jumlah Petani</th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Karakteristik</th>
-                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Level Ketahanan</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white/60">Jumlah Petani</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white/60">Karakteristik</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-white/60">Level Ketahanan</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
@@ -368,13 +381,13 @@ export default function EksplorasiPage() {
                 <tr
                   key={cluster.id}
                   className={`cursor-pointer transition-colors duration-200
-                    ${selectedCluster === cluster.id ? "bg-green-500/10" : "hover:bg-[#91C6BC]/15 dark:hover:bg-white/5"}
+                    ${selectedCluster === cluster.id ? "bg-green-500/10" : "hover:bg-[#87a96b]/12 dark:hover:bg-white/5"}
                   `}
                   onClick={() => setSelectedCluster(selectedCluster === cluster.id ? null : cluster.id)}
                 >
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{cluster.cluster}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-white/60">{cluster.jumlah} petani</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-white/60">{cluster.implikasi}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700 dark:text-white/60">{cluster.jumlah} petani</td>
+                  <td className="px-4 py-3 text-sm text-gray-700 dark:text-white/60">{cluster.implikasi}</td>
                   <td className="px-4 py-3 text-sm">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                         cluster.ketahanan === "Tinggi" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :

@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaChartLine, FaDatabase, FaHandsHelping, FaRobot, FaChartBar, FaLightbulb } from "react-icons/fa";
@@ -23,7 +23,7 @@ const FeatureIcon = ({ icon: Icon, label, path, description }) => {
         <Icon />
       </motion.div>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{label}</h3>
-      <p className="text-sm text-gray-500 dark:text-white/60">{description}</p>
+      <p className="text-sm text-gray-700 dark:text-white/60">{description}</p>
     </motion.div>
   );
 };
@@ -41,11 +41,11 @@ const Homepage = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black relative">
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black relative">
       <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
           <h1 className="text-5xl md:text-6xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">SAGE-Desa</h1>
-          <p className="text-xl text-gray-500 dark:text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>
+          <p className="text-xl text-gray-700 dark:text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>
         </motion.div>
 
         <div className="mb-12">

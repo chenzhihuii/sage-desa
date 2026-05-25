@@ -1,4 +1,4 @@
-﻿// Navbar.jsx
+// Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaArrowRight, FaBars, FaTimes, FaChevronDown, FaChartBar, FaChartLine, FaLightbulb, FaDatabase, FaHandsHelping } from "react-icons/fa";
@@ -64,10 +64,10 @@ const Navbar = () => {
         transition={{ duration: 0.1 }}
         className={`fixed top-0 left-0 right-0 z-50 mx-4 my-2 sm:mx-8 sm:my-4 transition-all duration-200
           ${scrolled
-            ? "bg-white/95 dark:bg-black/90 shadow-md dark:shadow-none"
-            : "bg-white/80 dark:bg-black/75"
+            ? "bg-[#F6F3EB]/95 dark:bg-black/90 shadow-md dark:shadow-none"
+            : "bg-[#F6F3EB]/85 dark:bg-black/75"
           }
-          backdrop-blur-lg rounded-2xl border border-[#91C6BC]/30 dark:border-white/10 shadow-lg`}
+          backdrop-blur-lg rounded-2xl border border-[#87a96b]/35 dark:border-white/10 shadow-sm dark:shadow-lg`}
       >
         <div className="flex items-center justify-between h-16 px-6 sm:px-8">
           <motion.div whileHover={{ scale: 1.05 }}>
@@ -121,10 +121,10 @@ const Navbar = () => {
                     transition={{ duration: 0.15, ease: "easeOut" }}
                     className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-72
                       bg-white dark:bg-black/90 backdrop-blur-xl rounded-2xl
-                      border border-[#91C6BC]/30 dark:border-white/10
+                      border border-[#87a96b]/40 dark:border-white/10
                       shadow-xl shadow-gray-200/50 dark:shadow-black/50 overflow-hidden"
                   >
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-black/90 border-l border-t border-[#91C6BC]/30 dark:border-white/10 rotate-45" />
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-black/90 border-l border-t border-[#87a96b]/40 dark:border-white/10 rotate-45" />
                     <div className="relative py-2">
                       {featureLinks.map((feature, index) => {
                         const Icon = feature.icon;
@@ -136,12 +136,12 @@ const Navbar = () => {
                             className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 group
                               ${isActive
                                 ? "bg-gradient-to-r from-green-400/15 to-blue-500/15 text-green-500"
-                                : "text-gray-700 dark:text-white/80 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"}`}
+                                : "text-gray-700 dark:text-white/80 hover:bg-[#F0EDE5] dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"}`}
                           >
                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200
                               ${isActive
                                 ? "bg-gradient-to-br from-green-400/20 to-blue-500/20"
-                                : "bg-[#91C6BC]/15 dark:bg-white/5 group-hover:bg-gray-200 dark:group-hover:bg-white/10"}`}>
+                                : "bg-[#F0EDE5] dark:bg-white/5 group-hover:bg-gray-200 dark:group-hover:bg-white/10"}`}>
                               <Icon className={`text-base ${isActive ? "text-green-500" : "text-gray-500 dark:text-white/60 group-hover:text-green-500 dark:group-hover:text-green-400"}`} />
                             </div>
                             <div>
@@ -230,7 +230,7 @@ const Navbar = () => {
           >
             <motion.div
               className="bg-white dark:bg-black/90 backdrop-blur-xl rounded-2xl
-                border border-[#91C6BC]/30 dark:border-white/10 shadow-2xl
+                border border-[#87a96b]/40 dark:border-white/10 shadow-2xl
                 overflow-hidden divide-y divide-gray-100 dark:divide-white/10"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -241,7 +241,7 @@ const Navbar = () => {
                 <Link
                   to="/"
                   className={`block px-6 py-4 text-base transition-all duration-300
-                    ${location.pathname === "/" ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5"}`}
+                    ${location.pathname === "/" ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#F0EDE5] dark:hover:bg-white/5"}`}
                   onClick={() => setIsOpen(false)}
                 >
                   Beranda
@@ -253,7 +253,7 @@ const Navbar = () => {
                 <button
                   onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
                   className={`w-full flex items-center justify-between px-6 py-4 text-base transition-all duration-300
-                    ${isOnFeaturePage ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5"}`}
+                    ${isOnFeaturePage ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#F0EDE5] dark:hover:bg-white/5"}`}
                 >
                   <span>Fitur</span>
                   <motion.span animate={{ rotate: isMobileDropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -280,7 +280,7 @@ const Navbar = () => {
                             className={`flex items-center gap-3 px-8 py-3 transition-all duration-200
                               ${isActive
                                 ? "text-green-500 bg-green-50 dark:bg-green-400/10"
-                                : "text-gray-600 dark:text-white/70 hover:bg-[#91C6BC]/15 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"}`}
+                                : "text-gray-600 dark:text-white/70 hover:bg-[#87a96b]/12 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white"}`}
                             onClick={() => setIsOpen(false)}
                           >
                             <Icon className={`text-base ${isActive ? "text-green-500" : "text-gray-400 dark:text-white/50"}`} />
@@ -299,7 +299,7 @@ const Navbar = () => {
                   <Link
                     to={link.path}
                     className={`block px-6 py-4 text-base transition-all duration-300
-                      ${location.pathname === link.path ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5"}`}
+                      ${location.pathname === link.path ? "text-green-500 bg-white dark:bg-white/5" : "text-gray-700 dark:text-white/90 hover:bg-[#F0EDE5] dark:hover:bg-white/5"}`}
                     onClick={() => setIsOpen(false)}
                   >
                     {link.title}

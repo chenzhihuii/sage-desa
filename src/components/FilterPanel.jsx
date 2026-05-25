@@ -22,11 +22,11 @@ export default function FilterPanel() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-white dark:bg-white/5
-        border border-[#91C6BC]/30 dark:border-white/10 rounded-2xl overflow-hidden shadow-sm dark:shadow-none"
+        border border-[#87a96b]/40 dark:border-white/10 rounded-2xl overflow-hidden shadow-sm dark:shadow-none"
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#91C6BC]/10 dark:hover:bg-white/5 transition-colors group"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F0EDE5] dark:hover:bg-white/5 transition-colors group"
       >
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-gradient-to-br from-green-400/20 to-blue-500/20 text-green-500 dark:text-green-400 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors">
@@ -50,7 +50,7 @@ export default function FilterPanel() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="border-t border-[#91C6BC]/20 dark:border-white/10 p-6 space-y-6">
+            <div className="border-t border-[#87a96b]/30 dark:border-white/10 p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Select Desa */}
                 <div className="space-y-2">
@@ -94,7 +94,7 @@ export default function FilterPanel() {
               </div>
 
               <div className="flex gap-3 justify-end pt-2">
-                <button className="px-5 py-2 rounded-xl border border-[#91C6BC]/30 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white transition-all duration-200 text-sm font-medium">
+                <button className="px-5 py-2 rounded-xl border border-[#87a96b]/40 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#F0EDE5] dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white transition-all duration-200 text-sm font-medium">
                   Reset
                 </button>
                 <button className="px-6 py-2 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 text-white font-medium hover:shadow-lg hover:shadow-green-500/20 hover:scale-[1.02] transition-all duration-200 text-sm">

@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { FaSeedling } from "react-icons/fa";
@@ -53,14 +53,14 @@ const CropsData = () => {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       <div className="container mx-auto px-4 py-8">
         {/* HEADER */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-10">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">Data Tanaman</h1>
-          <p className="text-lg text-gray-500 dark:text-white/60">Informasi komoditas pertanian Desa Sumberarum</p>
+          <p className="text-lg text-gray-700 dark:text-white/60">Informasi komoditas pertanian Desa Sumberarum</p>
         </motion.div>
 
         {/* GRID KOMODITAS */}
@@ -73,7 +73,7 @@ const CropsData = () => {
                 setSelectedCrop(crop);
                 setIsPopupVisible(true);
               }}
-              className="bg-white dark:bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-[#91C6BC]/30 dark:border-white/10 cursor-pointer hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition"
+              className="bg-white dark:bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-[#87a96b]/40 dark:border-white/10 cursor-pointer hover:border-[#87a96b]/55 dark:hover:border-white/20 transition"
             >
               <div className="h-44 mb-4 rounded-lg overflow-hidden">
                 <img src={crop.image} alt={crop.name} className="w-full h-full object-cover" />

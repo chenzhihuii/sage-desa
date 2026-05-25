@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Navbar from '../components/Navbar';
@@ -131,7 +131,7 @@ const App = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black"
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black"
     >
       <Navbar />
       <div className="container mx-auto px-4 pb-12">
@@ -144,7 +144,7 @@ const App = () => {
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
             Agricultural Analytics
           </h1>
-          <p className="text-xl text-gray-500 dark:text-white/60">
+          <p className="text-xl text-gray-700 dark:text-white/60">
             Monitor weather and soil conditions for better farming
           </p>
         </motion.div>
@@ -153,18 +153,18 @@ const App = () => {
         <motion.section 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mb-12 backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl p-6 border border-[#91C6BC]/30 dark:border-white/10"
+          className="mb-12 backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl p-6 border border-[#87a96b]/40 dark:border-white/10"
         >
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Precipitation Analysis</h2>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="space-y-2">
-  <label className="text-gray-500 dark:text-white/60">Start Date</label>
+  <label className="text-gray-700 dark:text-white/60">Start Date</label>
   <input
     type="date"
     value={startDate}
     onChange={(e) => setStartDate(e.target.value)}
-    className="w-full bg-white dark:bg-black/50 border border-[#91C6BC]/40 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3
+    className="w-full bg-white dark:bg-black/50 border border-[#87a96b]/45 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3
     focus:ring-2 focus:ring-green-500 focus:border-green-500
     hover:border-gray-400 dark:hover:border-white/30 transition-colors"
     required
@@ -172,12 +172,12 @@ const App = () => {
 </div>
 
 <div className="space-y-2">
-  <label className="text-gray-500 dark:text-white/60">End Date</label>
+  <label className="text-gray-700 dark:text-white/60">End Date</label>
   <input
     type="date"
     value={endDate}
     onChange={(e) => setEndDate(e.target.value)}
-    className="w-full bg-white dark:bg-black/50 border border-[#91C6BC]/40 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3
+    className="w-full bg-white dark:bg-black/50 border border-[#87a96b]/45 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3
     focus:ring-2 focus:ring-green-500 focus:border-green-500
     hover:border-gray-400 dark:hover:border-white/30 transition-colors"
     required
@@ -201,7 +201,7 @@ const App = () => {
   
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
   <motion.div 
-    className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#91C6BC]/30 dark:border-white/10"
+    className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#87a96b]/40 dark:border-white/10"
     whileHover={{ scale: 1.01 }}
   >
     <ResponsiveContainer width="100%" height={400}>
@@ -252,7 +252,7 @@ const App = () => {
   </motion.div>
 
   <motion.div 
-    className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#91C6BC]/30 dark:border-white/10"
+    className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#87a96b]/40 dark:border-white/10"
     whileHover={{ scale: 1.01 }}
   >
     <ResponsiveContainer width="100%" height={400}>
@@ -304,28 +304,28 @@ const App = () => {
         <motion.section 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl p-6 border border-[#91C6BC]/30 dark:border-white/10"
+          className="backdrop-blur-xl bg-white dark:bg-white/5 rounded-2xl p-6 border border-[#87a96b]/40 dark:border-white/10"
         >
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Soil Moisture Analysis</h2>
 
           <form onSubmit={handleYearSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="space-y-2">
-              <label className="text-gray-500 dark:text-white/60">Start Year</label>
+              <label className="text-gray-700 dark:text-white/60">Start Year</label>
               <input
                 type="number"
                 value={startYear}
                 onChange={(e) => setStartYear(e.target.value)}
-                className="w-full bg-white dark:bg-black/50 border border-[#91C6BC]/40 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-green-500"
+                className="w-full bg-white dark:bg-black/50 border border-[#87a96b]/45 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-green-500"
                 required
               />
             </div>
             <div className="space-y-2">
-              <label className="text-gray-500 dark:text-white/60">End Year</label>
+              <label className="text-gray-700 dark:text-white/60">End Year</label>
               <input
                 type="number"
                 value={endYear}
                 onChange={(e) => setEndYear(e.target.value)}
-                className="w-full bg-white dark:bg-black/50 border border-[#91C6BC]/40 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-green-500"
+                className="w-full bg-white dark:bg-black/50 border border-[#87a96b]/45 dark:border-white/10 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-green-500"
                 required
               />
             </div>
@@ -341,7 +341,7 @@ const App = () => {
   
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div 
-              className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#91C6BC]/30 dark:border-white/10"
+              className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#87a96b]/40 dark:border-white/10"
               whileHover={{ scale: 1.01 }}
             >
               <ResponsiveContainer width="100%" height={400}>
@@ -358,7 +358,7 @@ const App = () => {
             </motion.div>
   
             <motion.div 
-              className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#91C6BC]/30 dark:border-white/10"
+              className="bg-gray-100 dark:bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-[#87a96b]/40 dark:border-white/10"
               whileHover={{ scale: 1.01 }}
             >
               <ResponsiveContainer width="100%" height={400}>

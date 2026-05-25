@@ -1,11 +1,11 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaLeaf, FaHome } from 'react-icons/fa';
 
 const ErrorPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-green-900 dark:via-gray-900 dark:to-emerald-950 relative overflow-hidden flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-green-900 dark:via-gray-900 dark:to-emerald-950 relative overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMjEyMTIxIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMyOTI5MjkiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=')] opacity-10 dark:opacity-30"></div>
 
       <div className="container mx-auto px-4 relative z-10">

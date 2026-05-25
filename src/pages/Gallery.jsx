@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import { FaImages, FaTimes } from 'react-icons/fa';
@@ -23,14 +23,14 @@ const Gallery = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 pb-1 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
             Dokumentsi Lapangan
           </h1>
-          <p className="text-gray-500 dark:text-white/50 text-sm md:text-base">
+          <p className="text-gray-700 dark:text-white/50 text-sm md:text-base">
             Dokumentasi kegiatan survei serta kondisi lahan pertanian di lokasi penelitian
           </p>
         </motion.div>
