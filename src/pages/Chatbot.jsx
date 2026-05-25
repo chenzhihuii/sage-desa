@@ -71,7 +71,7 @@ const Chatbot = () => {
   }, []);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black" style={{ height: "calc(var(--vh, 1vh) * 100)" }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-gradient-to-br from-[#EAF0DE] via-[#F0F5E8] to-[#EAF0DE] dark:from-black dark:via-gray-900 dark:to-black" style={{ height: "calc(var(--vh, 1vh) * 100)" }}>
       <Navbar />
 
       <div className="container mx-auto px-4 h-[calc(100%-5rem)] pt-20 flex flex-col">

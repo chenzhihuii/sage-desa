@@ -323,9 +323,9 @@ const MapeBadge = ({ mae, mape, unit = "Rp/kg" }) => {
       {/* MAE */}
       {mae !== undefined && (
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-medium text-blue-300">
+          <span className="text-sm font-medium text-blue-400 dark:text-blue-300">
             MAE: {mae}
-            <span className="text-xs font-normal text-white/40"> {unit}</span>
+            <span className="text-xs font-normal text-gray-400 dark:text-white/40"> {unit}</span>
           </span>
 
           <div className="relative">
@@ -335,7 +335,7 @@ const MapeBadge = ({ mae, mape, unit = "Rp/kg" }) => {
                 setShowMAE(!showMAE);
                 setShowMAPE(false); // tutup yg lain
               }}
-              className="text-white/30 hover:text-white/70 transition-colors"
+              className="text-gray-400 dark:text-white/30 hover:text-gray-700 dark:hover:text-white/70 transition-colors"
             >
               <MdInfo size={14} />
             </button>
@@ -361,7 +361,7 @@ const MapeBadge = ({ mae, mape, unit = "Rp/kg" }) => {
               setShowMAPE(!showMAPE);
               setShowMAE(false); // tutup yg lain
             }}
-            className="text-white/30 hover:text-white/70 transition-colors"
+            className="text-gray-400 dark:text-white/30 hover:text-gray-700 dark:hover:text-white/70 transition-colors"
           >
             <MdInfo size={14} />
           </button>
@@ -677,7 +677,7 @@ export default function PrediksiPage() {
 
   return (
     <>
-    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-8 text-gray-900 dark:text-white">
+    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-[#EAF0DE] via-[#F0F5E8] to-[#EAF0DE] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-8 text-gray-900 dark:text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
@@ -761,17 +761,17 @@ export default function PrediksiPage() {
                   <div className="bg-red-500/10 rounded-xl p-4 text-center text-red-400">Error: {weatherError}</div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
                       <div className="flex items-center gap-3">
                         <MdLocationOn className="text-2xl text-green-400" />
                         <h4 className="font-semibold text-gray-900 dark:text-white text-lg">Desa {location}, Kab.Blitar</h4>
                       </div>
                       {liveWeather && (
-                        <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl">
+                        <div className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 px-4 py-2 rounded-xl">
                           <span className="text-gray-500 dark:text-white/60 text-sm">Saat ini:</span>
-                          <span className="text-xl font-bold text-green-400">{Math.round(liveWeather.main.temp)}°C</span>
-                          <span className="text-white/60">|</span>
-                          <span className="text-blue-400">{liveWeather.main.humidity}%</span>
+                          <span className="text-xl font-bold text-green-500 dark:text-green-400">{Math.round(liveWeather.main.temp)}°C</span>
+                          <span className="text-gray-300 dark:text-white/60">|</span>
+                          <span className="text-blue-500 dark:text-blue-400">{liveWeather.main.humidity}%</span>
                         </div>
                       )}
                     </div>
@@ -815,16 +815,16 @@ export default function PrediksiPage() {
                             <WiThermometer className="text-3xl text-red-400" />
                             <span className="text-sm text-gray-700 dark:text-white/60">Suhu</span>
                           </div>
-                          <p className="text-3xl font-bold text-white">{selectedForecast.temp}°C</p>
-                          <p className="text-xs text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
+                          <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.temp}°C</p>
+                          <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
                         </motion.div>
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
                           <div className="flex items-center gap-2 mb-2">
                             <BsDropletFill className="text-xl text-blue-400" />
                             <span className="text-sm text-gray-700 dark:text-white/60">Kelembaban</span>
                           </div>
-                          <p className="text-3xl font-bold text-white">{selectedForecast.humidity}%</p>
-                          <p className="text-xs text-white/50 mt-1">Tingkat kelembaban udara</p>
+                          <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.humidity}%</p>
+                          <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Tingkat kelembaban udara</p>
                         </motion.div>
                       </div>
                     )}
@@ -1187,7 +1187,7 @@ export default function PrediksiPage() {
                       <div className="grid grid-cols-3 gap-3">
                         {[
                           { label: "Terendah", value: fmt(min), color: "text-blue-400" },
-                          { label: "Rata-rata", value: fmt(avg), color: "text-white" },
+                          { label: "Rata-rata", value: fmt(avg), color: "text-gray-900 dark:text-white" },
                           { label: "Tertinggi", value: fmt(max), color: "text-amber-400" },
                         ].map(({ label, value, color }) => (
                           <div key={label} className="bg-[#F0EDE5] dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-200 dark:border-white/5">

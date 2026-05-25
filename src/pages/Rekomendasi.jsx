@@ -376,7 +376,7 @@ export default function RekomendasiPage() {
   const totalIncome = result?.models?.reduce((s, m) => s + (m.income?.value || 0), 0) || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-12 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#EAF0DE] via-[#F0F5E8] to-[#EAF0DE] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-12 text-gray-900 dark:text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}

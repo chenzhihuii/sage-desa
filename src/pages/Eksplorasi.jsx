@@ -204,7 +204,7 @@ export default function EksplorasiPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F6F3EB] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
+      <div className="min-h-screen bg-[#EAF0DE] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="animate-pulse font-medium">Mengambil data SAGE-Desa...</p>
@@ -214,7 +214,7 @@ export default function EksplorasiPage() {
   }
 
   if (!data) return (
-    <div className="min-h-screen bg-[#F6F3EB] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-[#EAF0DE] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
       <p>Data tidak ditemukan. Pastikan backend menyala.</p>
     </div>
   )
@@ -224,7 +224,7 @@ export default function EksplorasiPage() {
       initial="hidden"
       animate="show"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-6 pb-6 space-y-5 text-gray-900 dark:text-white"
+      className="min-h-screen bg-gradient-to-br from-[#EAF0DE] via-[#F0F5E8] to-[#EAF0DE] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-6 pb-6 space-y-5 text-gray-900 dark:text-white"
     >
       <Navbar />
 

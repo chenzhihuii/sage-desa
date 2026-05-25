@@ -6,7 +6,7 @@ import { FaLeaf, FaSeedling, FaHandHoldingHeart } from "react-icons/fa";
 const About = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="min-h-screen pt-20 bg-gradient-to-br from-[#F6F3EB] via-[#FAF8F3] to-[#F6F3EB] dark:from-black dark:via-gray-900 dark:to-black">
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#EAF0DE] via-[#F0F5E8] to-[#EAF0DE] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       {/* Hero Section */}
