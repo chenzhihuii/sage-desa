@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { FaSeedling } from "react-icons/fa";
@@ -53,14 +53,14 @@ const CropsData = () => {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black">
       <Navbar />
 
       <div className="container mx-auto px-4 py-8">
         {/* HEADER */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-10">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">Data Tanaman</h1>
-          <p className="text-lg text-white/60">Informasi komoditas pertanian Desa Sumberarum</p>
+          <p className="text-lg text-gray-500 dark:text-white/60">Informasi komoditas pertanian Desa Sumberarum</p>
         </motion.div>
 
         {/* GRID KOMODITAS */}
@@ -73,15 +73,15 @@ const CropsData = () => {
                 setSelectedCrop(crop);
                 setIsPopupVisible(true);
               }}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 cursor-pointer hover:border-white/20 transition"
+              className="bg-white dark:bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-[#91C6BC]/30 dark:border-white/10 cursor-pointer hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition"
             >
               <div className="h-44 mb-4 rounded-lg overflow-hidden">
                 <img src={crop.image} alt={crop.name} className="w-full h-full object-cover" />
               </div>
 
-              <h2 className="text-xl font-semibold text-white mb-2">{crop.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{crop.name}</h2>
 
-              <p className="text-sm text-white/60 mb-3">{crop.description}</p>
+              <p className="text-sm text-gray-500 dark:text-white/60 mb-3">{crop.description}</p>
 
               <div className="flex items-center text-green-400 text-sm">
                 <FaSeedling className="mr-2" />
@@ -94,10 +94,10 @@ const CropsData = () => {
         {/* POPUP DETAIL */}
         {isPopupVisible && selectedCrop && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setIsPopupVisible(false)}>
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-gray-900 p-6 rounded-2xl max-w-xl w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white dark:bg-gray-900 p-6 rounded-2xl max-w-xl w-full mx-4" onClick={(e) => e.stopPropagation()}>
               <img src={selectedCrop.image} alt={selectedCrop.name} className="w-full h-56 object-cover rounded-lg mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">{selectedCrop.name}</h2>
-              <p className="text-white/70 mb-4">{selectedCrop.fullDescription}</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{selectedCrop.name}</h2>
+              <p className="text-gray-600 dark:text-white/70 mb-4">{selectedCrop.fullDescription}</p>
               <div className="text-green-400 mb-4">
                 <FaSeedling className="inline mr-2" />
                 Kebutuhan air: {selectedCrop.waterRequirement}

@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaChartLine, FaDatabase, FaHandsHelping, FaRobot, FaChartBar, FaLightbulb } from "react-icons/fa";
@@ -12,16 +12,18 @@ const FeatureIcon = ({ icon: Icon, label, path, description }) => {
       whileTap={{ scale: 0.95 }}
       onClick={() => navigate(path)}
       className="flex flex-col p-6 rounded-2xl cursor-pointer
-                 bg-gradient-to-br from-green-400/10 via-blue-500/10 to-purple-500/10 
-                 backdrop-blur-xl border border-white/10 shadow-lg
-                 hover:shadow-xl hover:shadow-green-500/20 hover:border-white/20 
+                 bg-white dark:bg-transparent
+                 bg-gradient-to-br from-green-50/80 via-white to-emerald-50/50
+                 dark:from-green-400/10 dark:via-blue-500/10 dark:to-purple-500/10
+                 border border-green-100 dark:border-white/10 shadow-sm dark:shadow-lg
+                 hover:shadow-xl hover:shadow-green-500/20 hover:border-green-300 dark:hover:border-white/20
                  transition-all duration-300"
     >
-      <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-5xl mb-4 text-white">
+      <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-5xl mb-4 text-green-500 dark:text-white">
         <Icon />
       </motion.div>
-      <h3 className="text-lg font-semibold text-white mb-2">{label}</h3>
-      <p className="text-sm text-white/60">{description}</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{label}</h3>
+      <p className="text-sm text-gray-500 dark:text-white/60">{description}</p>
     </motion.div>
   );
 };
@@ -30,44 +32,20 @@ const Homepage = () => {
   const navigate = useNavigate();
 
   const features = [
-    {
-      icon: FaChartBar,
-      label: "Eksplorasi",
-      path: "/Eksplorasi",
-      description: "Visualisasi karakteristik petani dan harga komoditas.",
-    },
-    {
-      icon: FaChartLine,
-      label: "Prediksi",
-      path: "/Prediksi",
-      description: "Prediksi produksi, pendapatan, dan ketahanan pangan.",
-    },
-    {
-      icon: FaLightbulb,
-      label: "Rekomendasi",
-      path: "/Rekomendasi",
-      description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network.",
-    },
-    {
-      icon: FaDatabase,
-      label: "Data Komoditas",
-      path: "/cropdata",
-      description: "Informasi dan data tanaman pertanian",
-    },
-    {
-      icon: FaHandsHelping,
-      label: "Konsultasi",
-      path: "/Expert",
-      description: "Konsultasi dengan penyuluh",
-    },
+    { icon: FaChartBar, label: "Eksplorasi", path: "/Eksplorasi", description: "Visualisasi karakteristik petani dan harga komoditas." },
+    { icon: FaChartLine, label: "Prediksi", path: "/Prediksi", description: "Prediksi produksi, pendapatan, dan ketahanan pangan." },
+    { icon: FaLightbulb, label: "Rekomendasi", path: "/Rekomendasi", description: "Rekomendasi ketahanan pangan berbasis Deep Q-Network." },
+    { icon: FaDatabase, label: "Data Komoditas", path: "/cropdata", description: "Informasi dan data tanaman pertanian" },
+    { icon: FaHandsHelping, label: "Konsultasi", path: "/Expert", description: "Konsultasi dengan penyuluh" },
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-20 bg-gradient-to-br from-black via-gray-900 to-black relative">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      className="min-h-screen pt-20 bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black relative">
       <div className="container mx-auto px-4 py-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-8">
           <h1 className="text-5xl md:text-6xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">SAGE-Desa</h1>
-          <p className="text-xl text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>
+          <p className="text-xl text-gray-500 dark:text-white/60">Sustainable Agriculture and Growth through Expert-AI</p>
         </motion.div>
 
         <div className="mb-12">
@@ -76,12 +54,7 @@ const Homepage = () => {
 
         <motion.div variants={container} initial="hidden" animate="show" className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto pb-8">
           {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={item}
-              custom={index}
-              className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
-            >
+            <motion.div key={index} variants={item} custom={index} className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
               <FeatureIcon {...feature} />
             </motion.div>
           ))}
@@ -92,9 +65,7 @@ const Homepage = () => {
       <motion.div
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-green-400 to-blue-500 
-                   rounded-full p-4 shadow-lg cursor-pointer hover:shadow-xl 
-                   transition-all duration-300 z-50"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-green-400 to-blue-500 rounded-full p-4 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 z-50"
         onClick={() => navigate("/chatbot")}
       >
         <FaRobot className="text-white text-2xl" />
@@ -106,23 +77,12 @@ const Homepage = () => {
 
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const item = {
   hidden: { y: 20, opacity: 0 },
-  show: (i) => ({
-    y: 0,
-    opacity: 1,
-    transition: {
-      delay: i * 0.1,
-    },
-  }),
+  show: (i) => ({ y: 0, opacity: 1, transition: { delay: i * 0.1 } }),
 };
 
 export default Homepage;

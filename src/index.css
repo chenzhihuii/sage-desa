@@ -7,3 +7,10 @@
     @apply bg-clip-text text-transparent;
   }
 }
+
+/* Smooth theme transition */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import KPICard from "../components/KPI"
 import { useState, useEffect } from "react"
@@ -37,9 +37,9 @@ const itemVariants = {
 
 // ✅ Spacing dikecilkan: p-4 (dari p-6), gap dikecilkan juga
 const cardStyle = `
-  bg-gradient-to-br from-green-400/5 via-blue-500/5 to-purple-500/5 
-  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-4
-  hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
+  bg-white dark:bg-white/5
+  backdrop-blur-xl border border-[#91C6BC]/30 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-4
+  hover:shadow-[0_4px_16px_rgba(145,198,188,0.15)] dark:hover:shadow-green-500/10 hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition-all duration-300
 `
 
 const KEMANDIRIAN_COLOR = {
@@ -130,7 +130,7 @@ function KemandirianChart({ kemandirianChart }) {
           onMouseLeave={() => setHoveredEntry(null)}
         >
           <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-            <span style={{ color: KEMANDIRIAN_COLOR[hoveredEntry.status] || '#fff', fontWeight: 700, fontSize: 13 }}>
+            <span style={{ color: KEMANDIRIAN_COLOR[hoveredEntry.status] || '#aaa', fontWeight: 700, fontSize: 13 }}>
               {hoveredEntry.status}
             </span>
             <span className="text-white/40 text-xs">{hoveredEntry.jumlah} Petani</span>
@@ -191,7 +191,7 @@ export default function EksplorasiPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center text-white">
+      <div className="min-h-screen bg-[#c5e3de] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="animate-pulse font-medium">Mengambil data SAGE-Desa...</p>
@@ -201,7 +201,7 @@ export default function EksplorasiPage() {
   }
 
   if (!data) return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white">
+    <div className="min-h-screen bg-[#c5e3de] dark:bg-black flex items-center justify-center text-gray-900 dark:text-white">
       <p>Data tidak ditemukan. Pastikan backend menyala.</p>
     </div>
   )
@@ -211,7 +211,7 @@ export default function EksplorasiPage() {
       initial="hidden"
       animate="show"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-6 pb-6 space-y-5 text-white"
+      className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-6 pb-6 space-y-5 text-gray-900 dark:text-white"
     >
       <Navbar />
 
@@ -221,7 +221,7 @@ export default function EksplorasiPage() {
           <h2 className="text-4xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">
             Eksplorasi Data Ketahanan Pangan
           </h2>
-          <p className="text-white/60 text-lg">
+          <p className="text-gray-500 dark:text-white/60 text-lg">
             Analisis karakteristik petani, demografi, dan faktor ketahanan pangan (Live Data)
           </p>
         </div>
@@ -350,31 +350,31 @@ export default function EksplorasiPage() {
       {/* Table Section */}
       <motion.div variants={itemVariants} className={`${cardStyle} overflow-hidden !p-0`}>
         <div className="p-4 pb-2">
-          <h3 className="text-base font-semibold text-white">Klasterisasi Petani (KMeans Analysis)</h3>
-          <p className="text-white/40 text-sm mt-0.5">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Klasterisasi Petani (KMeans Analysis)</h3>
+          <p className="text-gray-400 dark:text-white/40 text-sm mt-0.5">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
         </div>
         <div className="overflow-x-auto p-2">
           <table className="w-full text-left border-collapse">
-            <thead className="border-b border-white/10 bg-white/5">
+            <thead className="border-b border-[#91C6BC]/30 dark:border-white/10 bg-[#91C6BC]/15 dark:bg-white/5">
               <tr>
-                <th className="px-4 py-3 text-sm font-semibold text-green-400">Cluster</th>
-                <th className="px-4 py-3 text-sm font-semibold text-white/60">Jumlah Petani</th>
-                <th className="px-4 py-3 text-sm font-semibold text-white/60">Karakteristik</th>
-                <th className="px-4 py-3 text-sm font-semibold text-white/60">Level Ketahanan</th>
+                <th className="px-4 py-3 text-sm font-semibold text-green-500 dark:text-green-400">Cluster</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Jumlah Petani</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Karakteristik</th>
+                <th className="px-4 py-3 text-sm font-semibold text-gray-500 dark:text-white/60">Level Ketahanan</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-gray-100 dark:divide-white/5">
               {data.petaniCluster.map((cluster) => (
                 <tr
                   key={cluster.id}
-                  className={`cursor-pointer transition-colors duration-200 
-                    ${selectedCluster === cluster.id ? "bg-green-500/10" : "hover:bg-white/5"}
+                  className={`cursor-pointer transition-colors duration-200
+                    ${selectedCluster === cluster.id ? "bg-green-500/10" : "hover:bg-[#91C6BC]/15 dark:hover:bg-white/5"}
                   `}
                   onClick={() => setSelectedCluster(selectedCluster === cluster.id ? null : cluster.id)}
                 >
-                  <td className="px-4 py-3 text-sm font-medium text-white">{cluster.cluster}</td>
-                  <td className="px-4 py-3 text-sm text-white/60">{cluster.jumlah} petani</td>
-                  <td className="px-4 py-3 text-sm text-white/60">{cluster.implikasi}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{cluster.cluster}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-white/60">{cluster.jumlah} petani</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-white/60">{cluster.implikasi}</td>
                   <td className="px-4 py-3 text-sm">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                         cluster.ketahanan === "Tinggi" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :

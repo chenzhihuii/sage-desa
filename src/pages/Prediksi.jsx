@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine } from "recharts";
@@ -69,9 +69,9 @@ const itemVariants = {
 };
 
 const cardStyle = `
-  bg-gradient-to-br from-green-400/5 via-blue-500/5 to-purple-500/5 
-  backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl p-6
-  hover:shadow-green-500/10 hover:border-white/20 transition-all duration-300
+  bg-white dark:bg-white/5
+  backdrop-blur-xl border border-[#91C6BC]/30 dark:border-white/10 shadow-sm dark:shadow-none rounded-2xl p-6
+  hover:shadow-[0_4px_16px_rgba(145,198,188,0.15)] dark:hover:shadow-green-500/10 hover:border-[#91C6BC]/50 dark:hover:border-white/20 transition-all duration-300
 `;
 
 const weatherForecastData = [
@@ -666,7 +666,7 @@ export default function PrediksiPage() {
 
   return (
     <>
-    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pt-24 px-4 md:px-8 pb-8 text-white">
+    <motion.div initial="hidden" animate="show" variants={containerVariants} className="min-h-screen bg-gradient-to-br from-[#c5e3de] via-[#e0f0ed] to-[#c5e3de] dark:from-black dark:via-gray-900 dark:to-black pt-24 px-4 md:px-8 pb-8 text-gray-900 dark:text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
@@ -675,7 +675,7 @@ export default function PrediksiPage() {
             <div className="flex items-center gap-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold pb-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent inline-block">Prediksi & Peramalan</h2>
-                <p className="text-white/50 text-sm md:text-base">Model prediktif berbasis AI untuk harga pangan dan kondisi iklim</p>
+                <p className="text-gray-500 dark:text-white/50 text-sm md:text-base">Model prediktif berbasis AI untuk harga pangan dan kondisi iklim</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -685,7 +685,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("suhu");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "weather" ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25" : "bg-white/5 text-white/60 hover:bg-white/10 border border-white/10"
+                  activeCategory === "weather" ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
                 }`}
               >
                 <IoCloudOutline size={16} /> Cuaca
@@ -696,7 +696,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("jagung");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "commodity" ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25" : "bg-white/5 text-white/60 hover:bg-white/10 border border-white/10"
+                  activeCategory === "commodity" ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
                 }`}
               >
                 <FaSeedling size={14} /> Harga Komoditas
@@ -707,7 +707,7 @@ export default function PrediksiPage() {
                   setSelectedPrediction("berasPremium");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
-                  activeCategory === "food" ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25" : "bg-white/5 text-white/60 hover:bg-white/10 border border-white/10"
+                  activeCategory === "food" ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25" : "bg-[#91C6BC]/15 dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 border border-[#91C6BC]/30 dark:border-white/10"
                 }`}
               >
                 <FaBowlRice size={16} /> Harga Bahan Pangan
@@ -717,18 +717,18 @@ export default function PrediksiPage() {
         </motion.div>
 
         {/* Info Bar */}
-        <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10">
-          <div className="flex flex-wrap items-center gap-4 text-xs text-white/60">
+        <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-[#91C6BC]/30 dark:border-white/10">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-white/60">
             <span className="flex items-center gap-1.5">
-              <MdAccessTime size={14} /> <span className="text-white/80">Terakhir diperbarui:</span> 18 Apr 2026
+              <MdAccessTime size={14} /> <span className="text-gray-700 dark:text-white/80">Terakhir diperbarui:</span> 18 Apr 2026
             </span>
-            <span className="hidden sm:block text-white/20">|</span>
+            <span className="hidden sm:block text-gray-300 dark:text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdCalendarMonth size={14} /> <span className="text-white/80">Periode:</span> Apr 2025 - Apr 2026
+              <MdCalendarMonth size={14} /> <span className="text-gray-700 dark:text-white/80">Periode:</span> Apr 2025 - Apr 2026
             </span>
-            <span className="hidden sm:block text-white/20">|</span>
+            <span className="hidden sm:block text-gray-300 dark:text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdAccountBalance size={14} /> <span className="text-white/80">Sumber:</span> BMKG, Siskaperbapo
+              <MdAccountBalance size={14} /> <span className="text-gray-700 dark:text-white/80">Sumber:</span> BMKG, Siskaperbapo
             </span>
           </div>
           <div className="text-xs text-amber-400/80 flex items-center gap-1.5">
@@ -744,7 +744,7 @@ export default function PrediksiPage() {
                 {weatherLoading ? (
                   <div className="flex justify-center items-center py-8">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400"></div>
-                    <span className="ml-3 text-white/60">Memuat data cuaca...</span>
+                    <span className="ml-3 text-gray-500 dark:text-white/60">Memuat data cuaca...</span>
                   </div>
                 ) : weatherError ? (
                   <div className="bg-red-500/10 rounded-xl p-4 text-center text-red-400">Error: {weatherError}</div>
@@ -753,11 +753,11 @@ export default function PrediksiPage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
                       <div className="flex items-center gap-3">
                         <MdLocationOn className="text-2xl text-green-400" />
-                        <h4 className="font-semibold text-white text-lg">Desa {location}, Kab.Blitar</h4>
+                        <h4 className="font-semibold text-gray-900 dark:text-white text-lg">Desa {location}, Kab.Blitar</h4>
                       </div>
                       {liveWeather && (
                         <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl">
-                          <span className="text-white/60 text-sm">Saat ini:</span>
+                          <span className="text-gray-500 dark:text-white/60 text-sm">Saat ini:</span>
                           <span className="text-xl font-bold text-green-400">{Math.round(liveWeather.main.temp)}°C</span>
                           <span className="text-white/60">|</span>
                           <span className="text-blue-400">{liveWeather.main.humidity}%</span>
@@ -766,7 +766,7 @@ export default function PrediksiPage() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="flex items-center gap-1.5 text-sm text-white/60 mb-2">
+                        <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
                           <MdCalendarMonth size={14} /> Pilih Tanggal
                         </label>
                         <input
@@ -775,18 +775,18 @@ export default function PrediksiPage() {
                           onChange={(e) => handleDateChange(e.target.value)}
                           min={getAvailableDates()[0]}
                           max={getArimaxDates().length > 0 ? getArimaxDates().slice(-1)[0] : getAvailableDates().slice(-1)[0]}
-                          className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50"
+                          className="w-full bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                           style={{ colorScheme: "dark" }}
                         />
                       </div>
                       <div>
-                        <label className="flex items-center gap-1.5 text-sm text-white/60 mb-2">
+                        <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
                           <MdAccessTime size={14} /> Pilih Jam
                         </label>
                         <select
                           value={selectedTime}
                           onChange={(e) => setSelectedTime(e.target.value)}
-                          className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50"
+                          className="w-full bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                           style={{ colorScheme: "dark" }}
                         >
                           {(dataSource === "openweather" ? getAvailableTimes(selectedDate) : getArimaxTimes(selectedDate)).map((time) => (
@@ -802,7 +802,7 @@ export default function PrediksiPage() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-red-500/20 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
                           <div className="flex items-center gap-2 mb-2">
                             <WiThermometer className="text-3xl text-red-400" />
-                            <span className="text-sm text-white/60">Suhu</span>
+                            <span className="text-sm text-gray-500 dark:text-white/60">Suhu</span>
                           </div>
                           <p className="text-3xl font-bold text-white">{selectedForecast.temp}°C</p>
                           <p className="text-xs text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
@@ -810,7 +810,7 @@ export default function PrediksiPage() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
                           <div className="flex items-center gap-2 mb-2">
                             <BsDropletFill className="text-xl text-blue-400" />
-                            <span className="text-sm text-white/60">Kelembaban</span>
+                            <span className="text-sm text-gray-500 dark:text-white/60">Kelembaban</span>
                           </div>
                           <p className="text-3xl font-bold text-white">{selectedForecast.humidity}%</p>
                           <p className="text-xs text-white/50 mt-1">Tingkat kelembaban udara</p>
@@ -825,17 +825,17 @@ export default function PrediksiPage() {
                 {/* Jagung */}
                 <div
                   onClick={() => setSelectedPrediction("jagung")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "jagung" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "jagung" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("jagung") && (
                     <div className="absolute top-3 right-3">
                       <MdWarning className="text-amber-400" size={18} />
                     </div>
                   )}
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <GiCorn /> Prediksi Harga Jagung
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.jagung.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.jagung.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.jagung.mae} mape={modelMetrics.commodities.jagung.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription("jagung")}</p>
                 </div>
@@ -843,17 +843,17 @@ export default function PrediksiPage() {
                 {/* Cabai */}
                 <div
                   onClick={() => setSelectedPrediction("cabai")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "cabai" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "cabai" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("cabe") && (
                     <div className="absolute top-3 right-3">
                       <MdWarning className="text-amber-400" size={18} />
                     </div>
                   )}
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaPepperHot /> Prediksi Harga Cabai
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.cabai.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.cabai.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.cabai.mae} mape={modelMetrics.commodities.cabai.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription("cabe")}</p>
                 </div>
@@ -861,17 +861,17 @@ export default function PrediksiPage() {
                 {/* Kedelai */}
                 <div
                   onClick={() => setSelectedPrediction("kedelai")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "kedelai" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border relative ${selectedPrediction === "kedelai" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
                   {isSignificantIncrease("kedelai") && (
                     <div className="absolute top-3 right-3">
                       <MdWarning className="text-amber-400" size={18} />
                     </div>
                   )}
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <Bean size={16} /> Prediksi Harga Kedelai
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.kedelai.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.kedelai.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.kedelai.mae} mape={modelMetrics.commodities.kedelai.mape} />
                   <p className="text-xs text-orange-400">{getTrendDescription("kedelai")}</p>
                 </div>
@@ -881,56 +881,56 @@ export default function PrediksiPage() {
                 {/* Beras Premium */}
                 <div
                   onClick={() => setSelectedPrediction("berasPremium")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasPremium" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasPremium" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras Premium
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasPremium.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.berasPremium.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.berasPremium.mae} mape={modelMetrics.commodities.berasPremium.mape} />
                 </div>
                 {/* Beras Medium */}
                 <div
                   onClick={() => setSelectedPrediction("berasMedium")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasMedium" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasMedium" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras Medium
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasMedium.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.berasMedium.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.berasMedium.mae} mape={modelMetrics.commodities.berasMedium.mape} />
                 </div>
                 {/* Beras SPHP Bulog */}
                 <div
                   onClick={() => setSelectedPrediction("berasSphp")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasSphp" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "berasSphp" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBowlRice /> Beras SPHP Bulog
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.berasSphp.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.berasSphp.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.berasSphp.mae} mape={modelMetrics.commodities.berasSphp.mape} />
                 </div>
                 {/* MINYAKITA */}
                 <div
                   onClick={() => setSelectedPrediction("minyakita")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "minyakita" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "minyakita" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaBottleWater /> MINYAKITA
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.minyakita.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.minyakita.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.minyakita.mae} mape={modelMetrics.commodities.minyakita.mape} unit="Rp/L" />
                 </div>
                 {/* Telur */}
                 <div
                   onClick={() => setSelectedPrediction("telur")}
-                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "telur" ? "bg-white/10 border-green-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}
+                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border ${selectedPrediction === "telur" ? "bg-green-50 dark:bg-white/10 border-green-500/50" : "bg-white dark:bg-white/5 border-[#91C6BC]/30 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10"}`}
                 >
-                  <h4 className="font-semibold text-white mb-1 flex items-center gap-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     <FaEgg /> Telur Ayam
                   </h4>
-                  <p className="text-xs text-white/40 mb-2">{modelMetrics.commodities.telur.model}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-2">{modelMetrics.commodities.telur.model}</p>
                   <MapeBadge mae={modelMetrics.commodities.telur.mae} mape={modelMetrics.commodities.telur.mape} />
                 </div>
               </>
@@ -942,9 +942,9 @@ export default function PrediksiPage() {
         <motion.div variants={itemVariants} className={`${cardStyle} overflow-visible`}>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <div>
-              <h3 className="text-xl font-semibold text-white mb-1">Prediksi {chartConfig.label}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Prediksi {chartConfig.label}</h3>
               <div className="flex items-center gap-3 text-sm">
-                <span className="text-white/50">{activeCategory === "weather" ? "Nilai saat ini:" : "Harga saat ini:"}</span>
+                <span className="text-gray-500 dark:text-white/50">{activeCategory === "weather" ? "Nilai saat ini:" : "Harga saat ini:"}</span>
                 <span className="text-lg font-bold text-green-400">
                   {activeCategory === "weather"
                     ? selectedPrediction === "suhu"
@@ -954,7 +954,7 @@ export default function PrediksiPage() {
                       ? formatCurrency(realCurrentPrices[selectedPrediction === "cabai" ? "cabe" : selectedPrediction] || currentPrices[selectedPrediction])
                       : formatCurrency(realCurrentPrices[selectedPrediction] || currentPrices[selectedPrediction])}
                 </span>
-                {(activeCategory === "commodity" || activeCategory === "food") && <span className="text-white/40 text-xs">{chartConfig.unit === "Rp/L" ? "/L" : "/kg"}</span>}
+                {(activeCategory === "commodity" || activeCategory === "food") && <span className="text-gray-400 dark:text-white/40 text-xs">{chartConfig.unit === "Rp/L" ? "/L" : "/kg"}</span>}
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -962,7 +962,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="jagung">Jagung</option>
@@ -974,7 +974,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="berasPremium">Beras Premium</option>
@@ -988,7 +988,7 @@ export default function PrediksiPage() {
                 <select
                   value={selectedPrediction}
                   onChange={(e) => setSelectedPrediction(e.target.value)}
-                  className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="suhu">Suhu</option>
@@ -999,7 +999,7 @@ export default function PrediksiPage() {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="bg-gray-900 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-green-500/50"
+                  className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                   style={{ colorScheme: "dark" }}
                 >
                   <option value="3">3 hari</option>
@@ -1012,7 +1012,7 @@ export default function PrediksiPage() {
               {activeCategory !== "weather" && (
                 <button
                   onClick={handleViewAllHistorical}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white hover:border-green-500/40 transition-all duration-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#91C6BC]/15 dark:bg-white/5 border border-[#91C6BC]/30 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#91C6BC]/20 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white hover:border-green-500/40 transition-all duration-200"
                 >
                   <MdHistory size={16} />
                   Data Aktual Lengkap
@@ -1128,20 +1128,20 @@ export default function PrediksiPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="bg-gray-950 border border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col pointer-events-auto"
+            className="bg-white dark:bg-gray-950 border border-[#91C6BC]/30 dark:border-white/10 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col pointer-events-auto"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#91C6BC]/30 dark:border-white/10">
               <div>
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                   <MdHistory size={20} className="text-green-400" />
                   Data Aktual Historis — {chartConfig.label}
                 </h3>
-                <p className="text-xs text-white/40 mt-0.5">Seluruh data harga aktual yang tersedia (maks. 365 hari)</p>
+                <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">Seluruh data harga aktual yang tersedia (maks. 365 hari)</p>
               </div>
               <button
                 onClick={() => setShowHistoricalModal(false)}
-                className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                className="p-2 rounded-lg text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
               >
                 <MdClose size={20} />
               </button>
@@ -1152,10 +1152,10 @@ export default function PrediksiPage() {
               {loadingAllHistorical ? (
                 <div className="flex justify-center items-center py-20">
                   <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400" />
-                  <span className="ml-3 text-white/60">Memuat data historis...</span>
+                  <span className="ml-3 text-gray-500 dark:text-white/60">Memuat data historis...</span>
                 </div>
               ) : allHistoricalData.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-white/30 gap-3">
+                <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-white/30 gap-3">
                   <MdHistory size={40} />
                   <p>Tidak ada data historis tersedia</p>
                 </div>
@@ -1179,8 +1179,8 @@ export default function PrediksiPage() {
                           { label: "Rata-rata", value: fmt(avg), color: "text-white" },
                           { label: "Tertinggi", value: fmt(max), color: "text-amber-400" },
                         ].map(({ label, value, color }) => (
-                          <div key={label} className="bg-white/5 rounded-xl px-4 py-3 border border-white/5">
-                            <p className="text-xs text-white/40 mb-1">{label}</p>
+                          <div key={label} className="bg-[#91C6BC]/15 dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-200 dark:border-white/5">
+                            <p className="text-xs text-gray-400 dark:text-white/40 mb-1">{label}</p>
                             <p className={`text-sm font-semibold ${color}`}>{value}</p>
                           </div>
                         ))}
@@ -1243,12 +1243,12 @@ export default function PrediksiPage() {
                       <div className="space-y-3">
                         {/* Filter row */}
                         <div className="flex items-center gap-3 flex-wrap">
-                          <span className="text-xs text-white/40 whitespace-nowrap">Filter:</span>
+                          <span className="text-xs text-gray-400 dark:text-white/40 whitespace-nowrap">Filter:</span>
                           {/* Dropdown Tahun */}
                           <select
                             value={selYear}
                             onChange={(e) => handleYearChange(e.target.value)}
-                            className="bg-gray-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-green-500/50"
+                            className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
                             style={{ colorScheme: "dark" }}
                           >
                             <option value="all">Semua Tahun</option>
@@ -1261,7 +1261,7 @@ export default function PrediksiPage() {
                             value={selMonth || "all"}
                             onChange={(e) => handleMonthChange(e.target.value)}
                             disabled={selYear === "all"}
-                            className="bg-gray-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-green-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="bg-white dark:bg-gray-900 border border-[#91C6BC]/40 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
                             style={{ colorScheme: "dark" }}
                           >
                             <option value="all">Semua Bulan</option>
@@ -1273,7 +1273,7 @@ export default function PrediksiPage() {
                           {filterMonthYear !== "all" && (
                             <button
                               onClick={() => setFilterMonthYear("all")}
-                              className="text-xs text-white/40 hover:text-white/70 transition-colors underline underline-offset-2"
+                              className="text-xs text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/70 transition-colors underline underline-offset-2"
                             >
                               Reset
                             </button>
@@ -1281,33 +1281,33 @@ export default function PrediksiPage() {
                         </div>
 
                         {/* Tabel */}
-                        <div className="rounded-xl border border-white/10 overflow-hidden">
+                        <div className="rounded-xl border border-[#91C6BC]/30 dark:border-white/10 overflow-hidden">
                           <div className="max-h-56 overflow-y-auto">
                             <table className="w-full text-sm">
-                              <thead className="sticky top-0 bg-gray-900 z-10">
-                                <tr className="border-b border-white/10">
-                                  <th className="text-left text-white/40 font-medium py-2.5 px-4">#</th>
-                                  <th className="text-left text-white/40 font-medium py-2.5 px-4">Tanggal</th>
-                                  <th className="text-right text-white/40 font-medium py-2.5 px-4">Harga Aktual</th>
+                              <thead className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10">
+                                <tr className="border-b border-[#91C6BC]/30 dark:border-white/10">
+                                  <th className="text-left text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">#</th>
+                                  <th className="text-left text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">Tanggal</th>
+                                  <th className="text-right text-gray-400 dark:text-white/40 font-medium py-2.5 px-4">Harga Aktual</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {filteredRows.length === 0 ? (
                                   <tr>
-                                    <td colSpan={3} className="py-8 text-center text-white/30 text-sm">
+                                    <td colSpan={3} className="py-8 text-center text-gray-400 dark:text-white/30 text-sm">
                                       Tidak ada data untuk bulan ini
                                     </td>
                                   </tr>
                                 ) : (
                                   filteredRows.map((item, i) => (
-                                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                      <td className="py-2 px-4 text-white/25 text-xs">{filteredRows.length - i}</td>
-                                      <td className="py-2 px-4 text-white/60">
+                                    <tr key={i} className="border-b border-gray-100 dark:border-white/5 hover:bg-[#91C6BC]/10 dark:hover:bg-white/5 transition-colors">
+                                      <td className="py-2 px-4 text-gray-300 dark:text-white/25 text-xs">{filteredRows.length - i}</td>
+                                      <td className="py-2 px-4 text-gray-500 dark:text-white/60">
                                         {item.date
                                           ? new Date(item.date + "T00:00:00").toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
                                           : item.month}
                                       </td>
-                                      <td className="py-2 px-4 text-right font-medium text-green-400">
+                                      <td className="py-2 px-4 text-right font-medium text-green-500 dark:text-green-400">
                                         {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(item.price)}
                                       </td>
                                     </tr>
@@ -1317,7 +1317,7 @@ export default function PrediksiPage() {
                             </table>
                           </div>
                         </div>
-                        <p className="text-xs text-white/25 text-right">{filteredRows.length} data ditampilkan</p>
+                        <p className="text-xs text-gray-300 dark:text-white/25 text-right">{filteredRows.length} data ditampilkan</p>
                       </div>
                     );
                   })()}
