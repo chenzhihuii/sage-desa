@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { useTheme } from "../context/ThemeContext";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine, Brush } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine, ReferenceArea, Brush } from "recharts";
 import useWeatherForecast from "../hooks/useWeatherForecast";
 import useCommodityForecast from "../hooks/useCommodityForecast";
 import WeatherIcon from "../components/WeatherIcon";
@@ -1109,10 +1109,18 @@ export default function PrediksiPage() {
                     <Line type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} strokeDasharray={hasActual ? "5 4" : "0"} dot={false} name="Prediksi Harga" connectNulls={false} />
                     {/* Actual historical line */}
                     {hasActual && <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} dot={false} name="Harga Aktual" connectNulls={false} />}
+                    {/* Shading untuk zona prediksi */}
+                    {cutoffLabel && (
+                      <ReferenceArea
+                        x1={cutoffLabel}
+                        fill={isDark ? "rgba(135,169,107,0.06)" : "rgba(135,169,107,0.10)"}
+                        strokeOpacity={0}
+                      />
+                    )}
                     {/* Cutoff reference line with label */}
                     {cutoffLabel && (
-                      <ReferenceLine x={cutoffLabel} stroke={cRef} strokeWidth={1.5} strokeDasharray="4 3"
-                        label={{ value: "Aktual | Prediksi", fill: cRef, fontSize: 10, position: "insideTopRight", dy: -4 }}
+                      <ReferenceLine x={cutoffLabel} stroke={isDark ? "rgba(135,169,107,0.7)" : "rgba(135,169,107,0.9)"} strokeWidth={2} strokeDasharray="5 3"
+                        label={{ value: "◀ Aktual  |  Prediksi ▶", fill: isDark ? "rgba(135,169,107,0.8)" : "#5a7a42", fontSize: 10, position: "insideTopRight", dy: -6 }}
                       />
                     )}
                     {/* Zoom/pan brush */}
