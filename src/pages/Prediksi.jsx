@@ -671,7 +671,7 @@ export default function PrediksiPage() {
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min;
-    const pad = range * 0.05;
+    const pad = range * 0.3;
     return [Math.floor(min - pad), Math.ceil(max + pad)];
   })();
 
