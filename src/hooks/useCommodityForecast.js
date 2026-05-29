@@ -147,7 +147,7 @@ export default function useCommodityForecast() {
             ]);
 
             // Fetch historical data in parallel (don't block UI)
-            Promise.all(KEYS.map(k => fetchHistoricalData(k, 30))).catch(() => {});
+            Promise.all(KEYS.map(k => fetchHistoricalData(k, 365))).catch(() => {});
 
             setCommodityData({
                 jagung: jagungData,
