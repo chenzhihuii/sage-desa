@@ -670,7 +670,7 @@ export default function PrediksiPage() {
     if (values.length === 0) return ["auto", "auto"];
     const min = Math.min(...values);
     const max = Math.max(...values);
-    return [Math.floor(min * 0.75), Math.ceil(max * 1.25)];
+    return [Math.floor(min * 1.0), Math.ceil(max * 1.25)];
   })();
 
   return (
