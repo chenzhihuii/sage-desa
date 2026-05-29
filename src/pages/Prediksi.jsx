@@ -19,7 +19,7 @@ const COLORS = {
   humidity: "#3b82f6",
   jagung: "#f59e0b",
   cabai: "#ef4444",
-  kedelai: "#22c55e",
+  kedelai: "#8b5cf6",
   berasPremium: "#ceb0fa",
   berasMedium: "#a78bfa",
   berasSphp: "#60a5fa",
