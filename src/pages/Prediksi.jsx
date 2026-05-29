@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { useTheme } from "../context/ThemeContext";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line, ComposedChart, ReferenceLine, Brush } from "recharts";
 import useWeatherForecast from "../hooks/useWeatherForecast";
 import useCommodityForecast from "../hooks/useCommodityForecast";
 import WeatherIcon from "../components/WeatherIcon";
@@ -1075,7 +1075,7 @@ export default function PrediksiPage() {
             );
 
             return (
-              <ResponsiveContainer width="100%" height={350}>
+              <ResponsiveContainer width="100%" height={420}>
                 {activeCategory === "weather" ? (
                   <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
                     <defs>
@@ -1089,7 +1089,7 @@ export default function PrediksiPage() {
                     <Area type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} fill={`url(#color${selectedPrediction})`} fillOpacity={0.5} />
                   </AreaChart>
                 ) : (
-                  <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
+                  <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
                     <defs>
                       <linearGradient id={`color${selectedPrediction}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor={chartConfig.color} stopOpacity={0.25} />
@@ -1101,19 +1101,29 @@ export default function PrediksiPage() {
                     <YAxis stroke={cAxis} tick={{ fill: cTick, fontSize: 12 }} domain={yDomain} label={{ value: chartConfig.unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: cTickD, fontSize: 12 } }} tickFormatter={(v) => v.toLocaleString("id-ID")} />
                     <Tooltip content={<PriceTooltip unit={chartConfig.unit} />} />
                     <Legend
-                      verticalAlign="bottom"
-                      height={36}
+                      verticalAlign="top"
+                      height={32}
                       formatter={(value) => (value === "Harga Aktual" ? "Harga Aktual" : "Prediksi Harga")}
                     />
                     {/* Predicted forecast line */}
                     <Line type="monotone" dataKey={chartConfig.predicted} stroke={chartConfig.color} strokeWidth={2} strokeDasharray={hasActual ? "5 4" : "0"} dot={false} name="Prediksi Harga" connectNulls={false} />
                     {/* Actual historical line */}
                     {hasActual && <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={2} dot={false} name="Harga Aktual" connectNulls={false} />}
-                    {/* Cutoff reference line */}
+                    {/* Cutoff reference line with label */}
                     {cutoffLabel && (
-                      <ReferenceLine x={cutoffLabel} stroke={cRef} strokeDasharray="4 3">
-                      </ReferenceLine>
+                      <ReferenceLine x={cutoffLabel} stroke={cRef} strokeWidth={1.5} strokeDasharray="4 3"
+                        label={{ value: "Aktual | Prediksi", fill: cRef, fontSize: 10, position: "insideTopRight", dy: -4 }}
+                      />
                     )}
+                    {/* Zoom/pan brush */}
+                    <Brush
+                      dataKey="month"
+                      height={24}
+                      stroke={isDark ? "rgba(255,255,255,0.15)" : "rgba(135,169,107,0.4)"}
+                      fill={isDark ? "rgba(255,255,255,0.03)" : "rgba(234,240,222,0.8)"}
+                      travellerWidth={6}
+                      tickFormatter={() => ""}
+                    />
                   </ComposedChart>
                 )}
               </ResponsiveContainer>
