@@ -668,9 +668,7 @@ export default function PrediksiPage() {
     const actual = chartData.map((d) => d.actual).filter((v) => v != null && !isNaN(v));
     const values = [...predicted, ...actual];
     if (values.length === 0) return ["auto", "auto"];
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    return [Math.floor(min * 1.0), Math.ceil(max * 1.0)];
+    return ["auto", "auto"];
   })();
 
   return (
