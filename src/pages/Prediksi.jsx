@@ -670,9 +670,7 @@ export default function PrediksiPage() {
     if (values.length === 0) return ["auto", "auto"];
     const min = Math.min(...values);
     const max = Math.max(...values);
-    const range = max - min;
-    const padding = range > 0 ? range * 3.0 : max * 0.2;
-    return [Math.floor(min - padding), Math.ceil(max + padding)];
+    return [Math.floor(min * 0.88), Math.ceil(max * 1.12)];
   })();
 
   return (
@@ -1113,14 +1111,14 @@ export default function PrediksiPage() {
                     {cutoffLabel && (
                       <ReferenceArea
                         x1={cutoffLabel}
-                        fill={isDark ? "rgba(135,169,107,0.06)" : "rgba(135,169,107,0.10)"}
+                        fill={isDark ? "rgba(135,169,107,0.12)" : "rgba(135,169,107,0.15)"}
                         strokeOpacity={0}
                       />
                     )}
                     {/* Cutoff reference line with label */}
                     {cutoffLabel && (
-                      <ReferenceLine x={cutoffLabel} stroke={isDark ? "rgba(135,169,107,0.7)" : "rgba(135,169,107,0.9)"} strokeWidth={2} strokeDasharray="5 3"
-                        label={{ value: "◀ Aktual  |  Prediksi ▶", fill: isDark ? "rgba(135,169,107,0.8)" : "#5a7a42", fontSize: 10, position: "insideTopRight", dy: -6 }}
+                      <ReferenceLine x={cutoffLabel} stroke={isDark ? "#87a96b" : "#5a7a42"} strokeWidth={2} strokeDasharray="5 3"
+                        label={{ value: "◀ Aktual  |  Prediksi ▶", fill: isDark ? "#a3c47a" : "#5a7a42", fontSize: 10, position: "insideTopRight", dy: -6 }}
                       />
                     )}
                     {/* Zoom/pan brush */}
