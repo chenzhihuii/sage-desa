@@ -621,7 +621,7 @@ export default function PrediksiPage() {
           actual: null,
         }));
 
-        const histPoints = (historicalData?.[commodityKey] || []).slice(-limit).map((item) => ({
+        const histPoints = (historicalData?.[commodityKey] || []).map((item) => ({
           month: item.month,
           actual: item.price,
           [`${displayKey}Predicted`]: null,
@@ -671,7 +671,7 @@ export default function PrediksiPage() {
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min;
-    const padding = range > 0 ? range * 0.5 : max * 0.005;
+    const padding = range > 0 ? range * 0.1 : max * 0.005;
     return [Math.floor(min - padding), Math.ceil(max + padding)];
   })();
 
