@@ -664,10 +664,8 @@ export default function PrediksiPage() {
 
   const infoBar = (() => {
     if (activeCategory === "weather") {
-      const lastUpdate = liveWeather
-        ? new Date(liveWeather.dt * 1000).toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
-        : "Real-time";
-      return { updated: lastUpdate, periode: "Apr 2025 – Apr 2026", sumber: "BMKG, Open Weather" };
+      const today = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+      return { updated: `${today}, 15.00 WIB (harian)`, periode: "Apr 2025 – Apr 2026", sumber: "BMKG, Open Weather" };
     }
     const commodityKey = COMMODITY_KEY_MAP[selectedPrediction] || selectedPrediction;
     const hist = historicalData?.[commodityKey];
