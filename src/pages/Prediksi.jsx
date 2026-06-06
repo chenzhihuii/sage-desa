@@ -662,6 +662,21 @@ export default function PrediksiPage() {
   const chartData = getChartData();
   const chartConfig = getChartConfig();
 
+  const infoBar = (() => {
+    if (activeCategory === "weather") {
+      const lastUpdate = liveWeather
+        ? new Date(liveWeather.dt * 1000).toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+        : "Real-time";
+      return { updated: lastUpdate, periode: "Real-time & prediksi 7 hari ke depan", sumber: "BMKG, Open Weather" };
+    }
+    const commodityKey = COMMODITY_KEY_MAP[selectedPrediction] || selectedPrediction;
+    const hist = historicalData?.[commodityKey];
+    const lastDate = hist?.length > 0 && hist[hist.length - 1].date
+      ? new Date(hist[hist.length - 1].date + "T00:00:00").toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })
+      : new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+    return { updated: `${lastDate} (harian)`, periode: "1 Jan 2025 – 23 Mei 2026", sumber: "SP2KP, BAPANAS" };
+  })();
+
   const yDomain = (() => {
     if (!chartData || chartData.length === 0 || activeCategory === "weather") return ["auto", "auto"];
     const predicted = chartData.map((d) => d[chartConfig.predicted]).filter((v) => v != null && !isNaN(v));
@@ -731,15 +746,15 @@ export default function PrediksiPage() {
         <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-white/5 backdrop-blur-sm rounded-xl px-5 py-3 border border-[#87a96b]/40 dark:border-white/10">
           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 dark:text-white/60">
             <span className="flex items-center gap-1.5">
-              <MdAccessTime size={14} /> <span className="text-gray-700 dark:text-white/80">Terakhir diperbarui:</span> 18 Apr 2026
+              <MdAccessTime size={14} /> <span className="text-gray-700 dark:text-white/80">Terakhir diperbarui:</span> {infoBar.updated}
             </span>
             <span className="hidden sm:block text-gray-300 dark:text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdCalendarMonth size={14} /> <span className="text-gray-700 dark:text-white/80">Periode:</span> Apr 2025 - Apr 2026
+              <MdCalendarMonth size={14} /> <span className="text-gray-700 dark:text-white/80">Periode:</span> {infoBar.periode}
             </span>
             <span className="hidden sm:block text-gray-300 dark:text-white/20">|</span>
             <span className="flex items-center gap-1.5">
-              <MdAccountBalance size={14} /> <span className="text-gray-700 dark:text-white/80">Sumber:</span> BMKG, Siskaperbapo
+              <MdAccountBalance size={14} /> <span className="text-gray-700 dark:text-white/80">Sumber:</span> {infoBar.sumber}
             </span>
           </div>
           <div className="text-xs text-amber-400/80 flex items-center gap-1.5">
