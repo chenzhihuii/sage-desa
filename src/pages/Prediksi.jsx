@@ -667,7 +667,7 @@ export default function PrediksiPage() {
       const lastUpdate = liveWeather
         ? new Date(liveWeather.dt * 1000).toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
         : "Real-time";
-      return { updated: lastUpdate, periode: "Real-time & prediksi 7 hari ke depan", sumber: "BMKG, Open Weather" };
+      return { updated: lastUpdate, periode: "Apr 2025 – Apr 2026", sumber: "BMKG, Open Weather" };
     }
     const commodityKey = COMMODITY_KEY_MAP[selectedPrediction] || selectedPrediction;
     const hist = historicalData?.[commodityKey];
