@@ -93,17 +93,16 @@ function CommodityDropdown({ models, selected, onSelect }) {
       <select
         value={selected}
         onChange={(e) => onSelect(e.target.value)}
-        className="appearance-none bg-white dark:bg-white/10 border border-[#87a96b]/30 dark:border-white/20 text-gray-900 dark:text-white text-sm
-          rounded-lg px-3 py-1.5 pr-7 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30"
-        style={{ colorScheme: "dark" }}
+        className="appearance-none bg-white dark:bg-gray-800 border border-[#87a96b]/30 dark:border-white/20 text-gray-900 dark:text-white text-sm
+    rounded-lg px-3 py-1.5 pr-7 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30"
       >
         {models.map((m) => (
-          <option key={m.commodity} value={m.commodity} className="bg-gray-900">
+          <option key={m.commodity} value={m.commodity} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
             {COMMODITY_LABELS[m.commodity]}
           </option>
         ))}
       </select>
-      <FaChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 text-xs pointer-events-none" />
+      <FaChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40 text-xs pointer-events-none" />
     </div>
   );
 }
@@ -113,10 +112,10 @@ function PriceForecastChart({ models }) {
   const isTumpangsari = models.length > 1;
   const [selected, setSelected] = useState(models[0]?.commodity || "");
   const { isDark } = useTheme();
-  const cGrid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(135,169,107,0.2)';
-  const cAxis = isDark ? 'rgba(255,255,255,0.2)'  : '#6b7280';
-  const cTick = isDark ? 'rgba(255,255,255,0.5)'  : '#374151';
-  const cTickD = isDark ? 'rgba(255,255,255,0.4)' : '#6b7280';
+  const cGrid = isDark ? "rgba(255,255,255,0.06)" : "rgba(135,169,107,0.2)";
+  const cAxis = isDark ? "rgba(255,255,255,0.2)" : "#6b7280";
+  const cTick = isDark ? "rgba(255,255,255,0.5)" : "#374151";
+  const cTickD = isDark ? "rgba(255,255,255,0.4)" : "#6b7280";
   if (!models || models.length === 0) return null;
 
   const activeModel = models.find((m) => m.commodity === selected) || models[0];
@@ -172,7 +171,19 @@ function PriceForecastChart({ models }) {
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
+    const { isDark } = useTheme();
     if (!active || !payload?.length) return null;
+
+    const tooltipStyle = {
+      backgroundColor: isDark ? "rgba(10, 15, 30, 0.97)" : "rgba(255, 255, 255, 0.97)",
+      borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)",
+      color: isDark ? "#f3f4f6" : "#111827",
+      borderRadius: "0.75rem",
+      padding: "12px",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+      border: "1px solid",
+    };
+
     const currentIndex = chartData.findIndex((d) => d.label === label);
     const prevValue = currentIndex > 0 ? chartData[currentIndex - 1].value : null;
     const currentValue = payload[0].value;
@@ -181,14 +192,16 @@ function PriceForecastChart({ models }) {
 
     return (
       <div style={tooltipStyle} className="min-w-[150px]">
-        <p className="text-white/50 text-xs mb-2 pb-2 border-b border-white/10">{label}</p>
+        <p className="text-xs mb-2 pb-2 border-b" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)", borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}>
+          {label}
+        </p>
         <div className="flex items-center gap-2 mb-1">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
           <span style={{ color }} className="font-semibold text-sm">
             {COMMODITY_LABELS[activeModel.commodity]}
           </span>
         </div>
-        <p className="text-white text-sm pl-4">
+        <p className="text-sm pl-4" style={{ color: isDark ? "white" : "#111827" }}>
           Rp {currentValue.toLocaleString("id-ID")}/kg
           {pctFromPrev != null && pctFromPrev !== "0.0" && (
             <span className={`ml-2 text-xs ${diff > 0 ? "text-green-400" : "text-red-400"}`}>
@@ -206,16 +219,16 @@ function PriceForecastChart({ models }) {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <FaChartLine style={{ color }} />
-            <h4 className="text-white font-semibold">{chartTitle}</h4>
+            <h4 className="text-gray-900 dark:text-white font-semibold">{chartTitle}</h4>
           </div>
-          <p className="text-white/40 text-xs">{isCabai ? "Proyeksi harga harian cabai di periode panen berdasarkan volatilitas historis" : "Proyeksi harga bulanan di periode panen berdasarkan tren data historis"}</p>
+          <p className="text-gray-500 dark:text-white/40 text-xs">{isCabai ? "Proyeksi harga harian cabai di periode panen berdasarkan volatilitas historis" : "Proyeksi harga bulanan di periode panen berdasarkan tren data historis"}</p>
         </div>
         {isTumpangsari && <CommodityDropdown models={models} selected={selected} onSelect={setSelected} />}
       </div>
 
       {/* HAPUS div badge tren/risiko/datasource, ganti cuma harga dasar */}
       <div className="flex items-center mt-3 mb-5">
-        <span className="text-white/30 text-xs ml-auto">Harga dasar: Rp {basePrice.toLocaleString("id-ID")}/kg</span>
+        <span className="text-gray-400 dark:text-white/30 text-xs ml-auto">Harga dasar: Rp {basePrice.toLocaleString("id-ID")}/kg</span>
       </div>
 
       <ResponsiveContainer width="100%" height={240}>
@@ -456,24 +469,45 @@ export default function RekomendasiPage() {
               <div className={cardStyle}>
                 <p className="text-gray-700 dark:text-white/50 text-sm mb-4">Estimasi Produksi</p>
                 {!isTumpangsari ? (
-                  <div>
-                    <p className="text-5xl font-bold" style={{ color: COMMODITY_COLORS[result.models[0].commodity] }}>
-                      {result.models[0].production?.value ?? "-"}
-                    </p>
-                    <p className="text-gray-400 dark:text-white/40 text-sm mt-2">kwintal/ha</p>
+                  <div
+                    className="rounded-xl border-2 px-5 py-4 flex items-center gap-3"
+                    style={{
+                      borderColor: COMMODITY_COLORS[result.models[0].commodity] + "60",
+                      backgroundColor: COMMODITY_COLORS[result.models[0].commodity] + "12",
+                    }}
+                  >
+                    <span style={{ color: COMMODITY_COLORS[result.models[0].commodity] }} className="text-lg">
+                      {COMMODITY_ICONS[result.models[0].commodity]}
+                    </span>
+                    <div>
+                      <p className="text-xs font-medium mb-0.5" style={{ color: COMMODITY_COLORS[result.models[0].commodity] }}>
+                        {COMMODITY_LABELS[result.models[0].commodity]}
+                      </p>
+                      <p className="text-4xl font-bold" style={{ color: COMMODITY_COLORS[result.models[0].commodity] }}>
+                        {result.models[0].production?.value ?? "-"}
+                        <span className="text-sm font-normal text-gray-400 dark:text-white/40 ml-2">kwintal/ha</span>
+                      </p>
+                    </div>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
                     {result.models.map((m) => (
-                      <div key={m.commodity} className="flex items-center justify-between">
-                        <span className="flex items-center gap-2 text-sm font-medium" style={{ color: COMMODITY_COLORS[m.commodity] }}>
+                      <div
+                        key={m.commodity}
+                        className="rounded-xl border-2 px-4 py-3"
+                        style={{
+                          borderColor: COMMODITY_COLORS[m.commodity] + "60",
+                          backgroundColor: COMMODITY_COLORS[m.commodity] + "12",
+                        }}
+                      >
+                        <p className="text-xs font-medium mb-1 flex items-center gap-1" style={{ color: COMMODITY_COLORS[m.commodity] }}>
                           {COMMODITY_ICONS[m.commodity]}
                           {COMMODITY_LABELS[m.commodity]}
-                        </span>
-                        <div className="text-right">
-                          <span className="font-bold text-white text-xl">{m.production?.value ?? "-"}</span>
-                          <span className="text-gray-400 dark:text-white/40 text-xs ml-1">kwintal/ha</span>
-                        </div>
+                        </p>
+                        <p className="text-3xl font-bold" style={{ color: COMMODITY_COLORS[m.commodity] }}>
+                          {m.production?.value ?? "-"}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">kwintal/ha</p>
                       </div>
                     ))}
                   </div>
@@ -497,7 +531,7 @@ export default function RekomendasiPage() {
                             {COMMODITY_ICONS[m.commodity]}
                             {COMMODITY_LABELS[m.commodity]}
                           </span>
-                          <span className="text-white/50 mt-0.5 block">{formatCurrency(m.income?.value || 0)}</span>
+                          <span className="text-gray-600 dark:text-white/50 mt-0.5 block">{formatCurrency(m.income?.value || 0)}</span>
                         </span>
                       ))}
                     </div>
@@ -513,9 +547,9 @@ export default function RekomendasiPage() {
             {result.reasons.length > 0 && <GroupedReasons reasons={result.reasons} />}
 
             {/* Catatan */}
-            <div className="bg-[#FFF8EC] dark:bg-white/3 border border-amber-200/70 dark:border-white/8 rounded-xl px-5 py-3 flex items-center gap-3">
+            <div className="bg-[#FFF8EC] dark:bg-yellow-500/10 border border-amber-200/70 dark:border-yellow-500/20 rounded-xl px-5 py-3 flex items-center gap-3">
               <FaExclamationTriangle className="text-amber-400 shrink-0" />
-              <p className="text-gray-500 dark:text-white/40 text-xs">Rekomendasi ini bersifat pendukung keputusan dan perlu disesuaikan dengan kondisi lapangan aktual.</p>
+              <p className="text-gray-600 dark:text-yellow-100/80 text-xs">Rekomendasi ini bersifat pendukung keputusan dan perlu disesuaikan dengan kondisi lapangan aktual.</p>
             </div>
           </div>
         )}
