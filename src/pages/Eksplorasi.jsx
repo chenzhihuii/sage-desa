@@ -363,7 +363,7 @@ export default function EksplorasiPage() {
       {/* Table Section */}
       <motion.div variants={itemVariants} className={`${cardStyle} overflow-hidden !p-0`}>
         <div className="p-4 pb-2">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Klasterisasi Petani (KMeans Analysis)</h3>
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Klasterisasi Petani (KMeans++)</h3>
           <p className="text-gray-400 dark:text-white/40 text-sm mt-0.5">Pengelompokan otomatis berdasarkan Indeks Ketahanan & Pendapatan.</p>
         </div>
         <div className="overflow-x-auto p-2">

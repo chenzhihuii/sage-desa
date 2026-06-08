@@ -210,14 +210,14 @@ const modelMetrics = {
     kelembaban: { model: "LSTM", rmse: 88.7, mae: 7.17, mape: 8.69 },
   },
   commodities: {
-    jagung:        { model: "Bidirectional LSTM",    rmse: 94.77,   mae: 63.86,   mape: 1.03 },
-    cabai:         { model: "Bidirectional LSTM",    rmse: 1459.13, mae: 930.18,  mape: 1.63 },
-    kedelai:       { model: "Bidirectional LSTM",    rmse: 29.44,   mae: 20.24,   mape: 0.16 },
-    berasPremium:  { model: "Bidirectional LSTM",    rmse: 17.99,   mae: 16.16,   mape: 0.11 },
-    berasMedium:   { model: "Bidirectional LSTM",    rmse: 0.82,    mae: 0.71,    mape: 0.005},
-    berasSphp:     { model: "Bidirectional LSTM",    rmse: 2.57,    mae: 2.09,    mape: 0.018},
-    minyakita:     { model: "Exponential Smoothing", rmse: 47.40,   mae: 11.24,   mape: 0.07 },
-    telur:         { model: "Bidirectional LSTM",    rmse: 218.60,  mae: 117.53,  mape: 0.43 },
+    jagung:        { model: "Bidirectional LSTM",    rmse: 124.93,  mae: 95.68,   mape: 1.5226 },
+    cabai:         { model: "Bidirectional LSTM",    rmse: 1482.52, mae: 1042.14, mape: 1.7507 },
+    kedelai:       { model: "Bidirectional LSTM",    rmse: 204.26,  mae: 120.14,  mape: 0.9022 },
+    berasPremium:  { model: "Bidirectional LSTM",    rmse: 13.75,   mae: 11.15,   mape: 0.0751 },
+    berasMedium:   { model: "Bidirectional LSTM",    rmse: 30.62,   mae: 9.67,    mape: 0.0729 },
+    berasSphp:     { model: "Bidirectional LSTM",    rmse: 47.03,   mae: 10.33,   mape: 0.0870 },
+    minyakita:     { model: "Exponential Smoothing", rmse: 47.40,   mae: 11.24,   mape: 0.0725 },
+    telur:         { model: "Bidirectional LSTM",    rmse: 202.33,  mae: 105.79,  mape: 0.3809 },
   },
 };
 
