@@ -46,6 +46,11 @@ const KEMANDIRIAN_COLOR = {
   Rentan: "#f87171",
 };
 
+const STATUS_DISPLAY = {
+  "Kekurangan sementara": "Cukup Tahan",
+};
+const displayStatus = (s) => STATUS_DISPLAY[s] || s;
+
 const FIELD_LABELS = {
   komoditas: "Komoditas",
   luas_lahan: "Luas Lahan (ha)",
@@ -96,7 +101,7 @@ function KemandirianChart({ kemandirianChart }) {
           <BarChart data={kemandirianChart} layout="vertical" margin={{ left: 20, right: 60 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={cGrid} horizontal={false} />
             <XAxis type="number" stroke={cAxis} tick={{ fill: cTick }} />
-            <YAxis dataKey="status" type="category" width={130} stroke={cTickB} tick={{ fill: cTickB, fontSize: 13 }} />
+            <YAxis dataKey="status" type="category" width={130} stroke={cTickB} tick={{ fill: cTickB, fontSize: 13 }} tickFormatter={displayStatus} />
             <Tooltip
               cursor={{ fill: cCur }}
               content={({ active, payload }) => {
@@ -105,7 +110,7 @@ function KemandirianChart({ kemandirianChart }) {
                 const color = KEMANDIRIAN_COLOR[entry.status] || "#ffffff";
                 return (
                   <div style={tooltipStyle}>
-                    <p style={{ color, fontWeight: 700, fontSize: 13 }}>{entry.status}</p>
+                    <p style={{ color, fontWeight: 700, fontSize: 13 }}>{displayStatus(entry.status)}</p>
                     <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11 }}>{entry.jumlah} Petani — hover untuk detail</p>
                   </div>
                 );
@@ -128,20 +133,32 @@ function KemandirianChart({ kemandirianChart }) {
       </div>
 
       {hoveredEntry && (
-        <div className="flex-1 overflow-hidden rounded-xl border border-white/10" style={{ background: "rgba(17,24,39,0.97)", minWidth: 0 }} onMouseEnter={() => setHoveredEntry(hoveredEntry)} onMouseLeave={() => setHoveredEntry(null)}>
-          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-            <span style={{ color: KEMANDIRIAN_COLOR[hoveredEntry.status] || "#aaa", fontWeight: 700, fontSize: 13 }}>{hoveredEntry.status}</span>
-            <span className="text-white/40 text-xs">{hoveredEntry.jumlah} Petani</span>
+        <div
+          className="flex-1 overflow-hidden rounded-xl"
+          style={{
+            background: isDark ? "rgba(17,24,39,0.97)" : "#F6F3EB",
+            border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(135,169,107,0.4)",
+            minWidth: 0
+          }}
+          onMouseEnter={() => setHoveredEntry(hoveredEntry)}
+          onMouseLeave={() => setHoveredEntry(null)}
+        >
+          <div
+            className="px-4 py-3 flex items-center justify-between"
+            style={{ borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(135,169,107,0.25)" }}
+          >
+            <span style={{ color: KEMANDIRIAN_COLOR[hoveredEntry.status] || "#aaa", fontWeight: 700, fontSize: 13 }}>{displayStatus(hoveredEntry.status)}</span>
+            <span className="text-gray-400 dark:text-white/40 text-xs">{hoveredEntry.jumlah} Petani</span>
           </div>
           <div className="overflow-auto" style={{ maxHeight: 240 }}>
             {loadingStatus === hoveredEntry.status ? (
-              <div className="flex items-center justify-center py-8 text-white/40 text-xs">Memuat data...</div>
+              <div className="flex items-center justify-center py-8 text-gray-400 dark:text-white/40 text-xs">Memuat data...</div>
             ) : (
               <table className="w-full text-left border-collapse" style={{ fontSize: 11 }}>
                 <thead>
-                  <tr className="sticky top-0" style={{ background: "rgba(17,24,39,0.98)" }}>
+                  <tr className="sticky top-0" style={{ background: isDark ? "rgba(17,24,39,0.98)" : "#EDE9DE" }}>
                     {Object.keys(FIELD_LABELS).map((k) => (
-                      <th key={k} className="px-3 py-2 text-white/50 font-semibold whitespace-nowrap border-b border-white/10">
+                      <th key={k} className="px-3 py-2 text-gray-500 dark:text-white/50 font-semibold whitespace-nowrap" style={{ borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(135,169,107,0.25)" }}>
                         {FIELD_LABELS[k]}
                       </th>
                     ))}
@@ -149,9 +166,9 @@ function KemandirianChart({ kemandirianChart }) {
                 </thead>
                 <tbody>
                   {(petaniMap[hoveredEntry.status] || []).map((p, i) => (
-                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr key={i} className="transition-colors" style={{ borderBottom: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(135,169,107,0.15)" }}>
                       {Object.keys(FIELD_LABELS).map((k) => (
-                        <td key={k} className="px-3 py-1.5 text-white/80 whitespace-nowrap">
+                        <td key={k} className="px-3 py-1.5 text-gray-700 dark:text-white/80 whitespace-nowrap">
                           {k === "luas_lahan" || k === "produksi" ? Number(p[k]).toLocaleString("id-ID") : (p[k] ?? "-")}
                         </td>
                       ))}
