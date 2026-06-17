@@ -12,64 +12,40 @@ This system was developed to support small-scale farmers who often face challeng
 
 > Add your application screenshots here.
 
-```md
-![Home Page](public/assets/homepage.png)
-![Exploration Page](public/assets/exploration.png)
-![Prediction Page](public/assets/prediction.png)
-![Recommendation Page](public/assets//recommendation.png)
-```
+### Home Page
+<img src="public/assets/homepage.png" alt="SAGE-Desa Home Page" width="700">
+
+### Exploration Page
+<img src="public/assets/exploration.png" alt="SAGE-Desa Exploration Page" width="700">
+
+### Prediction Page
+<img src="public/assets/prediction.png" alt="SAGE-Desa Prediction Page" width="700">
+
+### Recommendation Page
+<img src="public/assets/recommendation.png" alt="SAGE-Desa Recommendation Page" width="700">
 
 ---
 
 ## Key Features
 
-### Home Page
+* **Data Exploration**
+  Displays visual summaries of farmer characteristics, crop data, and local agricultural conditions.
 
-Provides an overview of SAGE-Desa, including the purpose of the application and the main agricultural problems addressed by the system.
+* **Price and Weather Insights**
+  Provides commodity price predictions, food price information, and weather-related insights to support farming decisions.
 
-### Data Exploration
+* **Crop Recommendation**
+  Generates crop strategy recommendations based on user input, including estimated production and income.
 
-Displays agricultural and farmer-related information through visual summaries. This feature helps users understand local farming conditions, crop information, and general farmer characteristics.
+* **Analysis and Suggestions**
+  Presents supporting explanations to help users understand the recommendation results.
 
-### Commodity Price Prediction
+* **AI Chatbot**
+  Allows users to ask agriculture-related questions through an AI-powered assistant.
 
-Presents commodity price prediction insights to help users observe price trends that may support crop planning and decision-making.
+* **Consultation and Feedback**
+  Provides access to consultation, gallery, and aspiration features to support user interaction and system improvement.
 
-### Food Price Prediction
-
-Displays prediction information for selected food commodities as additional context related to food availability and market conditions.
-
-### Weather Forecast Module
-
-Provides weather-related information that supports farming decisions, especially for farmers who depend on seasonal and rain-fed agricultural conditions.
-
-### Crop Recommendation
-
-Generates crop strategy recommendations based on user input. The recommendation output may include crop strategy suggestions, estimated production, estimated income, and supporting information.
-
-### Analysis and Suggestions
-
-Provides additional explanations and suggestions based on the generated recommendation, allowing users to better understand the output presented by the system.
-
-### Crop Data Page
-
-Displays information about selected crops, including crop characteristics and agricultural context relevant to the local farming environment.
-
-### AI Chatbot
-
-Allows users to interact with an AI assistant to ask questions related to agriculture, recommendation results, and system usage.
-
-### Consultation Page
-
-Provides a consultation feature that connects users with agricultural experts or support contacts.
-
-### Gallery Page
-
-Displays documentation and visual content related to agricultural activities or system implementation.
-
-### Aspiration Page
-
-Allows users to submit feedback, suggestions, or aspirations related to agricultural needs and future system development.
 
 ---
 
