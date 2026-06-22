@@ -427,6 +427,16 @@ export default function PrediksiPage() {
   const [selectedForecast, setSelectedForecast] = useState(null);
   const [dataSource, setDataSource] = useState("openweather");
 
+  // Weather historical tab
+  const [weatherTab, setWeatherTab] = useState("prediksi"); // "prediksi" | "historis"
+  const [historicalWeather, setHistoricalWeather] = useState([]);
+  const [loadingHistoricalWeather, setLoadingHistoricalWeather] = useState(false);
+  const [weatherHistoryDays, setWeatherHistoryDays] = useState(30);
+  const [histSelectedDate, setHistSelectedDate] = useState(""); // "YYYY-MM-DD"
+  const [backtestData, setBacktestData] = useState([]);
+  const [backtestMetrics, setBacktestMetrics] = useState(null);
+  const [loadingBacktest, setLoadingBacktest] = useState(false);
+
   // Modal data aktual historis
   const [showHistoricalModal, setShowHistoricalModal] = useState(false);
   const [allHistoricalData, setAllHistoricalData] = useState([]);
@@ -466,6 +476,8 @@ export default function PrediksiPage() {
     predictionLoading,
     predictionError,
     fetchQuickPrediction,
+    fetchHistoricalWeather,
+    fetchBacktestWeather,
     getArimaxDates,
     getArimaxTimes,
     getArimaxByDateTime,
@@ -532,6 +544,35 @@ export default function PrediksiPage() {
       }
     }
   }, [selectedDate, selectedTime, dataSource]);
+
+  // Fetch backtest + historical when tab or day range changes
+  useEffect(() => {
+    if (activeCategory === "weather" && weatherTab === "historis") {
+      // Backtest: aktual vs prediksi model untuk periode yang sama
+      setLoadingBacktest(true);
+      // Hitung jumlah hari yang dibutuhkan (termasuk jika ada tanggal kalender dipilih)
+      let days = weatherHistoryDays;
+      if (histSelectedDate) {
+        const diffMs = Date.now() - new Date(histSelectedDate + "T00:00:00").getTime();
+        const diffDays = Math.ceil(diffMs / 86400000) + 5;
+        days = Math.max(days, diffDays);
+      }
+
+      // Backtest dan historical keduanya pakai days yang sama
+      const btMetric = selectedPrediction === "kelembaban" ? "kelembapan" : "suhu";
+      fetchBacktestWeather(days, btMetric).then((res) => {
+        setBacktestData(res?.data || []);
+        setBacktestMetrics(res?.metrics || null);
+        setLoadingBacktest(false);
+      });
+
+      setLoadingHistoricalWeather(true);
+      fetchHistoricalWeather(days).then((data) => {
+        setHistoricalWeather(data || []);
+        setLoadingHistoricalWeather(false);
+      });
+    }
+  }, [activeCategory, weatherTab, weatherHistoryDays, histSelectedDate, selectedPrediction]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -707,6 +748,7 @@ export default function PrediksiPage() {
                 onClick={() => {
                   setActiveCategory("weather");
                   setSelectedPrediction("suhu");
+                  setWeatherTab("prediksi");
                 }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2 ${
                   activeCategory === "weather" ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25" : "bg-[#F0EDE5] dark:bg-white/5 text-gray-500 dark:text-white/60 hover:bg-[#E8E4DA] dark:hover:bg-white/10 border border-[#87a96b]/40 dark:border-white/10"
@@ -765,81 +807,324 @@ export default function PrediksiPage() {
           <div className={`grid gap-4 ${activeCategory === "weather" ? "grid-cols-1 md:grid-cols-2" : activeCategory === "commodity" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-5"}`}>
             {activeCategory === "weather" ? (
               <div className="col-span-full">
-                {weatherLoading ? (
-                  <div className="flex justify-center items-center py-8">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400"></div>
-                    <span className="ml-3 text-gray-700 dark:text-white/60">Memuat data cuaca...</span>
-                  </div>
-                ) : weatherError ? (
-                  <div className="bg-red-500/10 rounded-xl p-4 text-center text-red-400">Error: {weatherError}</div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
-                      <div className="flex items-center gap-3">
-                        <MdLocationOn className="text-2xl text-green-400" />
-                        <h4 className="font-semibold text-gray-900 dark:text-white text-lg">Desa {location}, Kab.Blitar</h4>
+                {/* Tab toggle */}
+                <div className="flex gap-2 mb-5 border-b border-gray-200 dark:border-white/10 pb-3">
+                  <button
+                    onClick={() => setWeatherTab("prediksi")}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${weatherTab === "prediksi" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" : "text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white/80"}`}
+                  >
+                    Prediksi
+                  </button>
+                  <button
+                    onClick={() => setWeatherTab("historis")}
+                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${weatherTab === "historis" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white/80"}`}
+                  >
+                    <MdHistory size={14} /> Data Historis
+                  </button>
+                </div>
+
+                {weatherTab === "prediksi" ? (
+                  <>
+                    {weatherLoading ? (
+                      <div className="flex justify-center items-center py-8">
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-400"></div>
+                        <span className="ml-3 text-gray-700 dark:text-white/60">Memuat data cuaca...</span>
                       </div>
-                      {liveWeather && (
-                        <div className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 px-4 py-2 rounded-xl">
-                          <span className="text-gray-500 dark:text-white/60 text-sm">Saat ini:</span>
-                          <span className="text-xl font-bold text-green-500 dark:text-green-400">{Math.round(liveWeather.main.temp)}°C</span>
-                          <span className="text-gray-300 dark:text-white/60">|</span>
-                          <span className="text-blue-500 dark:text-blue-400">{liveWeather.main.humidity}%</span>
+                    ) : weatherError ? (
+                      <div className="bg-red-500/10 rounded-xl p-4 text-center text-red-400">Error: {weatherError}</div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
+                          <div className="flex items-center gap-3">
+                            <MdLocationOn className="text-2xl text-green-400" />
+                            <h4 className="font-semibold text-gray-900 dark:text-white text-lg">Desa {location}, Kab.Blitar</h4>
+                          </div>
+                          {liveWeather && (
+                            <div className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 px-4 py-2 rounded-xl">
+                              <span className="text-gray-500 dark:text-white/60 text-sm">Saat ini:</span>
+                              <span className="text-xl font-bold text-green-500 dark:text-green-400">{Math.round(liveWeather.main.temp)}°C</span>
+                              <span className="text-gray-300 dark:text-white/60">|</span>
+                              <span className="text-blue-500 dark:text-blue-400">{liveWeather.main.humidity}%</span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
-                          <MdCalendarMonth size={14} /> Pilih Tanggal
-                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
+                              <MdCalendarMonth size={14} /> Pilih Tanggal
+                            </label>
+                            <input
+                              type="date"
+                              value={selectedDate}
+                              onChange={(e) => handleDateChange(e.target.value)}
+                              min={getAvailableDates()[0]}
+                              max={getArimaxDates().length > 0 ? getArimaxDates().slice(-1)[0] : getAvailableDates().slice(-1)[0]}
+                              className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                              style={{ colorScheme: "dark" }}
+                            />
+                          </div>
+                          <div>
+                            <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
+                              <MdAccessTime size={14} /> Pilih Jam
+                            </label>
+                            <select
+                              value={selectedTime}
+                              onChange={(e) => setSelectedTime(e.target.value)}
+                              className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
+                              style={{ colorScheme: "dark" }}
+                            >
+                              {(dataSource === "openweather" ? getAvailableTimes(selectedDate) : getArimaxTimes(selectedDate)).map((time) => (
+                                <option key={time.value} value={time.value}>
+                                  {time.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        {selectedForecast && (
+                          <div className="grid grid-cols-2 gap-4 mt-4">
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-red-500/20 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
+                              <div className="flex items-center gap-2 mb-2">
+                                <WiThermometer className="text-3xl text-red-400" />
+                                <span className="text-sm text-gray-700 dark:text-white/60">Suhu</span>
+                              </div>
+                              <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.temp}°C</p>
+                              <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
+                            </motion.div>
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
+                              <div className="flex items-center gap-2 mb-2">
+                                <BsDropletFill className="text-xl text-blue-400" />
+                                <span className="text-sm text-gray-700 dark:text-white/60">Kelembaban</span>
+                              </div>
+                              <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.humidity}%</p>
+                              <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Tingkat kelembaban udara</p>
+                            </motion.div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  /* ── Tab Data Historis Cuaca ── */
+                  <div className="space-y-4">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">Data Historis vs Hasil Prediksi</p>
+                          <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">Sumber: BMKG (historis) · ARIMAX/LSTM (prediksi)</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <select
+                            value={selectedPrediction}
+                            onChange={(e) => setSelectedPrediction(e.target.value)}
+                            className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none"
+                            style={{ colorScheme: "dark" }}
+                          >
+                            <option value="suhu">Suhu (°C)</option>
+                            <option value="kelembaban">Kelembaban (%)</option>
+                          </select>
+                          <select
+                            value={weatherHistoryDays}
+                            onChange={(e) => setWeatherHistoryDays(Number(e.target.value))}
+                            className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none"
+                            style={{ colorScheme: "dark" }}
+                          >
+                            <option value={14}>14 hari</option>
+                            <option value={30}>30 hari</option>
+                            <option value={60}>60 hari</option>
+                            <option value={90}>90 hari</option>
+                          </select>
+                        </div>
+                      </div>
+                      {/* Calendar date picker */}
+                      <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-gray-200 dark:border-white/10">
+                        <span className="text-xs text-gray-500 dark:text-white/50 flex items-center gap-1.5">
+                          <MdCalendarMonth size={14} /> Cari berdasarkan tanggal:
+                        </span>
                         <input
                           type="date"
-                          value={selectedDate}
-                          onChange={(e) => handleDateChange(e.target.value)}
-                          min={getAvailableDates()[0]}
-                          max={getArimaxDates().length > 0 ? getArimaxDates().slice(-1)[0] : getAvailableDates().slice(-1)[0]}
-                          className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
-                          style={{ colorScheme: "dark" }}
+                          value={histSelectedDate}
+                          min="2025-04-01"
+                          max={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => setHistSelectedDate(e.target.value)}
+                          className="bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#87a96b]/60"
+                          style={{ colorScheme: isDark ? "dark" : "light" }}
                         />
-                      </div>
-                      <div>
-                        <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/60 mb-2">
-                          <MdAccessTime size={14} /> Pilih Jam
-                        </label>
-                        <select
-                          value={selectedTime}
-                          onChange={(e) => setSelectedTime(e.target.value)}
-                          className="w-full bg-white dark:bg-gray-900 border border-[#87a96b]/45 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-green-500/50"
-                          style={{ colorScheme: "dark" }}
-                        >
-                          {(dataSource === "openweather" ? getAvailableTimes(selectedDate) : getArimaxTimes(selectedDate)).map((time) => (
-                            <option key={time.value} value={time.value}>
-                              {time.label}
-                            </option>
-                          ))}
-                        </select>
+                        {histSelectedDate && (
+                          <button
+                            onClick={() => setHistSelectedDate("")}
+                            className="text-xs px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/50 hover:bg-gray-200 dark:hover:bg-white/15 border border-gray-200 dark:border-white/10 transition-colors"
+                          >
+                            Reset
+                          </button>
+                        )}
                       </div>
                     </div>
-                    {selectedForecast && (
-                      <div className="grid grid-cols-2 gap-4 mt-4">
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-red-500/20 to-orange-500/10 rounded-xl p-4 border border-red-500/20">
-                          <div className="flex items-center gap-2 mb-2">
-                            <WiThermometer className="text-3xl text-red-400" />
-                            <span className="text-sm text-gray-700 dark:text-white/60">Suhu</span>
-                          </div>
-                          <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.temp}°C</p>
-                          <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Terasa seperti {selectedForecast.feelsLike}°C</p>
-                        </motion.div>
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
-                          <div className="flex items-center gap-2 mb-2">
-                            <BsDropletFill className="text-xl text-blue-400" />
-                            <span className="text-sm text-gray-700 dark:text-white/60">Kelembaban</span>
-                          </div>
-                          <p className="text-3xl font-bold text-gray-900 dark:text-white">{selectedForecast.humidity}%</p>
-                          <p className="text-xs text-gray-500 dark:text-white/50 mt-1">Tingkat kelembaban udara</p>
-                        </motion.div>
+
+                    {loadingBacktest ? (
+                      <div className="flex justify-center items-center py-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-400" />
+                        <span className="ml-3 text-gray-600 dark:text-white/60 text-sm">Memuat data backtest...</span>
                       </div>
+                    ) : backtestData.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-10 gap-2 text-gray-400 dark:text-white/30">
+                        <MdHistory size={36} />
+                        <p className="text-sm">Data historis cuaca tidak tersedia</p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Legend */}
+                        <div className="flex items-center gap-5 text-xs text-gray-500 dark:text-white/50">
+                          <span className="flex items-center gap-1.5">
+                            <span className="w-6 h-0.5 bg-red-400 inline-block rounded" />
+                            Data Aktual (BMKG)
+                          </span>
+                          <span className="flex items-center gap-1.5">
+                            <span className="w-6 h-0.5 bg-blue-400 inline-block rounded" style={{ borderTop: "2px dashed #60a5fa", background: "none" }} />
+                            Prediksi Model ({selectedPrediction === "kelembaban" ? "LSTM" : "ARIMAX"})
+                          </span>
+                        </div>
+
+                        {/* Backtest comparison chart */}
+                        {(() => {
+                          const unit = selectedPrediction === "kelembaban" ? "%" : "°C";
+                          const allValues = backtestData.flatMap(d => [d.aktual, d.prediksi]).filter(v => v != null);
+                          const yMin = allValues.length > 0 ? Math.floor(Math.min(...allValues)) - 2 : "auto";
+                          const yMax = allValues.length > 0 ? Math.ceil(Math.max(...allValues)) + 2 : "auto";
+
+                          return (
+                            <ResponsiveContainer width="100%" height={300}>
+                              <ComposedChart data={backtestData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke={cGrid} vertical={false} />
+                                <XAxis dataKey="label" stroke={cAxis} tick={{ fill: cTick, fontSize: 11 }} interval="preserveStartEnd" />
+                                <YAxis stroke={cAxis} tick={{ fill: cTick, fontSize: 11 }} domain={[yMin, yMax]}
+                                  label={{ value: unit, angle: -90, position: "insideLeft", offset: 10, style: { fill: cTickD, fontSize: 11 } }}
+                                  tickFormatter={(v) => `${v}${unit}`}
+                                />
+                                <Tooltip
+                                  contentStyle={tooltipStyle}
+                                  formatter={(value, name) => value != null ? [`${value}${unit}`, name === "aktual" ? "Data Aktual" : "Prediksi Model"] : [null, name]}
+                                  labelFormatter={(label) => {
+                                    const entry = backtestData.find(d => d.label === label);
+                                    const full = entry ? entry.date.split("-").reverse().join("/") : label;
+                                    return `Tanggal: ${full}`;
+                                  }}
+                                />
+                                <Legend verticalAlign="top" height={28}
+                                  formatter={(value) => value === "aktual" ? "Data Aktual (BMKG)" : `Prediksi Model (${selectedPrediction === "kelembaban" ? "LSTM" : "ARIMAX"})`}
+                                />
+                                {histSelectedDate && (() => {
+                                  const [, mm, dd] = histSelectedDate.split("-");
+                                  const selLabel = `${dd}/${mm}`;
+                                  return backtestData.some(d => d.label === selLabel) ? (
+                                    <ReferenceLine x={selLabel} stroke="#f59e0b" strokeWidth={2}
+                                      label={{ value: "▼", position: "top", fontSize: 12, fill: "#f59e0b", dy: -2 }}
+                                    />
+                                  ) : null;
+                                })()}
+                                <Line type="monotone" dataKey="aktual" stroke="#ef4444" strokeWidth={2} dot={{ r: 3, fill: "#ef4444" }} name="aktual" connectNulls={false} />
+                                <Line type="monotone" dataKey="prediksi" stroke="#60a5fa" strokeWidth={2} strokeDasharray="5 4" dot={{ r: 3, fill: "#60a5fa" }} name="prediksi" connectNulls={false} />
+                                <Brush dataKey="label" height={22} stroke={isDark ? "rgba(255,255,255,0.15)" : "rgba(135,169,107,0.4)"}
+                                  fill={isDark ? "rgba(255,255,255,0.03)" : "rgba(234,240,222,0.8)"} travellerWidth={6} tickFormatter={() => ""} />
+                              </ComposedChart>
+                            </ResponsiveContainer>
+                          );
+                        })()}
+
+                        {/* Metrics akurasi model */}
+                        {backtestMetrics && (
+                          <div className="grid grid-cols-3 gap-3 mt-1">
+                            {[
+                              { label: "MAE", value: `${backtestMetrics.mae}${selectedPrediction === "kelembaban" ? "%" : "°C"}`, desc: "Rata-rata error absolut", color: "text-blue-400" },
+                              { label: "RMSE", value: `${backtestMetrics.rmse}${selectedPrediction === "kelembaban" ? "%" : "°C"}`, desc: "Root mean square error", color: "text-purple-400" },
+                              { label: "MAPE", value: `${backtestMetrics.mape}%`, desc: "Mean absolute % error", color: backtestMetrics.mape < 5 ? "text-green-400" : backtestMetrics.mape < 10 ? "text-amber-400" : "text-red-400" },
+                            ].map(({ label, value, desc, color }) => (
+                              <div key={label} className="bg-[#F0EDE5] dark:bg-white/5 rounded-xl px-4 py-3 border border-gray-200 dark:border-white/5 text-center">
+                                <p className="text-[10px] text-gray-400 dark:text-white/40 mb-0.5">{label}</p>
+                                <p className={`text-sm font-semibold ${color}`}>{value}</p>
+                                <p className="text-[9px] text-gray-400 dark:text-white/30 mt-0.5">{desc}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Selected date detail card */}
+                        {histSelectedDate && (() => {
+                          const [, mm, dd] = histSelectedDate.split("-");
+                          const selLabel = `${dd}/${mm}`;
+                          const btEntry = backtestData.find(d => d.date === histSelectedDate || d.label === selLabel);
+                          const histEntry = historicalWeather.find(d => d.date === histSelectedDate || d.label === selLabel);
+                          const dateStr = new Date(histSelectedDate + "T00:00:00").toLocaleDateString("id-ID", {
+                            weekday: "long", day: "numeric", month: "long", year: "numeric",
+                          });
+                          return (
+                            <div className="mt-1 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-400/5 px-4 py-3 flex flex-wrap items-center gap-4">
+                              <div className="flex items-center gap-2">
+                                <MdCalendarMonth className="text-amber-500" size={18} />
+                                <div>
+                                  <p className="text-xs font-medium text-amber-600 dark:text-amber-400">{dateStr}</p>
+                                  <p className="text-[10px] text-gray-400 dark:text-white/40">Pencatatan pukul 15.00 WIB</p>
+                                </div>
+                              </div>
+                              {btEntry ? (
+                                <>
+                                  <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-400/20">
+                                    <span className="text-base">{selectedPrediction === "kelembaban" ? "💧" : "🌡️"}</span>
+                                    <div>
+                                      <p className="text-[10px] text-gray-400 dark:text-white/40">Aktual</p>
+                                      <p className="text-sm font-semibold text-red-500">
+                                        {btEntry.aktual != null ? `${btEntry.aktual}${selectedPrediction === "kelembaban" ? "%" : "°C"}` : "—"}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-400/20">
+                                    <span className="text-base">🤖</span>
+                                    <div>
+                                      <p className="text-[10px] text-gray-400 dark:text-white/40">Prediksi Model</p>
+                                      <p className="text-sm font-semibold text-blue-400">
+                                        {btEntry.prediksi != null ? `${btEntry.prediksi}${selectedPrediction === "kelembaban" ? "%" : "°C"}` : "—"}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  {btEntry.aktual != null && btEntry.prediksi != null && (
+                                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-400/20">
+                                      <span className="text-base">📊</span>
+                                      <div>
+                                        <p className="text-[10px] text-gray-400 dark:text-white/40">Selisih</p>
+                                        <p className={`text-sm font-semibold ${Math.abs(btEntry.aktual - btEntry.prediksi) <= (selectedPrediction === "kelembaban" ? 3 : 1) ? "text-green-500" : "text-amber-400"}`}>
+                                          {Math.abs(btEntry.aktual - btEntry.prediksi).toFixed(1)}{selectedPrediction === "kelembaban" ? "%" : "°C"}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {selectedPrediction !== "kelembaban" && histEntry?.kelembapan != null && (
+                                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-400/20">
+                                      <span className="text-base">💧</span>
+                                      <div>
+                                        <p className="text-[10px] text-gray-400 dark:text-white/40">Kelembapan</p>
+                                        <p className="text-sm font-semibold text-blue-500">{histEntry.kelembapan}%</p>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {selectedPrediction === "kelembaban" && histEntry?.suhu != null && (
+                                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-400/20">
+                                      <span className="text-base">🌡️</span>
+                                      <div>
+                                        <p className="text-[10px] text-gray-400 dark:text-white/40">Suhu</p>
+                                        <p className="text-sm font-semibold text-orange-400">{histEntry.suhu}°C</p>
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
+                              ) : (
+                                <p className="text-xs text-gray-400 dark:text-white/40">
+                                  Data tidak tersedia untuk tanggal ini. Coba perbesar rentang hari.
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </>
                     )}
                   </div>
                 )}

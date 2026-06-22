@@ -202,6 +202,38 @@ export default function useWeatherForecast() {
         }
     }, []);
 
+    // Fetch historical weather data for chart visualization
+    const fetchHistoricalWeather = useCallback(async (days = 60) => {
+        try {
+            const response = await axios.get(`${BACKEND_API_URL}/predict/cuaca/historical`, {
+                params: { days }
+            });
+            if (response.data.success) {
+                return response.data.data;
+            }
+            return null;
+        } catch (err) {
+            console.error('Error fetching historical weather:', err);
+            return null;
+        }
+    }, []);
+
+    // Fetch backtest data: actual vs model in-sample prediction for same period
+    const fetchBacktestWeather = useCallback(async (days = 60, metric = "suhu") => {
+        try {
+            const response = await axios.get(`${BACKEND_API_URL}/predict/cuaca/backtest`, {
+                params: { days, metric }
+            });
+            if (response.data.success) {
+                return { data: response.data.data, metrics: response.data.metrics };
+            }
+            return null;
+        } catch (err) {
+            console.error('Error fetching backtest weather:', err);
+            return null;
+        }
+    }, []);
+
     // =====================================================
     // INITIALIZE: Use fixed location for Desa Sumberarum
     // =====================================================
@@ -389,6 +421,8 @@ export default function useWeatherForecast() {
         fetchArimaxPrediction,
         fetchQuickPrediction,
         fetchLatestCuaca,
+        fetchHistoricalWeather,
+        fetchBacktestWeather,
 
         // OpenWeather helpers
         getForecastByDateTime,
