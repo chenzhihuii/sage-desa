@@ -10,8 +10,6 @@ This system was developed to support small-scale farmers who often face challeng
 
 ## Application Preview
 
-> Add your application screenshots here.
-
 ### Home Page
 <img src="public/assets/homepage.png" alt="SAGE-Desa Home Page" width="700">
 
